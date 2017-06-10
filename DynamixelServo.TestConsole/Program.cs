@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using DynamixelServo.Driver;
 
 namespace DynamixelServo.TestConsole
@@ -10,21 +11,14 @@ namespace DynamixelServo.TestConsole
          Console.WriteLine("Starting");
          using (DynamixelDriver driver = new DynamixelDriver("COM17"))
          {
-            byte[] servos = driver.Search(1, 10);
-            Console.WriteLine("Leds on");
-            Console.WriteLine("Press enter to turn leds on");
-            Console.ReadLine();
-            foreach (byte servo in servos)
+            driver.SetTorque(1, false);
+            driver.SetTorque(2, false);
+            while (true)
             {
-               driver.SetLed(servo, true);
+               driver.WriteGoalPosition(4,(ushort) (1024 - driver.ReadPresentPosition(1))); 
+               driver.WriteGoalPosition(3,(ushort) (1024 - driver.ReadPresentPosition(2)));
+               Thread.Sleep(50);
             }
-            Console.WriteLine("Press enter to turn leds off");
-            Console.ReadLine();
-            foreach (byte servo in servos)
-            {
-               driver.SetLed(servo, false);
-            }
-            Console.WriteLine("Leds off");
          }
          Console.WriteLine("Press enter to exit");
          Console.ReadLine();
