@@ -48,14 +48,9 @@ namespace DynamixelServo.Driver
          List<byte> found = new List<byte>();
          for (byte i = startId; i < endId; i++)
          {
-            try
+            if (Ping(i))
             {
-               Ping(i);
                found.Add(i);
-            }
-            catch (IOException)
-            {
-
             }
          }
          return found.ToArray();
@@ -115,10 +110,19 @@ namespace DynamixelServo.Driver
          return modelNumber;
       }
 
-      public void Ping(byte servoId)
+      public bool Ping(byte servoId)
       {
          dynamixel.ping(_portNumber, ProtocolVersion, servoId);
-         VerifyLastMessage();
+         byte dxlError = 0;
+         if (dynamixel.getLastTxRxResult(_portNumber, ProtocolVersion) != CommSuccess)
+         {
+            return false;
+         }
+         if ((dxlError = dynamixel.getLastRxPacketError(_portNumber, ProtocolVersion)) != 0)
+         {
+            throw new IOException(DynamixelErrorHelper.GetRxPackErrorDescription(dxlError));
+         }
+         return true;
       }
 
       private void WriteByte(byte servoId, ushort address, byte data)
