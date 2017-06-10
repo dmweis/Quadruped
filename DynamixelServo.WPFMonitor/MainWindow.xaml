@@ -7,6 +7,19 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <ItemsControl ItemsSource="{Binding Servos}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="Black" BorderThickness="2">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Index, StringFormat=Index: {0}}"/>
+                            <TextBlock Text="{Binding Temperature, StringFormat=temperature: {0}}"/>
+                            <TextBlock Text="{Binding Position, StringFormat=position: {0}}"/>
+                            <Button Content="Toggle Led" Command="{Binding ToggleLedCommand}"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </Window>
