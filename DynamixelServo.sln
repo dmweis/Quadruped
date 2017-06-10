@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamixelServo.Driver", "Dy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamixelServo.TestConsole", "DynamixelServo.TestConsole\DynamixelServo.TestConsole.csproj", "{6DE6B5D4-945B-45D8-9102-3544D9AFC2A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamixelServo.WPFMonitor", "DynamixelServo.WPFMonitor\DynamixelServo.WPFMonitor.csproj", "{B43E0B21-F206-4857-9117-4F57D314B3C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6DE6B5D4-945B-45D8-9102-3544D9AFC2A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DE6B5D4-945B-45D8-9102-3544D9AFC2A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DE6B5D4-945B-45D8-9102-3544D9AFC2A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B43E0B21-F206-4857-9117-4F57D314B3C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B43E0B21-F206-4857-9117-4F57D314B3C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B43E0B21-F206-4857-9117-4F57D314B3C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B43E0B21-F206-4857-9117-4F57D314B3C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
