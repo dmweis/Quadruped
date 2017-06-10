@@ -5,7 +5,7 @@ using dynamixel_sdk;
 
 namespace DynamixelServo.Driver
 {
-   class DynamixelDriver : IDisposable
+   public class DynamixelDriver : IDisposable
    {
       // Control table address
       public const ushort ADDR_TORQUE_ENABLE = 24;
