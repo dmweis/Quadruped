@@ -17,6 +17,7 @@ namespace DynamixelServo.Driver
       public const ushort ADDR_PRESENT_LOAD = 40;
       public const ushort ADDR_PRESENT_VOLTAGE = 42;
       public const ushort ADDR_PRESENT_TEMP = 43;
+      public const ushort ADDR_PRESENT_MOVING = 46;
 
       private const int ProtocolVersion = 1;
       private const int BaudRate = 1000000;
@@ -54,6 +55,11 @@ namespace DynamixelServo.Driver
             }
          }
          return found.ToArray();
+      }
+
+      public bool IsMoving(byte servoId)
+      {
+         return ReadByte(servoId, ADDR_PRESENT_MOVING) > 0;
       }
 
       public void SetLed(byte servoId, bool on)
