@@ -64,7 +64,7 @@ namespace DynamixelServo.Driver
 
       public void SetLed(byte servoId, bool on)
       {
-         byte ledFlag = on ? (byte)1 : (byte)0;
+         byte ledFlag = Convert.ToByte(on);
          WriteByte(servoId, ADDR_LED_ENABLE, ledFlag);
       }
 
