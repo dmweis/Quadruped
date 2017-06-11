@@ -8,6 +8,7 @@ namespace DynamixelServo.Driver
    public class DynamixelDriver : IDisposable
    {
       // Control table address
+      public const ushort ADDR_ID = 3;
       public const ushort ADDR_TORQUE_ENABLE = 24;
       public const ushort ADDR_LED_ENABLE = 25;
       public const ushort ADDR_GOAL_POSITION = 30;
@@ -55,6 +56,15 @@ namespace DynamixelServo.Driver
             }
          }
          return found.ToArray();
+      }
+
+      public void SetId(byte servoId, byte newServoId)
+      {
+         if (Ping(newServoId))
+         {
+            throw new InvalidOperationException("New ID alredy taken");
+         }
+         WriteByte(servoId, ADDR_ID, newServoId);
       }
 
       public bool IsMoving(byte servoId)
