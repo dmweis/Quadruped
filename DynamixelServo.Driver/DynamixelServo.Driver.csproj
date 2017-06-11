@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="DynamixelDriver.cs" />
     <Compile Include="DynamixelErrorHelper.cs" />
+    <Compile Include="DynamixelHelpers.cs" />
     <Compile Include="dynamixel_sdk\dynamixel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerialPortAddress.cs" />
