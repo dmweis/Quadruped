@@ -241,6 +241,7 @@ namespace DynamixelServo.Driver
       Yellow = 0b11,
       Blue = 0b100,
       Green = 0b010,
-      Red = 0b1
+      Red = 0b1,
+      None = 0
    }
 }
