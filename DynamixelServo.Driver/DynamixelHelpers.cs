@@ -50,6 +50,18 @@ namespace DynamixelServo.Driver
          }
       }
 
+      public static void MoveToAll(byte[] servoIds, ushort[] goals, DynamixelDriver driver)
+      {
+         if (servoIds.Length != goals.Length)
+         {
+            throw new ArgumentException($"{nameof(servoIds)} and {nameof(goals)} have to be the same length");
+         }
+         for (int index = 0; index < servoIds.Length; index++)
+         {
+            driver.WriteGoalPosition(servoIds[index], goals[index]);
+         }
+      }
+
       public static void MoveToAllBlocking(byte[] servoIds, ushort[] goals, DynamixelDriver driver)
       {
          if (servoIds.Length != goals.Length)
