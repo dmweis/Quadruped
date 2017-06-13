@@ -7,20 +7,30 @@ namespace DynamixelServo.Driver
 {
    public class DynamixelDriver : IDisposable
    {
-      // Control table address
-      public const ushort ADDR_ID = 3;
-      public const ushort ADDR_TORQUE_ENABLE = 24;
-      public const ushort ADDR_LED_ENABLE = 25;
-      public const ushort ADDR_GOAL_POSITION = 30;
-      public const ushort ADDR_MOVING_SPEED = 32;
-      public const ushort ADDR_PRESENT_POSITION = 36;
-      public const ushort ADDR_PRESENT_SPEED = 38;
-      public const ushort ADDR_PRESENT_LOAD = 40;
-      public const ushort ADDR_PRESENT_VOLTAGE = 42;
-      public const ushort ADDR_PRESENT_TEMP = 43;
-      public const ushort ADDR_PRESENT_MOVING = 46;
+      // Control table address for protocol 1
+      public const ushort ADDR_MX_ID = 3;
+      public const ushort ADDR_MX_TORQUE_ENABLE = 24;
+      public const ushort ADDR_MX_LED_ENABLE = 25;
+      public const ushort ADDR_MX_GOAL_POSITION = 30;
+      public const ushort ADDR_MX_MOVING_SPEED = 32;
+      public const ushort ADDR_MX_PRESENT_POSITION = 36;
+      public const ushort ADDR_MX_PRESENT_SPEED = 38;
+      public const ushort ADDR_MX_PRESENT_LOAD = 40;
+      public const ushort ADDR_MX_PRESENT_VOLTAGE = 42;
+      public const ushort ADDR_MX_PRESENT_TEMP = 43;
+      public const ushort ADDR_MX_PRESENT_MOVING = 46;
 
-      private const int ProtocolVersion = 1;
+      // Control table address for protocol 2
+      public const ushort ADDR_XL_ID = 3;
+      public const ushort ADDR_XL_TORQUE_ENABLE = 24;
+      public const ushort ADDR_XL_LED = 25;
+      public const ushort ADDR_XL_GOAL_POSITION = 30;
+      public const ushort ADDR_XL_GOAL_VELOCITY = 32;
+      public const ushort ADDR_XL_PRESENT_POSITION = 37;
+      public const ushort ADDR_XL_PRESENT_VELOCITY = 39;
+      public const ushort ADDR_XL_PRESENT_LOAD = 41;
+      public const ushort ADDR_XL_PRESENT_VOLTAGE = 45;
+
       private const int BaudRate = 1000000;
       private const int CommFail = -1001;
       private const int CommSuccess = 0;
@@ -45,7 +55,7 @@ namespace DynamixelServo.Driver
          }
       }
 
-      public byte[] Search(byte startId = 0, byte endId = 252)
+      public byte[] Search(byte startId = 0, byte endId = 252, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          List<byte> found = new List<byte>();
          for (byte i = startId; i < endId; i++)
@@ -58,124 +68,137 @@ namespace DynamixelServo.Driver
          return found.ToArray();
       }
 
-      public void SetId(byte servoId, byte newServoId)
+      public void SetId(byte servoId, byte newServoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
-         if (Ping(newServoId))
+         if (Ping(newServoId, protocol))
          {
             throw new InvalidOperationException("New ID alredy taken");
          }
-         WriteByte(servoId, ADDR_ID, newServoId);
+         WriteByte(servoId, ADDR_MX_ID, newServoId, protocol);
       }
 
-      public bool IsMoving(byte servoId)
+      public bool IsMoving(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
-         return ReadByte(servoId, ADDR_PRESENT_MOVING) > 0;
+         return ReadByte(servoId, ADDR_MX_PRESENT_MOVING, protocol) > 0;
       }
 
       public void SetLed(byte servoId, bool on)
       {
          byte ledFlag = Convert.ToByte(on);
-         WriteByte(servoId, ADDR_LED_ENABLE, ledFlag);
+         WriteByte(servoId, ADDR_MX_LED_ENABLE, ledFlag, DynamixelProtocol.Version1);
       }
 
-      public void SetTorque(byte servoId, bool on)
+      public void SetLedColor(byte servoId, byte color)
+      {
+         WriteByte(servoId, ADDR_XL_LED, color, DynamixelProtocol.Version2);
+      }
+
+      public void SetTorque(byte servoId, bool on, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          byte torqueFlag = on ? (byte)1 : (byte)0;
-         WriteByte(servoId, ADDR_TORQUE_ENABLE, torqueFlag);
+         ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_TORQUE_ENABLE : ADDR_XL_TORQUE_ENABLE;
+         WriteByte(servoId, address, torqueFlag, protocol);
       }
 
-      public void WriteGoalPosition(byte servoId, ushort goalPosition)
+      public void WriteGoalPosition(byte servoId, ushort goalPosition, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
-         WriteUInt16(servoId, ADDR_GOAL_POSITION, goalPosition);
+         ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_GOAL_POSITION : ADDR_XL_GOAL_POSITION;
+         WriteUInt16(servoId, address, goalPosition, protocol);
       }
 
-      public void WriteMovingSpeed(byte servoId, ushort movingSpeed)
+      public void WriteMovingSpeed(byte servoId, ushort movingSpeed, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
-         WriteUInt16(servoId, ADDR_MOVING_SPEED, movingSpeed);
+         ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_MOVING_SPEED : ADDR_XL_GOAL_VELOCITY;
+         WriteUInt16(servoId, address, movingSpeed, protocol);
       }
 
-      public ushort ReadPresentPosition(byte servoId)
+      public ushort ReadPresentPosition(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
-         return ReadUInt16(servoId, ADDR_PRESENT_POSITION);
+         ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_POSITION : ADDR_XL_PRESENT_POSITION;
+         return ReadUInt16(servoId, address, protocol);
       }
 
-      public ushort ReadPresentSpeed(byte servoId)
+      public ushort ReadPresentSpeed(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
-         return ReadUInt16(servoId, ADDR_PRESENT_SPEED);
+         ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_SPEED : ADDR_XL_PRESENT_VELOCITY;
+         return ReadUInt16(servoId, address, protocol);
       }
 
-      public ushort ReadPresentLoad(byte servoId)
+      public ushort ReadPresentLoad(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
-         return ReadUInt16(servoId, ADDR_PRESENT_LOAD);
+         ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_LOAD : ADDR_XL_PRESENT_LOAD;
+         return ReadUInt16(servoId, address, protocol);
       }
 
-      public byte ReadTemperature(byte servoId)
+      public byte ReadTemperature(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
-         return ReadByte(servoId, ADDR_PRESENT_TEMP);
+         ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_TEMP : throw new NotImplementedException();
+         return ReadByte(servoId, address, protocol);
       }
 
-      public byte ReadVoltage(byte servoId)
+      public byte ReadVoltage(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
-         return ReadByte(servoId, ADDR_PRESENT_VOLTAGE);
+         ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_VOLTAGE : ADDR_XL_PRESENT_VOLTAGE;
+         return ReadByte(servoId, address, protocol);
       }
 
-      public ushort GetModelNumber(byte servoId)
+      public ushort GetModelNumber(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
-         ushort modelNumber = dynamixel.pingGetModelNum(_portNumber, ProtocolVersion, servoId);
-         VerifyLastMessage();
+         ushort modelNumber = dynamixel.pingGetModelNum(_portNumber, (int)protocol, servoId);
+         VerifyLastMessage(protocol);
          return modelNumber;
       }
 
-      public bool Ping(byte servoId)
+      public bool Ping(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
-         dynamixel.ping(_portNumber, ProtocolVersion, servoId);
+         dynamixel.ping(_portNumber, (int)protocol, servoId);
          byte dxlError = 0;
-         if (dynamixel.getLastTxRxResult(_portNumber, ProtocolVersion) != CommSuccess)
+         if (dynamixel.getLastTxRxResult(_portNumber, (int)protocol) != CommSuccess)
          {
             return false;
          }
-         if ((dxlError = dynamixel.getLastRxPacketError(_portNumber, ProtocolVersion)) != 0)
+         if ((dxlError = dynamixel.getLastRxPacketError(_portNumber, (int)protocol)) != 0)
          {
             throw new IOException(DynamixelErrorHelper.GetRxPackErrorDescription(dxlError));
          }
          return true;
       }
 
-      private void WriteByte(byte servoId, ushort address, byte data)
+      private void WriteByte(byte servoId, ushort address, byte data, DynamixelProtocol protocol)
       {
-         dynamixel.write1ByteTxRx(_portNumber, ProtocolVersion, servoId, address, data);
-         VerifyLastMessage();
+         dynamixel.write1ByteTxRx(_portNumber, (int)protocol, servoId, address, data);
+         VerifyLastMessage(protocol);
       }
 
-      private byte ReadByte(byte servoId, ushort address)
+      private byte ReadByte(byte servoId, ushort address, DynamixelProtocol protocol)
       {
-         byte incoming = dynamixel.read1ByteTxRx(_portNumber, ProtocolVersion, servoId, address);
-         VerifyLastMessage();
+         byte incoming = dynamixel.read1ByteTxRx(_portNumber, (int)protocol, servoId, address);
+         VerifyLastMessage(protocol);
          return incoming;
       }
 
-      private void WriteUInt16(byte servoId, ushort address, ushort data)
+      private void WriteUInt16(byte servoId, ushort address, ushort data, DynamixelProtocol protocol)
       {
-         dynamixel.write2ByteTxRx(_portNumber, ProtocolVersion, servoId, address, data);
-         VerifyLastMessage();
+         dynamixel.write2ByteTxRx(_portNumber, (int)protocol, servoId, address, data);
+         VerifyLastMessage(protocol);
       }
 
-      private ushort ReadUInt16(byte servoId, ushort address)
+      private ushort ReadUInt16(byte servoId, ushort address, DynamixelProtocol protocol)
       {
-         ushort incoming = dynamixel.read2ByteTxRx(_portNumber, ProtocolVersion, servoId, address);
-         VerifyLastMessage();
+         ushort incoming = dynamixel.read2ByteTxRx(_portNumber, (int)protocol, servoId, address);
+         VerifyLastMessage(protocol);
          return incoming;
       }
 
-      private void VerifyLastMessage()
+      private void VerifyLastMessage(DynamixelProtocol protocol)
       {
          byte dxlError = 0;
          int commResult = CommFail;
-         if ((commResult = dynamixel.getLastTxRxResult(_portNumber, ProtocolVersion)) != CommSuccess)
+         if ((commResult = dynamixel.getLastTxRxResult(_portNumber, (int)protocol)) != CommSuccess)
          {
             throw new IOException(DynamixelErrorHelper.GetTxRxResultDescription(commResult));
          }
-         if ((dxlError = dynamixel.getLastRxPacketError(_portNumber, ProtocolVersion)) != 0)
+         if ((dxlError = dynamixel.getLastRxPacketError(_portNumber, (int)protocol)) != 0)
          {
             throw new IOException(DynamixelErrorHelper.GetRxPackErrorDescription(dxlError));
          }
@@ -185,5 +208,11 @@ namespace DynamixelServo.Driver
       {
          dynamixel.closePort(_portNumber);
       }
+   }
+
+   public enum DynamixelProtocol
+   {
+      Version1 = 1,
+      Version2 = 2
    }
 }
