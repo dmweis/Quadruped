@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace DynamixelServo.Driver
 {
@@ -19,13 +17,13 @@ namespace DynamixelServo.Driver
          }
       }
 
-      public static byte SwitchId(byte servo1Id, byte servo2Id, DynamixelDriver driver)
+      public static void SwitchId(byte servo1Id, byte servo2Id, DynamixelDriver driver, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          // find empty index
          byte freeIndex = 255;
          for (byte index = 1; index < 252; index++)
          {
-            if (!driver.Ping(index))
+            if (!driver.Ping(index, protocol))
             {
                freeIndex = index;
                break;
@@ -35,22 +33,21 @@ namespace DynamixelServo.Driver
          {
             throw new InvalidOperationException("Can't find free ID");
          }
-         driver.SetId(servo1Id, freeIndex);
-         driver.SetId(servo2Id, servo1Id);
-         driver.SetId(freeIndex, servo2Id);
-         return freeIndex;
+         driver.SetId(servo1Id, freeIndex, protocol);
+         driver.SetId(servo2Id, servo1Id, protocol);
+         driver.SetId(freeIndex, servo2Id, protocol);
       }
 
-      public static void MoveToBlocking(byte servoId, ushort goal, DynamixelDriver driver)
+      public static void MoveToBlocking(byte servoId, ushort goal, DynamixelDriver driver, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          driver.SetGoalPosition(servoId, goal);
-         while (driver.IsMoving(servoId))
+         while (driver.IsMoving(servoId, protocol))
          {
             Thread.Sleep(50);
          }
       }
 
-      public static void MoveToAll(byte[] servoIds, ushort[] goals, DynamixelDriver driver)
+      public static void MoveToAll(byte[] servoIds, ushort[] goals, DynamixelDriver driver, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          if (servoIds.Length != goals.Length)
          {
@@ -58,11 +55,11 @@ namespace DynamixelServo.Driver
          }
          for (int index = 0; index < servoIds.Length; index++)
          {
-            driver.SetGoalPosition(servoIds[index], goals[index]);
+            driver.SetGoalPosition(servoIds[index], goals[index], protocol);
          }
       }
 
-      public static void MoveToAllBlocking(byte[] servoIds, ushort[] goals, DynamixelDriver driver)
+      public static void MoveToAllBlocking(byte[] servoIds, ushort[] goals, DynamixelDriver driver, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          if (servoIds.Length != goals.Length)
          {
@@ -70,9 +67,9 @@ namespace DynamixelServo.Driver
          }
          for (int index = 0; index < servoIds.Length; index++)
          {
-            driver.SetGoalPosition(servoIds[index], goals[index]);
+            driver.SetGoalPosition(servoIds[index], goals[index], protocol);
          }
-         while (!servoIds.All(index => !driver.IsMoving(index)))
+         while (!servoIds.All(index => !driver.IsMoving(index, protocol)))
          {
             Thread.Sleep(50);
          }
