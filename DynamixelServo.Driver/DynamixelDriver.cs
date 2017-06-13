@@ -76,7 +76,8 @@ namespace DynamixelServo.Driver
          {
             throw new InvalidOperationException("New ID alredy taken");
          }
-         WriteByte(servoId, ADDR_MX_ID, newServoId, protocol);
+         ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_ID : ADDR_XL_ID;
+         WriteByte(servoId, address, newServoId, protocol);
       }
 
       public bool IsMoving(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
