@@ -30,6 +30,8 @@ namespace DynamixelServo.Driver
       public const ushort ADDR_XL_PRESENT_VELOCITY = 39;
       public const ushort ADDR_XL_PRESENT_LOAD = 41;
       public const ushort ADDR_XL_PRESENT_VOLTAGE = 45;
+      public const ushort ADDR_XL_PRESENT_TEMPERATURE = 46;
+      public const ushort ADDR_XL_PRESENT_MOVING = 49;
 
       private const int BaudRate = 1000000;
       private const int CommFail = -1001;
@@ -60,7 +62,7 @@ namespace DynamixelServo.Driver
          List<byte> found = new List<byte>();
          for (byte i = startId; i < endId; i++)
          {
-            if (Ping(i))
+            if (Ping(i, protocol))
             {
                found.Add(i);
             }
@@ -79,7 +81,8 @@ namespace DynamixelServo.Driver
 
       public bool IsMoving(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
-         return ReadByte(servoId, ADDR_MX_PRESENT_MOVING, protocol) > 0;
+         ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_MOVING : ADDR_XL_PRESENT_MOVING;
+         return ReadByte(servoId, address, protocol) > 0;
       }
 
       public void SetLed(byte servoId, bool on)
@@ -132,7 +135,7 @@ namespace DynamixelServo.Driver
 
       public byte ReadTemperature(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
-         ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_TEMP : throw new NotImplementedException();
+         ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_TEMP : ADDR_XL_PRESENT_TEMPERATURE;
          return ReadByte(servoId, address, protocol);
       }
 
