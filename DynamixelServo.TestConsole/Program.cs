@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Ports;
+using System.Linq;
 using System.Threading;
 using DynamixelServo.Driver;
 using Timer = System.Timers.Timer;
@@ -10,19 +12,75 @@ namespace DynamixelServo.TestConsole
    {
       static void Main(string[] args)
       {
-         Record();
-         //Console.WriteLine("Starting");
-         //using (DynamixelDriver driver = new DynamixelDriver("COM17"))
-         //{
-         //   driver.SetMovingSpeed(1, 0, DynamixelProtocol.Version2);
-         //   driver.SetGoalPosition(1, 0, DynamixelProtocol.Version2);
-         //   Thread.Sleep(1000);
-         //   driver.SetGoalPosition(1, 1023, DynamixelProtocol.Version2);
-         //   Thread.Sleep(1000);
-         //   driver.SetGoalPosition(1, 0, DynamixelProtocol.Version2);
-         //}
-         //Console.WriteLine("Press enter to exit");
-         //Console.ReadLine();
+         Console.WriteLine("Starting");
+         using (SerialPort port = new SerialPort("COM17", 1000000))
+         {
+            port.Open();
+            Thread.Sleep(400);
+            byte id = 4;
+            byte instruction = 3;
+            byte parameter1 = 25;
+            byte parameter2 = 0;
+
+            byte[] data = EncodeMessage(id, instruction, new [] {parameter1, parameter2});
+            port.Write(data, 0, data.Length);
+            Console.WriteLine("Sent");
+            List<byte> buffer = new List<byte>();
+            while (true)
+            {
+               buffer.Add((byte)port.ReadByte());
+               bool flag = DecodeMessage(buffer.ToArray());
+               if (flag)
+               {
+                  buffer.Clear();
+               }
+            }
+         }
+         Console.WriteLine("Press enter to exit");
+         Console.ReadLine();
+      }
+
+      public static bool DecodeMessage(byte[] data)
+      {
+         if (data[0] != 0xFF || data[1] != 0xFF)
+         {
+            Console.WriteLine("not a packet");
+            return false;
+         }
+         byte id = data[2];
+         byte length = data[3];
+         byte error = data[4];
+         byte[] incoming = new byte[length-2];
+         Array.Copy(data, 5,incoming, 0, length-2);
+         byte checksum = data[data.Length - 1];
+         int localChecksum = id + length + error + incoming.Sum(num => num);
+         localChecksum = ~localChecksum;
+         if (checksum!= localChecksum)
+         {
+            Console.WriteLine("Checksum error");
+            return false;
+         }
+         Console.WriteLine("It worked!");
+         return true;
+      }
+
+      public static byte[] EncodeMessage(byte id, byte instruction, byte[] parameters)
+      {
+         byte length = (byte) (2 + parameters.Length);
+         int checksum = id + length + instruction + parameters.Sum(num => num);
+         checksum = ~checksum;
+         byte[] data = new byte[parameters.Length + 6];
+         data[0] = 0xFF;
+         data[1] = 0xFF;
+         data[2] = id;
+         data[3] = length;
+         data[4] = instruction;
+         for (int i = 0; i < parameters.Length; i++)
+         {
+            data[5 + i] = parameters[i];
+         }
+         data[data.Length - 1] = (byte) checksum;
+         return data;
       }
 
       public static void RecordContinuouse()
