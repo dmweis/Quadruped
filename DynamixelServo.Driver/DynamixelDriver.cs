@@ -88,9 +88,9 @@ namespace DynamixelServo.Driver
          WriteByte(servoId, ADDR_MX_LED_ENABLE, ledFlag, DynamixelProtocol.Version1);
       }
 
-      public void SetLedColor(byte servoId, byte color)
+      public void SetLedColor(byte servoId, LedColor color)
       {
-         WriteByte(servoId, ADDR_XL_LED, color, DynamixelProtocol.Version2);
+         WriteByte(servoId, ADDR_XL_LED, (byte)color, DynamixelProtocol.Version2);
       }
 
       public void SetTorque(byte servoId, bool on, DynamixelProtocol protocol = DynamixelProtocol.Version1)
@@ -214,5 +214,16 @@ namespace DynamixelServo.Driver
    {
       Version1 = 1,
       Version2 = 2
+   }
+
+   public enum LedColor
+   {
+      White = 0b111,
+      Pink = 0b101,
+      BlueGreen = 0b011,
+      Yellow = 0b11,
+      Blue = 0b001,
+      Green = 0b010,
+      Red = 0b1
    }
 }
