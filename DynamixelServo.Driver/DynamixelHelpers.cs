@@ -41,7 +41,7 @@ namespace DynamixelServo.Driver
          return freeIndex;
       }
 
-      public static void MoveToBlocking(byte servoId, ushort goal,DynamixelDriver driver)
+      public static void MoveToBlocking(byte servoId, ushort goal, DynamixelDriver driver)
       {
          driver.SetGoalPosition(servoId, goal);
          while (driver.IsMoving(servoId))
