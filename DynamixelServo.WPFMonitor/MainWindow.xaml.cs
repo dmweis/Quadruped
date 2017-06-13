@@ -43,8 +43,8 @@ namespace DynamixelServo.WPFMonitor
             {
                foreach (var servo in Servos)
                {
-                  servo.Temperature = _driver.ReadTemperature((byte) servo.Index);
-                  servo.Position = _driver.ReadPresentPosition((byte) servo.Index);
+                  servo.Temperature = _driver.GetTemperature((byte) servo.Index);
+                  servo.Position = _driver.GetPresentPosition((byte) servo.Index);
                }
             });
          };

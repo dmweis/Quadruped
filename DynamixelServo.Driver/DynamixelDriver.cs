@@ -115,31 +115,31 @@ namespace DynamixelServo.Driver
          WriteUInt16(servoId, address, movingSpeed, protocol);
       }
 
-      public ushort ReadPresentPosition(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      public ushort GetPresentPosition(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_POSITION : ADDR_XL_PRESENT_POSITION;
          return ReadUInt16(servoId, address, protocol);
       }
 
-      public ushort ReadPresentSpeed(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      public ushort GetPresentSpeed(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_SPEED : ADDR_XL_PRESENT_VELOCITY;
          return ReadUInt16(servoId, address, protocol);
       }
 
-      public ushort ReadPresentLoad(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      public ushort GetPresentLoad(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_LOAD : ADDR_XL_PRESENT_LOAD;
          return ReadUInt16(servoId, address, protocol);
       }
 
-      public byte ReadTemperature(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      public byte GetTemperature(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_TEMP : ADDR_XL_PRESENT_TEMPERATURE;
          return ReadByte(servoId, address, protocol);
       }
 
-      public byte ReadVoltage(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      public byte GetVoltage(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_VOLTAGE : ADDR_XL_PRESENT_VOLTAGE;
          return ReadByte(servoId, address, protocol);
