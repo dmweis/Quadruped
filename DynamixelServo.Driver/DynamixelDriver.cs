@@ -13,6 +13,7 @@ namespace DynamixelServo.Driver
       public const ushort ADDR_MX_LED_ENABLE = 25;
       public const ushort ADDR_MX_GOAL_POSITION = 30;
       public const ushort ADDR_MX_MOVING_SPEED = 32;
+      public const ushort ADDR_MX_TORQUE_LIMIT = 34;
       public const ushort ADDR_MX_PRESENT_POSITION = 36;
       public const ushort ADDR_MX_PRESENT_SPEED = 38;
       public const ushort ADDR_MX_PRESENT_LOAD = 40;
@@ -26,6 +27,7 @@ namespace DynamixelServo.Driver
       public const ushort ADDR_XL_LED = 25;
       public const ushort ADDR_XL_GOAL_POSITION = 30;
       public const ushort ADDR_XL_GOAL_VELOCITY = 32;
+      public const ushort ADDR_XL_GOAL_TORQUE = 35;
       public const ushort ADDR_XL_PRESENT_POSITION = 37;
       public const ushort ADDR_XL_PRESENT_VELOCITY = 39;
       public const ushort ADDR_XL_PRESENT_LOAD = 41;
@@ -119,6 +121,12 @@ namespace DynamixelServo.Driver
       {
          ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_MOVING_SPEED : ADDR_XL_GOAL_VELOCITY;
          WriteUInt16(servoId, address, movingSpeed, protocol);
+      }
+
+      public void SetTorqueGoal(byte servoId, ushort torque, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      {
+         ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_TORQUE_LIMIT : ADDR_XL_GOAL_TORQUE;
+         WriteUInt16(servoId, address, torque, protocol);
       }
 
       public ushort GetPresentPosition(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
