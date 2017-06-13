@@ -109,6 +109,12 @@ namespace DynamixelServo.Driver
          WriteUInt16(servoId, address, goalPosition, protocol);
       }
 
+      public ushort GetGoalPosition(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      {
+         ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_GOAL_POSITION : ADDR_XL_GOAL_POSITION;
+         return ReadUInt16(servoId, address, protocol);
+      }
+
       public void SetMovingSpeed(byte servoId, ushort movingSpeed, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_MOVING_SPEED : ADDR_XL_GOAL_VELOCITY;
