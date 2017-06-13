@@ -157,7 +157,8 @@ namespace DynamixelServo.Driver
          {
             return false;
          }
-         if ((dxlError = dynamixel.getLastRxPacketError(_portNumber, (int)protocol)) != 0)
+         byte dxlError = dynamixel.getLastRxPacketError(_portNumber, (int)protocol);
+         if (dxlError != 0)
          {
             throw new IOException(DynamixelErrorHelper.GetRxPackErrorDescription(dxlError));
          }
@@ -192,13 +193,13 @@ namespace DynamixelServo.Driver
 
       private void VerifyLastMessage(DynamixelProtocol protocol)
       {
-         byte dxlError = 0;
-         int commResult = CommFail;
-         if ((commResult = dynamixel.getLastTxRxResult(_portNumber, (int)protocol)) != CommSuccess)
+         int commResult = dynamixel.getLastTxRxResult(_portNumber, (int)protocol);
+         if (commResult != CommSuccess)
          {
             throw new IOException(DynamixelErrorHelper.GetTxRxResultDescription(commResult));
          }
-         if ((dxlError = dynamixel.getLastRxPacketError(_portNumber, (int)protocol)) != 0)
+         byte dxlError = dynamixel.getLastRxPacketError(_portNumber, (int)protocol);
+         if (dxlError != 0)
          {
             throw new IOException(DynamixelErrorHelper.GetRxPackErrorDescription(dxlError));
          }
