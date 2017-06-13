@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace DynamixelServo.Driver
 {
-   public class DynamixelHelpers
+   public static class DynamixelHelpers
    {
       public static IEnumerable<byte> IterateLeds(byte[] indexes, DynamixelDriver driver)
       {
