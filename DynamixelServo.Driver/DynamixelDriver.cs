@@ -103,13 +103,13 @@ namespace DynamixelServo.Driver
          WriteByte(servoId, address, torqueFlag, protocol);
       }
 
-      public void WriteGoalPosition(byte servoId, ushort goalPosition, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      public void SetGoalPosition(byte servoId, ushort goalPosition, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_GOAL_POSITION : ADDR_XL_GOAL_POSITION;
          WriteUInt16(servoId, address, goalPosition, protocol);
       }
 
-      public void WriteMovingSpeed(byte servoId, ushort movingSpeed, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      public void SetMovingSpeed(byte servoId, ushort movingSpeed, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_MOVING_SPEED : ADDR_XL_GOAL_VELOCITY;
          WriteUInt16(servoId, address, movingSpeed, protocol);

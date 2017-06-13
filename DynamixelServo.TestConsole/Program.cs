@@ -14,12 +14,12 @@ namespace DynamixelServo.TestConsole
          Console.WriteLine("Starting");
          //using (DynamixelDriver driver = new DynamixelDriver("COM17"))
          //{
-         //   driver.WriteMovingSpeed(1, 0, DynamixelProtocol.Version2);
-         //   driver.WriteGoalPosition(1, 0, DynamixelProtocol.Version2);
+         //   driver.SetMovingSpeed(1, 0, DynamixelProtocol.Version2);
+         //   driver.SetGoalPosition(1, 0, DynamixelProtocol.Version2);
          //   Thread.Sleep(1000);
-         //   driver.WriteGoalPosition(1, 1023, DynamixelProtocol.Version2);
+         //   driver.SetGoalPosition(1, 1023, DynamixelProtocol.Version2);
          //   Thread.Sleep(1000);
-         //   driver.WriteGoalPosition(1, 0, DynamixelProtocol.Version2);
+         //   driver.SetGoalPosition(1, 0, DynamixelProtocol.Version2);
          //}
          //Console.WriteLine("Press enter to exit");
          //Console.ReadLine();
@@ -34,7 +34,7 @@ namespace DynamixelServo.TestConsole
             IList<ushort[]> history = new List<ushort[]>();
             foreach (var id in servoIds)
             {
-               driver.WriteMovingSpeed(id, 100);
+               driver.SetMovingSpeed(id, 100);
                driver.SetTorque(id, false);
             }
             Console.WriteLine("press enter to start recording");

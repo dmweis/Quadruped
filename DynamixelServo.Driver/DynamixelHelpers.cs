@@ -43,7 +43,7 @@ namespace DynamixelServo.Driver
 
       public static void MoveToBlocking(byte servoId, ushort goal,DynamixelDriver driver)
       {
-         driver.WriteGoalPosition(servoId, goal);
+         driver.SetGoalPosition(servoId, goal);
          while (driver.IsMoving(servoId))
          {
             Thread.Sleep(50);
@@ -58,7 +58,7 @@ namespace DynamixelServo.Driver
          }
          for (int index = 0; index < servoIds.Length; index++)
          {
-            driver.WriteGoalPosition(servoIds[index], goals[index]);
+            driver.SetGoalPosition(servoIds[index], goals[index]);
          }
       }
 
@@ -70,7 +70,7 @@ namespace DynamixelServo.Driver
          }
          for (int index = 0; index < servoIds.Length; index++)
          {
-            driver.WriteGoalPosition(servoIds[index], goals[index]);
+            driver.SetGoalPosition(servoIds[index], goals[index]);
          }
          while (!servoIds.All(index => !driver.IsMoving(index)))
          {
