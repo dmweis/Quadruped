@@ -34,7 +34,6 @@ namespace DynamixelServo.Driver
       public const ushort ADDR_XL_PRESENT_MOVING = 49;
 
       private const int BaudRate = 1000000;
-      private const int CommFail = -1001;
       private const int CommSuccess = 0;
 
       private readonly string _portName;
