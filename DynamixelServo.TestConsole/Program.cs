@@ -30,7 +30,7 @@ namespace DynamixelServo.TestConsole
          Console.WriteLine("Starting");
          using (DynamixelDriver driver = new DynamixelDriver("COM17"))
          {
-            byte[] servoIds = { 1, 2, 3 };
+            byte[] servoIds = driver.Search(1, 10);
             IList<ushort[]> history = new List<ushort[]>();
             foreach (var id in servoIds)
             {
