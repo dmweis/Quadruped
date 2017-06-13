@@ -152,7 +152,6 @@ namespace DynamixelServo.Driver
       public bool Ping(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          dynamixel.ping(_portNumber, (int)protocol, servoId);
-         byte dxlError = 0;
          if (dynamixel.getLastTxRxResult(_portNumber, (int)protocol) != CommSuccess)
          {
             return false;
