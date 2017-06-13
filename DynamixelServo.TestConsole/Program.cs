@@ -10,19 +10,19 @@ namespace DynamixelServo.TestConsole
    {
       static void Main(string[] args)
       {
-         Record();
-         //Console.WriteLine("Starting");
-         //using (DynamixelDriver driver = new DynamixelDriver("COM17"))
-         //{
-         //   byte[] servos = driver.Search(1, 10);
-         //   foreach (var servo in DynamixelHelpers.IterateLeds(servos, driver))
-         //   {
-         //      Console.WriteLine(servo);
-         //      Console.ReadLine();
-         //   }
-         //}
-         //Console.WriteLine("Press enter to exit");
-         //Console.ReadLine();
+         //Record();
+         Console.WriteLine("Starting");
+         using (DynamixelDriver driver = new DynamixelDriver("COM17"))
+         {
+            driver.WriteMovingSpeed(1, 0, DynamixelProtocol.Version2);
+            driver.WriteGoalPosition(1, 0, DynamixelProtocol.Version2);
+            Thread.Sleep(1000);
+            driver.WriteGoalPosition(1, 1023, DynamixelProtocol.Version2);
+            Thread.Sleep(1000);
+            driver.WriteGoalPosition(1, 0, DynamixelProtocol.Version2);
+         }
+         Console.WriteLine("Press enter to exit");
+         Console.ReadLine();
       }
 
       public static void Record()
