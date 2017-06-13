@@ -48,7 +48,7 @@ namespace DynamixelServo.TestConsole
                   ushort[] currentPositions = new ushort[servoIds.Length];
                   for (int i = 0; i < servoIds.Length; i++)
                   {
-                     currentPositions[i] = driver.ReadPresentPosition(servoIds[i]);
+                     currentPositions[i] = driver.GetPresentPosition(servoIds[i]);
                   }
                   history.Add(currentPositions);
                };
@@ -62,7 +62,7 @@ namespace DynamixelServo.TestConsole
             {
                foreach (var positions in history)
                {
-                  DynamixelHelpers.MoveToAll(servoIds, positions, driver);
+                  DynamixelHelpers.MoveToAllBlocking(servoIds, positions, driver);
                   Thread.Sleep(100);
                }
                Console.WriteLine("write q to exit");
@@ -95,7 +95,7 @@ namespace DynamixelServo.TestConsole
                ushort[] currentPositions = new ushort[servoIds.Length];
                for (int i = 0; i < servoIds.Length; i++)
                {
-                  currentPositions[i] = driver.ReadPresentPosition(servoIds[i]);
+                  currentPositions[i] = driver.GetPresentPosition(servoIds[i]);
                }
                history.Add(currentPositions);
                Console.WriteLine("step");
