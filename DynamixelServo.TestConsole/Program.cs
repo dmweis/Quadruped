@@ -11,7 +11,7 @@ namespace DynamixelServo.TestConsole
       static void Main(string[] args)
       {
          Record();
-         Console.WriteLine("Starting");
+         //Console.WriteLine("Starting");
          //using (DynamixelDriver driver = new DynamixelDriver("COM17"))
          //{
          //   driver.SetMovingSpeed(1, 0, DynamixelProtocol.Version2);
