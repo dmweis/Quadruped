@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamixelServo.TestConsole"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamixelServo.WPFMonitor", "DynamixelServo.WPFMonitor\DynamixelServo.WPFMonitor.csproj", "{B43E0B21-F206-4857-9117-4F57D314B3C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelemetricWatcher", "TelemetricWatcher\TelemetricWatcher.csproj", "{F07FD89B-A8AB-4753-9320-7803E9E23064}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B43E0B21-F206-4857-9117-4F57D314B3C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B43E0B21-F206-4857-9117-4F57D314B3C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B43E0B21-F206-4857-9117-4F57D314B3C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F07FD89B-A8AB-4753-9320-7803E9E23064}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F07FD89B-A8AB-4753-9320-7803E9E23064}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F07FD89B-A8AB-4753-9320-7803E9E23064}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F07FD89B-A8AB-4753-9320-7803E9E23064}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

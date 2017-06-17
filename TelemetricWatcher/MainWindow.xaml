@@ -1,0 +1,32 @@
+﻿<Window x:Class="TelemetricWatcher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TelemetricWatcher"
+        xmlns:servo="clr-namespace:TelemetricWatcher.Servo"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        Height="350"
+        Width="525"
+        d:DataContext="{d:DesignInstance Type=local:MainViewModel}">
+    <Grid>
+        <!--<ItemsControl ItemsSource="{Binding Servos}">
+            <ItemsControl.Resources>
+                <DataTemplate DataType="{x:Type servo:ServoViewModel}">
+                    <servo:ServoView/>
+                </DataTemplate>
+            </ItemsControl.Resources>
+        </ItemsControl>-->
+        <ListView Margin="10" ItemsSource="{Binding Servos}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"/>
+                    <GridViewColumn Header="Temperature" DisplayMemberBinding="{Binding Temperature, StringFormat={}{0}°C}"/>
+                    <GridViewColumn Header="Voltage" DisplayMemberBinding="{Binding Voltage, StringFormat={}{0}V}"/>
+                    <GridViewColumn Header="Load" DisplayMemberBinding="{Binding Load, StringFormat={}{0}%}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using DynamixelServo.Driver;
+using RabbitMQ.Client;
 using Timer = System.Timers.Timer;
 
 namespace DynamixelServo.TestConsole
@@ -12,30 +14,31 @@ namespace DynamixelServo.TestConsole
    {
       static void Main(string[] args)
       {
-         Console.WriteLine("Starting");
-         using (SerialPort port = new SerialPort("COM17", 1000000))
-         {
-            port.Open();
-            Thread.Sleep(400);
-            byte id = 4;
-            byte instruction = 3;
-            byte parameter1 = 25;
-            byte parameter2 = 0;
+         StartTelemetricObserver();
+         //Console.WriteLine("Starting");
+         //using (SerialPort port = new SerialPort("COM17", 1000000))
+         //{
+         //   port.Open();
+         //   Thread.Sleep(400);
+         //   byte id = 4;
+         //   byte instruction = 3;
+         //   byte parameter1 = 25;
+         //   byte parameter2 = 0;
 
-            byte[] data = EncodeMessage(id, instruction, new [] {parameter1, parameter2});
-            port.Write(data, 0, data.Length);
-            Console.WriteLine("Sent");
-            List<byte> buffer = new List<byte>();
-            while (true)
-            {
-               buffer.Add((byte)port.ReadByte());
-               bool flag = DecodeMessage(buffer.ToArray());
-               if (flag)
-               {
-                  buffer.Clear();
-               }
-            }
-         }
+         //   byte[] data = EncodeMessage(id, instruction, new [] {parameter1, parameter2});
+         //   port.Write(data, 0, data.Length);
+         //   Console.WriteLine("Sent");
+         //   List<byte> buffer = new List<byte>();
+         //   while (true)
+         //   {
+         //      buffer.Add((byte)port.ReadByte());
+         //      bool flag = DecodeMessage(buffer.ToArray());
+         //      if (flag)
+         //      {
+         //         buffer.Clear();
+         //      }
+         //   }
+         //}
          Console.WriteLine("Press enter to exit");
          Console.ReadLine();
       }
@@ -142,6 +145,12 @@ namespace DynamixelServo.TestConsole
          {
             byte[] servoIds = driver.Search(1, 10);
             IList<ushort[]> history = new List<ushort[]>();
+            SetSpeedToAll(new byte[] { 1, 2, 3, 4 }, 100, driver);
+            driver.SetMovingSpeed(1, 100);
+            driver.SetMovingSpeed(2, 200);
+            driver.SetMovingSpeed(3, 200);
+            driver.SetMovingSpeed(4, 200);
+
             foreach (var id in servoIds)
             {
                driver.SetTorque(id, false);
@@ -175,10 +184,50 @@ namespace DynamixelServo.TestConsole
                {
                   break;
                }
+               //ushort speed = ushort.Parse(input);
+               //SetSpeedToAll(new byte[] {2,3,4}, speed, driver);
             }
          }
          Console.WriteLine("Press enter to exit");
          Console.ReadLine();
+      }
+
+      public static void SetSpeedToAll(byte[] indexes, ushort speed, DynamixelDriver driver)
+      {
+         foreach (byte index in indexes)
+         {
+            driver.SetMovingSpeed(index, speed);
+         }
+      }
+
+      public static void StartTelemetricObserver()
+      {
+         Console.WriteLine("Starting");
+         ConnectionFactory factory = new ConnectionFactory(){HostName = "localhost"};
+         IConnection connection = factory.CreateConnection();
+         IModel channel = connection.CreateModel();
+         channel.ExchangeDeclare("DynamixelTelemetrics", "fanout");
+         using (DynamixelDriver driver = new DynamixelDriver("COM17"))
+         {
+            byte[] servos = driver.Search(1, 10);
+            while (true)
+            {
+               Console.WriteLine("Publising");
+               List<ServoTelemetrics> servoData = new List<ServoTelemetrics>(); 
+               foreach (var servo in servos)
+               {
+                  ServoTelemetrics telemetrics = new ServoTelemetrics();
+                  telemetrics.Id = servo;
+                  telemetrics.Voltage = driver.GetVoltage(servo);
+                  telemetrics.Temperature = driver.GetTemperature(servo);
+                  telemetrics.Load = driver.GetPresentLoad(servo);
+                  servoData.Add(telemetrics);
+               }
+               string json = ServoTelemetrics.SerealizeCollection(servoData);
+               channel.BasicPublish("DynamixelTelemetrics", string.Empty, null, Encoding.UTF8.GetBytes(json));
+               Thread.Sleep(2 * 1000);
+            }
+         }
       }
    }
 }
