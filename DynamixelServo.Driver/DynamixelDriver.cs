@@ -11,6 +11,10 @@ namespace DynamixelServo.Driver
       public const ushort ADDR_MX_ID = 3;
       public const ushort ADDR_MX_TORQUE_ENABLE = 24;
       public const ushort ADDR_MX_LED_ENABLE = 25;
+      public const ushort ADDR_MX_CW_COMPLIANCE_MARGIN = 26;
+      public const ushort ADDR_MX_CCW_COMPLIANCE_MARGIN = 27;
+      public const ushort ADDR_MX_CW_COMPLIANCE_SLOPE = 28;
+      public const ushort ADDR_MX_CCW_COMPLIANCE_SLOPE = 29;
       public const ushort ADDR_MX_GOAL_POSITION = 30;
       public const ushort ADDR_MX_MOVING_SPEED = 32;
       public const ushort ADDR_MX_TORQUE_LIMIT = 34;
@@ -79,6 +83,54 @@ namespace DynamixelServo.Driver
          }
          ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_ID : ADDR_XL_ID;
          WriteByte(servoId, address, newServoId, protocol);
+      }
+
+      public void SetComplianceMargin(byte servoId, byte complianceMargin, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      {
+         SetClockwiseComplianceMargin(servoId, complianceMargin, protocol);
+         SetCounterClockwiseComplianceMargin(servoId, complianceMargin, protocol);
+      }
+
+      public void SetClockwiseComplianceMargin(byte servoId, byte complianceMargin, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      {
+         if (protocol != DynamixelProtocol.Version1)
+         {
+            throw new NotImplementedException();
+         }
+         WriteByte(servoId, ADDR_MX_CW_COMPLIANCE_MARGIN, complianceMargin, protocol);
+      }
+
+      public void SetCounterClockwiseComplianceMargin(byte servoId, byte complianceMargin, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      {
+         if (protocol != DynamixelProtocol.Version1)
+         {
+            throw new NotImplementedException();
+         }
+         WriteByte(servoId, ADDR_MX_CCW_COMPLIANCE_MARGIN, complianceMargin, protocol);
+      }
+
+      public void SetComplianceSlope(byte servoId, ComplianceSlope complianceSlope, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      {
+         SetClockwiseComplianceSlope(servoId, complianceSlope, protocol);
+         SetCounterClockwiseComplianceSlope(servoId, complianceSlope, protocol);
+      }
+
+      public void SetClockwiseComplianceSlope(byte servoId, ComplianceSlope complianceSlope, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      {
+         if (protocol != DynamixelProtocol.Version1)
+         {
+            throw new NotImplementedException();
+         }
+         WriteByte(servoId, ADDR_MX_CW_COMPLIANCE_SLOPE, (byte)complianceSlope, protocol);
+      }
+
+      public void SetCounterClockwiseComplianceSlope(byte servoId, ComplianceSlope complianceSlope, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      {
+         if (protocol != DynamixelProtocol.Version1)
+         {
+            throw new NotImplementedException();
+         }
+         WriteByte(servoId, ADDR_MX_CCW_COMPLIANCE_SLOPE, (byte)complianceSlope, protocol);
       }
 
       public bool IsMoving(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
@@ -243,5 +295,17 @@ namespace DynamixelServo.Driver
       Green = 0b010,
       Red = 0b1,
       None = 0
+   }
+
+   public enum ComplianceSlope
+   {
+      S2 = 2,
+      S4 = 4,
+      S8 = 8,
+      S16 = 16,
+      S32 = 32,
+      Default = 32,
+      S64 = 64,
+      S128 = 128
    }
 }

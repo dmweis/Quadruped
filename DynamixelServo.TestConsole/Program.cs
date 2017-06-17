@@ -14,33 +14,46 @@ namespace DynamixelServo.TestConsole
    {
       static void Main(string[] args)
       {
-         StartTelemetricObserver();
-         //Console.WriteLine("Starting");
-         //using (SerialPort port = new SerialPort("COM17", 1000000))
-         //{
-         //   port.Open();
-         //   Thread.Sleep(400);
-         //   byte id = 4;
-         //   byte instruction = 3;
-         //   byte parameter1 = 25;
-         //   byte parameter2 = 0;
-
-         //   byte[] data = EncodeMessage(id, instruction, new [] {parameter1, parameter2});
-         //   port.Write(data, 0, data.Length);
-         //   Console.WriteLine("Sent");
-         //   List<byte> buffer = new List<byte>();
-         //   while (true)
-         //   {
-         //      buffer.Add((byte)port.ReadByte());
-         //      bool flag = DecodeMessage(buffer.ToArray());
-         //      if (flag)
-         //      {
-         //         buffer.Clear();
-         //      }
-         //   }
-         //}
+         //StartTelemetricObserver();
+         Console.WriteLine("Starting");
+         using (DynamixelDriver driver = new DynamixelDriver("COM17"))
+         {
+            byte[] servos = driver.Search(1, 10);
+            foreach (var servo in servos)
+            {
+               driver.SetComplianceSlope(servo, ComplianceSlope.Default);
+            }
+         }
          Console.WriteLine("Press enter to exit");
          Console.ReadLine();
+      }
+
+      public static void WriteSingleMessage()
+      {
+         Console.WriteLine("Starting");
+         using (SerialPort port = new SerialPort("COM17", 1000000))
+         {
+            port.Open();
+            Thread.Sleep(400);
+            byte id = 4;
+            byte instruction = 3;
+            byte parameter1 = 25;
+            byte parameter2 = 0;
+
+            byte[] data = EncodeMessage(id, instruction, new[] { parameter1, parameter2 });
+            port.Write(data, 0, data.Length);
+            Console.WriteLine("Sent");
+            List<byte> buffer = new List<byte>();
+            while (true)
+            {
+               buffer.Add((byte)port.ReadByte());
+               bool flag = DecodeMessage(buffer.ToArray());
+               if (flag)
+               {
+                  buffer.Clear();
+               }
+            }
+         }
       }
 
       public static bool DecodeMessage(byte[] data)
