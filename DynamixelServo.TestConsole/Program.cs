@@ -14,18 +14,19 @@ namespace DynamixelServo.TestConsole
    {
       static void Main(string[] args)
       {
+         RecordContinuouse();
          //StartTelemetricObserver();
-         Console.WriteLine("Starting");
-         using (DynamixelDriver driver = new DynamixelDriver("COM17"))
-         {
-            byte[] servos = driver.Search(1, 10);
-            foreach (var servo in servos)
-            {
-               driver.SetComplianceSlope(servo, ComplianceSlope.Default);
-            }
-         }
-         Console.WriteLine("Press enter to exit");
-         Console.ReadLine();
+         //Console.WriteLine("Starting");
+         //using (DynamixelDriver driver = new DynamixelDriver("COM17"))
+         //{
+         //   byte[] servos = driver.Search(1, 10);
+         //   foreach (var servo in servos)
+         //   {
+         //      driver.SetComplianceSlope(servo, ComplianceSlope.Default);
+         //   }
+         //}
+         //Console.WriteLine("Press enter to exit");
+         //Console.ReadLine();
       }
 
       public static void WriteSingleMessage()
@@ -106,9 +107,13 @@ namespace DynamixelServo.TestConsole
          {
             byte[] servoIds = driver.Search(1, 10);
             IList<ushort[]> history = new List<ushort[]>();
+            driver.SetMovingSpeed(1, 100);
+            driver.SetMovingSpeed(2, 250);
+            driver.SetMovingSpeed(3, 250);
+            driver.SetMovingSpeed(4, 250);
             foreach (var id in servoIds)
             {
-               driver.SetMovingSpeed(id, 100);
+               driver.SetComplianceSlope(id, ComplianceSlope.S128);
                driver.SetTorque(id, false);
             }
             Console.WriteLine("press enter to start recording");
@@ -136,7 +141,7 @@ namespace DynamixelServo.TestConsole
             {
                foreach (var positions in history)
                {
-                  DynamixelHelpers.MoveToAllBlocking(servoIds, positions, driver);
+                  DynamixelHelpers.MoveToAll(servoIds, positions, driver);
                   Thread.Sleep(100);
                }
                Console.WriteLine("write q to exit");
@@ -145,6 +150,10 @@ namespace DynamixelServo.TestConsole
                {
                   break;
                }
+            }
+            foreach (var servoId in servoIds)
+            {
+               driver.SetTorque(servoId, false);
             }
          }
          Console.WriteLine("Press enter to exit");
