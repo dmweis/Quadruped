@@ -41,13 +41,13 @@ namespace DynamixelServo.Driver
       public const ushort ADDR_XL_PRESENT_TEMPERATURE = 46;
       public const ushort ADDR_XL_PRESENT_MOVING = 49;
 
-      private const int BaudRate = 1000000;
+      private const int DefaultBaudRate = 1000000;
       private const int CommSuccess = 0;
 
       private readonly string _portName;
       private readonly int _portNumber;
 
-      public DynamixelDriver(string portName)
+      public DynamixelDriver(string portName, int baudRate = DefaultBaudRate)
       {
          _portName = portName;
          _portNumber = dynamixel.portHandler(_portName);
@@ -58,9 +58,9 @@ namespace DynamixelServo.Driver
          {
             throw new IOException($"Can not open port {_portName}");
          }
-         if (!dynamixel.setBaudRate(_portNumber, BaudRate))
+         if (!dynamixel.setBaudRate(_portNumber, baudRate))
          {
-            throw new IOException($"Can not set baud rate {BaudRate} on: {_portName}");
+            throw new IOException($"Can not set baud rate {baudRate} on: {_portName}");
          }
       }
 
