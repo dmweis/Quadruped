@@ -239,12 +239,7 @@ namespace DynamixelServo.TestConsole
                List<ServoTelemetrics> servoData = new List<ServoTelemetrics>(); 
                foreach (var servo in servos)
                {
-                  ServoTelemetrics telemetrics = new ServoTelemetrics();
-                  telemetrics.Id = servo;
-                  telemetrics.Voltage = (int)driver.GetVoltage(servo);
-                  telemetrics.Temperature = driver.GetTemperature(servo);
-                  telemetrics.Load = driver.GetPresentLoad(servo);
-                  servoData.Add(telemetrics);
+                  servoData.Add(driver.GetTelemetrics(servo));
                }
                string json = JsonConvert.SerializeObject(servoData);
                channel.BasicPublish("DynamixelTelemetrics", string.Empty, null, Encoding.UTF8.GetBytes(json));

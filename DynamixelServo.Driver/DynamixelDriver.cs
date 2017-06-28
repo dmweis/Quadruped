@@ -233,6 +233,18 @@ namespace DynamixelServo.Driver
          return true;
       }
 
+      public ServoTelemetrics GetTelemetrics(byte servo, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      {
+         ServoTelemetrics telemetrics = new ServoTelemetrics
+         {
+            Id = servo,
+            Voltage = GetVoltage(servo, protocol),
+            Temperature = GetTemperature(servo, protocol),
+            Load = GetPresentLoad(servo, protocol)
+         };
+         return telemetrics;
+      }
+
       private void WriteByte(byte servoId, ushort address, byte data, DynamixelProtocol protocol)
       {
          dynamixel.write1ByteTxRx(_portNumber, (int)protocol, servoId, address, data);
