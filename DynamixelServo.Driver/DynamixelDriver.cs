@@ -329,34 +329,4 @@ namespace DynamixelServo.Driver
          dynamixel.closePort(_portNumber);
       }
    }
-
-   public enum DynamixelProtocol
-   {
-      Version1 = 1,
-      Version2 = 2
-   }
-
-   public enum LedColor
-   {
-      White = 0b111,
-      Pink = 0b101,
-      BlueGreen = 0b110,
-      Yellow = 0b11,
-      Blue = 0b100,
-      Green = 0b010,
-      Red = 0b1,
-      None = 0
-   }
-
-   public enum ComplianceSlope
-   {
-      S2 = 2,
-      S4 = 4,
-      S8 = 8,
-      S16 = 16,
-      S32 = 32,
-      Default = 32,
-      S64 = 64,
-      S128 = 128
-   }
 }
