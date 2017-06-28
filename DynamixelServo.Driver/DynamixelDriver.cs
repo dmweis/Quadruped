@@ -11,6 +11,8 @@ namespace DynamixelServo.Driver
    {
       // Control table address for protocol 1
       public const ushort ADDR_MX_ID = 3;
+      public const ushort ADDR_MX_CW_ANGLE_LIMIT = 6;
+      public const ushort ADDR_MX_CCW_ANGLE_LIMIT = 8;
       public const ushort ADDR_MX_TORQUE_ENABLE = 24;
       public const ushort ADDR_MX_LED_ENABLE = 25;
       public const ushort ADDR_MX_CW_COMPLIANCE_MARGIN = 26;
@@ -208,8 +210,16 @@ namespace DynamixelServo.Driver
          }
       }
 
-      public void SetMovingSpeed(byte servoId, ushort movingSpeed, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      public void SetMovingSpeed(byte servoId, ushort movingSpeed, bool cw = true, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
+         if (movingSpeed > 1023)
+         {
+            throw new ArgumentOutOfRangeException($"{nameof(movingSpeed)} is too high. Max value is 1023");
+         }
+         if (movingSpeed > 0 && cw) // if speed zero and bit for CW set true servo mode won't work
+         {
+            movingSpeed |= 1 << 10; // set direction bit high
+         }
          ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_MOVING_SPEED : ADDR_XL_GOAL_VELOCITY;
          WriteUInt16(servoId, address, movingSpeed, protocol);
       }
@@ -282,6 +292,26 @@ namespace DynamixelServo.Driver
             Load = GetPresentLoad(servo, protocol)
          };
          return telemetrics;
+      }
+
+      public void SetWheelMode(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      {
+         if (protocol != DynamixelProtocol.Version1)
+         {
+            throw new NotImplementedException("Support for protocol 1 only");
+         }
+         WriteUInt16(servoId, ADDR_MX_CW_ANGLE_LIMIT, 0, protocol);
+         WriteUInt16(servoId, ADDR_MX_CCW_ANGLE_LIMIT, 0, protocol);
+      }
+
+      public void SetServoMode(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      {
+         if (protocol != DynamixelProtocol.Version1)
+         {
+            throw new NotImplementedException("Support for protocol 1 only");
+         }
+         WriteUInt16(servoId, ADDR_MX_CW_ANGLE_LIMIT, 0, protocol);
+         WriteUInt16(servoId, ADDR_MX_CCW_ANGLE_LIMIT, 1023, protocol);
       }
 
       private void WriteByte(byte servoId, ushort address, byte data, DynamixelProtocol protocol)

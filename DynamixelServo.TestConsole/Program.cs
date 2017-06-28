@@ -15,19 +15,27 @@ namespace DynamixelServo.TestConsole
    {
       static void Main(string[] args)
       {
-         RecordContinuouse();
-         //StartTelemetricObserver();
-         //Console.WriteLine("Starting");
-         //using (DynamixelDriver driver = new DynamixelDriver("COM17"))
-         //{
-         //   byte[] servos = driver.Search(1, 10);
-         //   foreach (var servo in servos)
-         //   {
-         //      driver.SetComplianceSlope(servo, ComplianceSlope.Default);
-         //   }
-         //}
-         //Console.WriteLine("Press enter to exit");
-         //Console.ReadLine();
+         Console.WriteLine("Starting");
+         using (DynamixelDriver driver = new DynamixelDriver("COM17"))
+         {
+            driver.SetWheelMode(1);
+            driver.SetMovingSpeed(1, 1023, true);
+            Console.WriteLine("Moving CW");
+            Console.ReadLine();
+            driver.SetMovingSpeed(1, 1023, false);
+            Console.WriteLine("Moving CCW");
+            Console.ReadLine();
+            driver.SetMovingSpeed(1, 0, true);
+            driver.SetServoMode(1);
+            Console.WriteLine("Move?");
+            Console.ReadLine();
+            driver.MoveToBlocking(1, 0);
+            driver.MoveToBlocking(1, 1023);
+            Console.WriteLine("Bye");
+
+         }
+         Console.WriteLine("Press enter to exit");
+         Console.ReadLine();
       }
 
       public static void RecordContinuouse()
