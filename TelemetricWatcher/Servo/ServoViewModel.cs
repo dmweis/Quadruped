@@ -47,11 +47,8 @@ namespace TelemetricWatcher.Servo
          if (telemetrics?.Id == Id)
          {
             Temperature = telemetrics.Temperature;
-            Voltage = (float)telemetrics.Voltage / 10;
-            // convert load
-            bool ccw = Convert.ToBoolean(telemetrics.Load & 1 << 10);
-            float load = (float)(telemetrics.Load & ~(1 << 10)) / 10;
-            Load = ccw ? -load : load;
+            Voltage = telemetrics.Voltage;
+            Load = telemetrics.Load;
             _lastUpDateTime = DateTime.Now;
          }
       }

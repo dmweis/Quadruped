@@ -7,7 +7,7 @@ namespace TelemetricWatcher
    {
       public int Id { get; set; }
       public int Temperature { get; set; }
-      public int Voltage { get; set; }
+      public float Voltage { get; set; }
       public int Load { get; set; }
 
       public static ServoTelemetrics Deserealize(string json)
