@@ -240,7 +240,7 @@ namespace DynamixelServo.TestConsole
                {
                   ServoTelemetrics telemetrics = new ServoTelemetrics();
                   telemetrics.Id = servo;
-                  telemetrics.Voltage = driver.GetVoltage(servo);
+                  telemetrics.Voltage = (int)driver.GetVoltage(servo);
                   telemetrics.Temperature = driver.GetTemperature(servo);
                   telemetrics.Load = driver.GetPresentLoad(servo);
                   servoData.Add(telemetrics);

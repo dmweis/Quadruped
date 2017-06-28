@@ -205,10 +205,10 @@ namespace DynamixelServo.Driver
          return ReadByte(servoId, address, protocol);
       }
 
-      public byte GetVoltage(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      public float GetVoltage(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_VOLTAGE : ADDR_XL_PRESENT_VOLTAGE;
-         return ReadByte(servoId, address, protocol);
+         return ReadByte(servoId, address, protocol) / 10f;
       }
 
       public ushort GetModelNumber(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
