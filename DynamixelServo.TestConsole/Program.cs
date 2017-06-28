@@ -71,7 +71,7 @@ namespace DynamixelServo.TestConsole
             {
                foreach (var positions in history)
                {
-                  DynamixelHelpers.MoveToAll(servoIds, positions, driver);
+                  driver.MoveToAll(servoIds, positions);
                   Thread.Sleep(100);
                }
                Console.WriteLine("write q to exit");
@@ -97,7 +97,6 @@ namespace DynamixelServo.TestConsole
          {
             byte[] servoIds = driver.Search(1, 10);
             IList<ushort[]> history = new List<ushort[]>();
-            SetSpeedToAll(new byte[] { 1, 2, 3, 4 }, 100, driver);
             driver.SetMovingSpeed(1, 100);
             driver.SetMovingSpeed(2, 200);
             driver.SetMovingSpeed(3, 200);
@@ -128,7 +127,7 @@ namespace DynamixelServo.TestConsole
             {
                foreach (var positions in history)
                {
-                  DynamixelHelpers.MoveToAllBlocking(servoIds, positions, driver);
+                  driver.MoveToAllBlocking(servoIds, positions);
                }
                Console.WriteLine("write esc to exit");
                string input = Console.ReadLine();
@@ -142,14 +141,6 @@ namespace DynamixelServo.TestConsole
          }
          Console.WriteLine("Press enter to exit");
          Console.ReadLine();
-      }
-
-      public static void SetSpeedToAll(byte[] indexes, ushort speed, DynamixelDriver driver)
-      {
-         foreach (byte index in indexes)
-         {
-            driver.SetMovingSpeed(index, speed);
-         }
       }
 
       public static void StartTelemetricObserver()

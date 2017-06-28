@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using dynamixel_sdk;
+using System.Linq;
 
 namespace DynamixelServo.Driver
 {
@@ -167,6 +169,43 @@ namespace DynamixelServo.Driver
       {
          ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_GOAL_POSITION : ADDR_XL_GOAL_POSITION;
          return ReadUInt16(servoId, address, protocol);
+      }
+
+      public void MoveToBlocking(byte servoId, ushort goal, DynamixelProtocol protocol = DynamixelProtocol.Version1, int querryDelay = 50)
+      {
+         SetGoalPosition(servoId, goal);
+         while (IsMoving(servoId, protocol))
+         {
+            Thread.Sleep(querryDelay);
+         }
+      }
+
+      public void MoveToAll(byte[] servoIds, ushort[] goals, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      {
+         if (servoIds.Length != goals.Length)
+         {
+            throw new ArgumentException($"{nameof(servoIds)} and {nameof(goals)} have to be the same length");
+         }
+         for (int index = 0; index < servoIds.Length; index++)
+         {
+            SetGoalPosition(servoIds[index], goals[index], protocol);
+         }
+      }
+
+      public void MoveToAllBlocking(byte[] servoIds, ushort[] goals, DynamixelProtocol protocol = DynamixelProtocol.Version1, int querryDelay = 50)
+      {
+         if (servoIds.Length != goals.Length)
+         {
+            throw new ArgumentException($"{nameof(servoIds)} and {nameof(goals)} have to be the same length");
+         }
+         for (int index = 0; index < servoIds.Length; index++)
+         {
+            SetGoalPosition(servoIds[index], goals[index], protocol);
+         }
+         while (!servoIds.All(index => !IsMoving(index, protocol)))
+         {
+            Thread.Sleep(querryDelay);
+         }
       }
 
       public void SetMovingSpeed(byte servoId, ushort movingSpeed, DynamixelProtocol protocol = DynamixelProtocol.Version1)
