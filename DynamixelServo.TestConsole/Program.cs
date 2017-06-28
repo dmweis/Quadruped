@@ -236,11 +236,7 @@ namespace DynamixelServo.TestConsole
             while (true)
             {
                Console.WriteLine("Publising");
-               List<ServoTelemetrics> servoData = new List<ServoTelemetrics>(); 
-               foreach (var servo in servos)
-               {
-                  servoData.Add(driver.GetTelemetrics(servo));
-               }
+               IEnumerable<ServoTelemetrics> servoData = servos.Select(servoIndex => driver.GetTelemetrics(servoIndex));
                string json = JsonConvert.SerializeObject(servoData);
                channel.BasicPublish("DynamixelTelemetrics", string.Empty, null, Encoding.UTF8.GetBytes(json));
                Thread.Sleep(2 * 1000);
