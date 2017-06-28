@@ -242,10 +242,14 @@ namespace DynamixelServo.Driver
          return ReadUInt16(servoId, address, protocol);
       }
 
-      public ushort GetPresentLoad(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      public int GetPresentLoad(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_PRESENT_LOAD : ADDR_XL_PRESENT_LOAD;
-         return ReadUInt16(servoId, address, protocol);
+         ushort loadData = ReadUInt16(servoId, address, protocol);
+         bool ccw = Convert.ToBoolean(loadData & 1 << 10);
+         int load = (loadData & ~(1 << 10)) / 10;
+         load = ccw ? -load : load;
+         return load;
       }
 
       public byte GetTemperature(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
