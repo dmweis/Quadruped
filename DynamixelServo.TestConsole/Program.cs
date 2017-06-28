@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using DynamixelServo.Driver;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 using Timer = System.Timers.Timer;
 
@@ -245,7 +246,7 @@ namespace DynamixelServo.TestConsole
                   telemetrics.Load = driver.GetPresentLoad(servo);
                   servoData.Add(telemetrics);
                }
-               string json = ServoTelemetrics.SerealizeCollection(servoData);
+               string json = JsonConvert.SerializeObject(servoData);
                channel.BasicPublish("DynamixelTelemetrics", string.Empty, null, Encoding.UTF8.GetBytes(json));
                Thread.Sleep(2 * 1000);
             }

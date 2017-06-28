@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DynamixelServo.Driver
+﻿namespace DynamixelServo.Driver
 {
-   class ServoTelemetrics
+   public class ServoTelemetrics
    {
       public int Id { get; set; }
       public int Temperature { get; set; }
