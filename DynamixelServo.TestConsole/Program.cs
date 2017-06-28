@@ -143,8 +143,6 @@ namespace DynamixelServo.TestConsole
                {
                   break;
                }
-               //ushort speed = ushort.Parse(input);
-               //SetSpeedToAll(new byte[] {2,3,4}, speed, driver);
             }
          }
          Console.WriteLine("Press enter to exit");
