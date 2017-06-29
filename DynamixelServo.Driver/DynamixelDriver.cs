@@ -358,6 +358,30 @@ namespace DynamixelServo.Driver
          }
       }
 
+      public static float UnitsToDegrees(int units)
+      {
+         return Constrain(MapFloat(units, 0, 1023, 0, 300), 0, 300);
+      }
+
+      public static int DegreesToUnits(float degrees)
+      {
+         return (int)Math.Round(Constrain(MapFloat(degrees, 0, 300, 0, 1023), 0, 1023));
+      }
+
+      private static float MapFloat(float value, float inMin, float inMax, float outMin, float outMax)
+      {
+         return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+      }
+
+      private static float Constrain(float value, float min, float max)
+      {
+         float tempMin = Math.Min(min, max);
+         max = Math.Max(min, max);
+         min = tempMin;
+         value = Math.Max(value, min);
+         return Math.Min(value, max);
+      }
+
       public void Dispose()
       {
          dynamixel.closePort(_portNumber);
