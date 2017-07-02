@@ -358,14 +358,14 @@ namespace DynamixelServo.Driver
          }
       }
 
-      public static float UnitsToDegrees(int units)
+      public static float UnitsToDegrees(ushort units)
       {
          return Constrain(MapFloat(units, 0, 1023, 0, 300), 0, 300);
       }
 
-      public static int DegreesToUnits(float degrees)
+      public static ushort DegreesToUnits(float degrees)
       {
-         return (int)Math.Round(Constrain(MapFloat(degrees, 0, 300, 0, 1023), 0, 1023));
+         return (ushort)Math.Round(Constrain(MapFloat(degrees, 0, 300, 0, 1023), 0, 1023));
       }
 
       private static float MapFloat(float value, float inMin, float inMax, float outMin, float outMax)
