@@ -7,5 +7,10 @@
       public float Voltage { get; set; }
       public int Load { get; set; }
 
+
+      public override string ToString()
+      {
+          return $"Id: {Id} Temperature: {Temperature}°C Voltage: {Voltage}V Load: {Load:000}";
+      }
    }
 }
