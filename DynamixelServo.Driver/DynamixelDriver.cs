@@ -210,7 +210,7 @@ namespace DynamixelServo.Driver
          }
       }
 
-      public void SetMovingSpeed(byte servoId, ushort movingSpeed, bool cw = true, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+      public void SetMovingSpeed(byte servoId, ushort movingSpeed, bool cw = false, DynamixelProtocol protocol = DynamixelProtocol.Version1)
       {
          if (movingSpeed > 1023)
          {
