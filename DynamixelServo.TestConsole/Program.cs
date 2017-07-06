@@ -159,12 +159,12 @@ namespace DynamixelServo.TestConsole
         {
             Console.WriteLine("Starting");
             ConnectionFactory factory = new ConnectionFactory() { HostName = "localhost" };
-            IConnection connection = factory.CreateConnection();
-            IModel channel = connection.CreateModel();
-            channel.ExchangeDeclare("DynamixelTelemetrics", "fanout");
-            using (DynamixelDriver driver = new DynamixelDriver("COM17"))
+            using(IConnection connection = factory.CreateConnection())
+            using (IModel channel = connection.CreateModel())
+            using (DynamixelDriver driver = new DynamixelDriver("COM4"))
             {
-                byte[] servos = driver.Search(1, 10);
+                channel.ExchangeDeclare("DynamixelTelemetrics", "fanout");
+                byte[] servos = driver.Search(1, 20);
                 while (true)
                 {
                     Console.WriteLine("Publising");
