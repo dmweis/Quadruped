@@ -12,7 +12,7 @@ namespace DynamixelServo.Driver
 
       public static void WriteMessageAndCheck(string portName, byte id)
       {
-         using (SerialPort port = new SerialPort("COM17", 1000000))
+         using (SerialPort port = new SerialPort(portName, 1000000))
          {
             port.Open();
             Thread.Sleep(400);
@@ -20,20 +20,25 @@ namespace DynamixelServo.Driver
             byte parameter1 = 25; // address of LED
             byte parameter2 = 0; // turn off LED
 
-            byte[] data = EncodeMessage(id, instruction, new[] { parameter1, parameter2 });
-            port.Write(data, 0, data.Length);
-            // sent
-            List<byte> buffer = new List<byte>();
-            while (true)
-            {
-               buffer.Add((byte)port.ReadByte());
-               bool flag = DecodeMessage(buffer.ToArray());
-               if (flag)
-               {
-                  buffer.Clear();
-                  return;
-               }
-            }
+             while (true)
+             {
+                byte[] data = EncodeMessage(id, instruction, new[] { parameter1, parameter2 });
+                port.Write(data, 0, data.Length);
+                // sent
+                List<byte> buffer = new List<byte>();
+                while (true)
+                {
+                   buffer.Add((byte)port.ReadByte());
+                   bool flag = DecodeMessage(buffer.ToArray());
+                   if (flag)
+                   {
+                      buffer.Clear();
+                       System.Diagnostics.Debug.WriteLine("Success!");
+                      break;
+                   }
+                }
+                 
+             }
          }
       }
 
@@ -58,6 +63,8 @@ namespace DynamixelServo.Driver
 
       public static bool DecodeMessage(byte[] data)
       {
+          try
+          {
          if (data[0] != 0xFF || data[1] != 0xFF)
          {
             // not a packet
@@ -68,15 +75,21 @@ namespace DynamixelServo.Driver
          byte error = data[4];
          byte[] incoming = new byte[length - 2];
          Array.Copy(data, 5, incoming, 0, length - 2);
-         byte checksum = data[data.Length - 1];
+         byte checksum = data[3 + length];
          int localChecksum = id + length + error + incoming.Sum(num => num);
          localChecksum = ~localChecksum;
-         if (checksum != localChecksum)
+         if (checksum != (byte)localChecksum)
          {
             throw new IOException("Checksum error");
          }
          // Success!
          return true;
+
+          }
+          catch (IndexOutOfRangeException)
+          {
+              return false;
+          }
       }
    }
 }
