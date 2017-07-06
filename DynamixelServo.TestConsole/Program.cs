@@ -18,27 +18,18 @@ namespace DynamixelServo.TestConsole
         static void Main(string[] args)
         {
             Console.WriteLine("Starting");
-            using (IConnection connection = new ConnectionFactory {HostName = "localhost"}.CreateConnection())
-            using(IModel channel = connection.CreateModel())
+            //ExperimentalDriver.WriteMessageAndCheck("COM4", 1);
             using (DynamixelDriver driver = new DynamixelDriver("COM4"))
             {
-                channel.ExchangeDeclare("ArmPositionUpdate", "fanout");
-                foreach (var servo in driver.Search(1, 5))
+                byte[] servos = driver.Search(1, 20);
+                foreach (var servo in servos)
                 {
-                    driver.SetTorque(servo, false);
+                    driver.SetLed(servo, true);
+                    driver.MoveToBlocking(servo, 0);
+                    driver.MoveToBlocking(servo, 1023);
+                    driver.MoveToBlocking(servo, 512);
+                    driver.SetLed(servo, false);
                 }
-                while (true)
-                {
-                    float @base = DynamixelDriver.UnitsToDegrees(driver.GetPresentPosition(1));
-                    float shoulder = DynamixelDriver.UnitsToDegrees(driver.GetPresentPosition(2));
-                    float elbow = DynamixelDriver.UnitsToDegrees(driver.GetPresentPosition(3));
-                    float wrist = DynamixelDriver.UnitsToDegrees(driver.GetPresentPosition(4));
-                    byte[] body =
-                        Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new ArmPosition(@base, shoulder, elbow, wrist)));
-                    channel.BasicPublish("ArmPositionUpdate", "", body: body);
-                    Thread.Sleep(100);
-                }
-
             }
             Console.WriteLine("Press enter to exit");
             Console.ReadLine();
