@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO.Ports;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using DynamixelServo.Driver;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 using Timer = System.Timers.Timer;
 
 namespace DynamixelServo.TestConsole
