@@ -150,7 +150,7 @@ namespace DynamixelServo.TestConsole
         {
             Console.WriteLine("Starting");
             ConnectionFactory factory = new ConnectionFactory() { HostName = "localhost" };
-            using(IConnection connection = factory.CreateConnection())
+            using (IConnection connection = factory.CreateConnection())
             using (IModel channel = connection.CreateModel())
             using (DynamixelDriver driver = new DynamixelDriver("COM4"))
             {
