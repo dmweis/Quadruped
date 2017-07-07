@@ -48,6 +48,7 @@
     <Compile Include="DynamixelHelpers.cs" />
     <Compile Include="DynamixelProtocol.cs" />
     <Compile Include="dynamixel_sdk\dynamixel.cs" />
+    <Compile Include="ExceptionHelper.cs" />
     <Compile Include="ExperimentalDriver.cs" />
     <Compile Include="LedColor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
