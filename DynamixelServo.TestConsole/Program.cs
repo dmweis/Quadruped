@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -15,17 +16,53 @@ namespace DynamixelServo.TestConsole
         static void Main(string[] args)
         {
             Console.WriteLine("Starting");
-            //ExperimentalDriver.WriteMessageAndCheck("COM4", 1);
+            //StartTelemetricObserver();
             using (DynamixelDriver driver = new DynamixelDriver("COM4"))
             {
-                byte[] servos = driver.Search(1, 20);
-                foreach (var servo in servos)
+                foreach (var servo in driver.Search(1, 20))
                 {
-                    driver.SetLed(servo, true);
-                    driver.MoveToBlocking(servo, 0);
-                    driver.MoveToBlocking(servo, 1023);
-                    driver.MoveToBlocking(servo, 512);
-                    driver.SetLed(servo, false);
+                    driver.SetComplianceSlope(servo, ComplianceSlope.S128);
+                    driver.SetMovingSpeed(servo, 200);
+                }
+                driver.SetGoalPosition(2, DynamixelDriver.DegreesToUnits(190));
+                driver.SetGoalPosition(1, DynamixelDriver.DegreesToUnits(110));
+                driver.SetGoalPosition(4, DynamixelDriver.DegreesToUnits(60));
+                driver.SetGoalPosition(3, DynamixelDriver.DegreesToUnits(240));
+                driver.SetGoalPosition(8, DynamixelDriver.DegreesToUnits(110));
+                driver.SetGoalPosition(7, DynamixelDriver.DegreesToUnits(190));
+                driver.SetGoalPosition(9, DynamixelDriver.DegreesToUnits(150));
+                driver.SetGoalPosition(10, DynamixelDriver.DegreesToUnits(150));
+                driver.SetGoalPosition(11, DynamixelDriver.DegreesToUnits(55));
+                driver.SetGoalPosition(12, DynamixelDriver.DegreesToUnits(245));
+                bool keepGoing = true;
+                while (keepGoing)
+                {
+                    driver.SetGoalPosition(4, DynamixelDriver.DegreesToUnits(60));
+                    driver.SetGoalPosition(3, DynamixelDriver.DegreesToUnits(240));
+                    driver.SetGoalPosition(9, DynamixelDriver.DegreesToUnits(150));
+                    driver.SetGoalPosition(10, DynamixelDriver.DegreesToUnits(150));
+                    driver.SetGoalPosition(11, DynamixelDriver.DegreesToUnits(55));
+                    driver.SetGoalPosition(12, DynamixelDriver.DegreesToUnits(245));
+                    Thread.Sleep(1000);
+                    driver.SetGoalPosition(4, DynamixelDriver.DegreesToUnits(70));
+                    driver.SetGoalPosition(3, DynamixelDriver.DegreesToUnits(230));
+                    driver.SetGoalPosition(9, DynamixelDriver.DegreesToUnits(100));
+                    driver.SetGoalPosition(10, DynamixelDriver.DegreesToUnits(200));
+                    driver.SetGoalPosition(11, DynamixelDriver.DegreesToUnits(95));
+                    driver.SetGoalPosition(12, DynamixelDriver.DegreesToUnits(205));
+                    Thread.Sleep(1000);
+                    while (Console.KeyAvailable)
+                    {
+                        if (Console.ReadKey().Key == ConsoleKey.C)
+                        {
+                            keepGoing = false;
+                            break;
+                        }
+                    }
+                }
+                foreach (var servo in driver.Search(1, 20))
+                {
+                    driver.SetTorque(servo, false);
                 }
             }
             Console.WriteLine("Press enter to exit");
