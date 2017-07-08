@@ -8,7 +8,7 @@ namespace DynamixelServo.Driver
     {
         public static T RepeatCatch<T>(Func<T> call, int maxTries = 5)
         {
-            List<Exception> exceptions = new List<Exception>();
+            List<Exception> exceptions = null;
             while (true)
             {
                 try
@@ -17,6 +17,10 @@ namespace DynamixelServo.Driver
                 }
                 catch (Exception e)
                 {
+                    if (exceptions == null)
+                    {
+                        exceptions = new List<Exception>();
+                    }
                     exceptions.Add(e);
                     if (exceptions.Count >= maxTries)
                     {
@@ -28,7 +32,7 @@ namespace DynamixelServo.Driver
 
         public static T2 RepeatCatch<T1, T2>(Func<T1, T2> call, T1 arg1, int maxTries = 5)
         {
-            List<Exception> exceptions = new List<Exception>();
+            List<Exception> exceptions = null;
             while (true)
             {
                 try
@@ -37,6 +41,10 @@ namespace DynamixelServo.Driver
                 }
                 catch (Exception e)
                 {
+                    if (exceptions == null)
+                    {
+                        exceptions = new List<Exception>();
+                    }
                     exceptions.Add(e);
                     if (exceptions.Count >= maxTries)
                     {
@@ -48,7 +56,7 @@ namespace DynamixelServo.Driver
 
         public static T3 RepeatCatch<T1, T2, T3>(Func<T1, T2, T3> call, T1 arg1, T2 arg2, int maxTries = 5)
         {
-            List<Exception> exceptions = new List<Exception>();
+            List<Exception> exceptions = null;
             while (true)
             {
                 try
@@ -57,6 +65,10 @@ namespace DynamixelServo.Driver
                 }
                 catch (Exception e)
                 {
+                    if (exceptions == null)
+                    {
+                        exceptions = new List<Exception>();
+                    }
                     exceptions.Add(e);
                     if (exceptions.Count >= maxTries)
                     {
@@ -68,7 +80,7 @@ namespace DynamixelServo.Driver
 
         public static T4 RepeatCatch<T1, T2, T3, T4>(Func<T1, T2, T3, T4> call, T1 arg1, T2 arg2, T3 arg3, int maxTries = 5)
         {
-            List<Exception> exceptions = new List<Exception>();
+            List<Exception> exceptions = null;
             while (true)
             {
                 try
@@ -77,6 +89,10 @@ namespace DynamixelServo.Driver
                 }
                 catch (Exception e)
                 {
+                    if (exceptions == null)
+                    {
+                        exceptions = new List<Exception>();
+                    }
                     exceptions.Add(e);
                     if (exceptions.Count >= maxTries)
                     {
@@ -88,7 +104,7 @@ namespace DynamixelServo.Driver
 
         public static T5 RepeatCatch<T1, T2, T3, T4, T5>(Func<T1, T2, T3, T4, T5> call, T1 arg1, T2 arg2, T3 arg3, T4 arg4, int maxTries = 5)
         {
-            List<Exception> exceptions = new List<Exception>();
+            List<Exception> exceptions = null;
             while (true)
             {
                 try
@@ -97,6 +113,10 @@ namespace DynamixelServo.Driver
                 }
                 catch (Exception e)
                 {
+                    if (exceptions == null)
+                    {
+                        exceptions = new List<Exception>();
+                    }
                     exceptions.Add(e);
                     if (exceptions.Count >= maxTries)
                     {
@@ -108,7 +128,7 @@ namespace DynamixelServo.Driver
 
         public static void RepeatCatch(Action call, int maxTries = 5)
         {
-            List<Exception> exceptions = new List<Exception>();
+            List<Exception> exceptions = null;
             while (true)
             {
                 try
@@ -118,6 +138,10 @@ namespace DynamixelServo.Driver
                 }
                 catch (Exception e)
                 {
+                    if (exceptions == null)
+                    {
+                        exceptions = new List<Exception>();
+                    }
                     exceptions.Add(e);
                     if (exceptions.Count >= maxTries)
                     {
@@ -129,7 +153,7 @@ namespace DynamixelServo.Driver
 
         public static void RepeatCatch<T>(Action<T> call, T arg1, int maxTries = 5)
         {
-            List<Exception> exceptions = new List<Exception>();
+            List<Exception> exceptions = null;
             while (true)
             {
                 try
@@ -139,6 +163,10 @@ namespace DynamixelServo.Driver
                 }
                 catch (Exception e)
                 {
+                    if (exceptions == null)
+                    {
+                        exceptions = new List<Exception>();
+                    }
                     exceptions.Add(e);
                     if (exceptions.Count >= maxTries)
                     {
@@ -150,7 +178,7 @@ namespace DynamixelServo.Driver
 
         public static void RepeatCatch<T1, T2>(Action<T1, T2> call, T1 arg1, T2 arg2, int maxTries = 5)
         {
-            List<Exception> exceptions = new List<Exception>();
+            List<Exception> exceptions = null;
             while (true)
             {
                 try
@@ -160,6 +188,10 @@ namespace DynamixelServo.Driver
                 }
                 catch (Exception e)
                 {
+                    if (exceptions == null)
+                    {
+                        exceptions = new List<Exception>();
+                    }
                     exceptions.Add(e);
                     if (exceptions.Count >= maxTries)
                     {
@@ -171,7 +203,7 @@ namespace DynamixelServo.Driver
 
         public static void RepeatCatch<T1, T2, T3>(Action<T1, T2, T3> call, T1 arg1, T2 arg2, T3 arg3, int maxTries = 5)
         {
-            List<Exception> exceptions = new List<Exception>();
+            List<Exception> exceptions = null;
             while (true)
             {
                 try
@@ -181,6 +213,10 @@ namespace DynamixelServo.Driver
                 }
                 catch (Exception e)
                 {
+                    if (exceptions == null)
+                    {
+                        exceptions = new List<Exception>();
+                    }
                     exceptions.Add(e);
                     if (exceptions.Count >= maxTries)
                     {
