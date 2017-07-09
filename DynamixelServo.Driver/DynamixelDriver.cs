@@ -267,7 +267,7 @@ namespace DynamixelServo.Driver
         public ushort GetModelNumber(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
         {
             ushort modelNumber = dynamixel.pingGetModelNum(_portNumber, (int)protocol, servoId);
-            VerifyLastMessage(protocol);
+            VerifyLastMessage(servoId, protocol);
             return modelNumber;
         }
 
@@ -321,40 +321,40 @@ namespace DynamixelServo.Driver
         private void WriteByte(byte servoId, ushort address, byte data, DynamixelProtocol protocol)
         {
             dynamixel.write1ByteTxRx(_portNumber, (int)protocol, servoId, address, data);
-            VerifyLastMessage(protocol);
+            VerifyLastMessage(servoId, protocol);
         }
 
         private byte ReadByte(byte servoId, ushort address, DynamixelProtocol protocol)
         {
             byte incoming = dynamixel.read1ByteTxRx(_portNumber, (int)protocol, servoId, address);
-            VerifyLastMessage(protocol);
+            VerifyLastMessage(servoId, protocol);
             return incoming;
         }
 
         private void WriteUInt16(byte servoId, ushort address, ushort data, DynamixelProtocol protocol)
         {
             dynamixel.write2ByteTxRx(_portNumber, (int)protocol, servoId, address, data);
-            VerifyLastMessage(protocol);
+            VerifyLastMessage(servoId, protocol);
         }
 
         private ushort ReadUInt16(byte servoId, ushort address, DynamixelProtocol protocol)
         {
             ushort incoming = dynamixel.read2ByteTxRx(_portNumber, (int)protocol, servoId, address);
-            VerifyLastMessage(protocol);
+            VerifyLastMessage(servoId, protocol);
             return incoming;
         }
 
-        private void VerifyLastMessage(DynamixelProtocol protocol)
+        private void VerifyLastMessage(byte servoId, DynamixelProtocol protocol)
         {
             int commResult = dynamixel.getLastTxRxResult(_portNumber, (int)protocol);
             if (commResult != CommSuccess)
             {
-                throw new IOException(DynamixelErrorHelper.GetTxRxResultDescription(commResult));
+                throw new IOException(DynamixelErrorHelper.GetTxRxResultDescription(commResult) + $" on servo: {servoId}");
             }
             byte dxlError = dynamixel.getLastRxPacketError(_portNumber, (int)protocol);
             if (dxlError != 0)
             {
-                throw new IOException(DynamixelErrorHelper.GetRxPackErrorDescription(dxlError));
+                throw new IOException(DynamixelErrorHelper.GetRxPackErrorDescription(dxlError) + $" on servo: {servoId}");
             }
         }
 
