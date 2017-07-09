@@ -19,47 +19,31 @@ namespace DynamixelServo.TestConsole
             //StartTelemetricObserver();
             using (DynamixelDriver driver = new DynamixelDriver("COM4"))
             {
-                foreach (var servo in driver.Search(1, 20))
+                Quadropod.SetupAndStance(driver);
+                
+                Console.Beep(2000, 200);
+                Thread.Sleep(2000);
+                Console.Beep(2000, 200);
+                Console.Beep(2000, 200);
+                Console.Beep(2000, 200);
+                for (int i = 0; i < 8; i++)
                 {
-                    driver.SetComplianceSlope(servo, ComplianceSlope.S128);
-                    driver.SetMovingSpeed(servo, 200);
+                    Quadropod.TurnLeft(driver);
+                    Thread.Sleep(100);
                 }
-                driver.SetGoalPosition(2, DynamixelDriver.DegreesToUnits(190));
-                driver.SetGoalPosition(1, DynamixelDriver.DegreesToUnits(110));
-                driver.SetGoalPosition(4, DynamixelDriver.DegreesToUnits(60));
-                driver.SetGoalPosition(3, DynamixelDriver.DegreesToUnits(240));
-                driver.SetGoalPosition(8, DynamixelDriver.DegreesToUnits(110));
-                driver.SetGoalPosition(7, DynamixelDriver.DegreesToUnits(190));
-                driver.SetGoalPosition(9, DynamixelDriver.DegreesToUnits(150));
-                driver.SetGoalPosition(10, DynamixelDriver.DegreesToUnits(150));
-                driver.SetGoalPosition(11, DynamixelDriver.DegreesToUnits(55));
-                driver.SetGoalPosition(12, DynamixelDriver.DegreesToUnits(245));
-                bool keepGoing = true;
-                while (keepGoing)
+                Quadropod.Stance(driver);
+                Console.Beep();
+                Thread.Sleep(1000);
+                for (int i = 0; i < 8; i++)
                 {
-                    driver.SetGoalPosition(4, DynamixelDriver.DegreesToUnits(60));
-                    driver.SetGoalPosition(3, DynamixelDriver.DegreesToUnits(240));
-                    driver.SetGoalPosition(9, DynamixelDriver.DegreesToUnits(150));
-                    driver.SetGoalPosition(10, DynamixelDriver.DegreesToUnits(150));
-                    driver.SetGoalPosition(11, DynamixelDriver.DegreesToUnits(55));
-                    driver.SetGoalPosition(12, DynamixelDriver.DegreesToUnits(245));
-                    Thread.Sleep(1000);
-                    driver.SetGoalPosition(4, DynamixelDriver.DegreesToUnits(70));
-                    driver.SetGoalPosition(3, DynamixelDriver.DegreesToUnits(230));
-                    driver.SetGoalPosition(9, DynamixelDriver.DegreesToUnits(100));
-                    driver.SetGoalPosition(10, DynamixelDriver.DegreesToUnits(200));
-                    driver.SetGoalPosition(11, DynamixelDriver.DegreesToUnits(95));
-                    driver.SetGoalPosition(12, DynamixelDriver.DegreesToUnits(205));
-                    Thread.Sleep(1000);
-                    while (Console.KeyAvailable)
-                    {
-                        if (Console.ReadKey().Key == ConsoleKey.C)
-                        {
-                            keepGoing = false;
-                            break;
-                        }
-                    }
+                    Quadropod.TurnRight(driver);
+                    Thread.Sleep(100);
                 }
+                Quadropod.SetRobot(0, 45, 45, driver);
+                Thread.Sleep(700);
+                Console.Beep(4000, 1000);
+
+                // relax
                 foreach (var servo in driver.Search(1, 20))
                 {
                     driver.SetTorque(servo, false);
