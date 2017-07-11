@@ -5,117 +5,111 @@ namespace DynamixelServo.TestConsole
 {
     class Quadropod
     {
-        private const int TurnAngle = 40;
+        private const int TurnAngle = 20;
+        private const int RelaxedFemur = -20;
+        private const int RelaxedTibia = 60;
+        public const int BreakTime = 500;
+        private const int LiftedFemur = -80;
+        private const int LiftedTibia = 90;
+
+        private static readonly byte[] Coxas = {1, 2, 7, 8};
+        private static readonly byte[] Femurs = {3, 4, 9, 10};
+        private static readonly byte[] Tibias = {5, 6, 11, 12};
 
         public static void SetupAndStance(DynamixelDriver driver)
         {
-            foreach (var servo in driver.Search(1, 20))
+            foreach (var servo in Coxas)
             {
-                driver.SetComplianceSlope(servo, ComplianceSlope.S128);
-                driver.SetMovingSpeed(servo, 500);
+                driver.SetComplianceSlope(servo, ComplianceSlope.Default);
+                driver.SetMovingSpeed(servo, 200);
             }
-            SetRobot(0, 45, 45, driver);
+            foreach (var servo in Femurs)
+            {
+                driver.SetComplianceSlope(servo, ComplianceSlope.Default);
+                driver.SetMovingSpeed(servo, 200);
+            }
+            foreach (var servo in Tibias)
+            {
+                driver.SetComplianceSlope(servo, ComplianceSlope.Default);
+                driver.SetMovingSpeed(servo, 200);
+            }
+            SetRobot(0, RelaxedFemur, RelaxedTibia, driver);
+            
         }
 
         public static void Stance(DynamixelDriver driver)
         {
-            SetRobot(0, 45, 45, driver);
+            SetRobot(0, RelaxedFemur, RelaxedTibia, driver);
         }
 
         public static void TurnLeft(DynamixelDriver driver)
         {
-            const int breakTime = 75;
-            SetLeg1(TurnAngle, 45, 45, driver);
-            SetLeg2(-TurnAngle, 45, 45, driver);
-            SetLeg7(-TurnAngle, 45, 45, driver);
-            SetLeg8(TurnAngle, 45, 45, driver);
-            Thread.Sleep(breakTime);
-            // leg 1 move
-            SetLeg1(TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg1(-TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg1(-TurnAngle, 45, 45, driver);
-            Thread.Sleep(breakTime);
-            // leg 8 move
-            SetLeg8(TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg8(-TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg8(-TurnAngle, 45, 45, driver);
-            Thread.Sleep(breakTime);
-            // leg 2 move
-            SetLeg2(-TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg2(TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg2(TurnAngle, 45, 45, driver);
-            Thread.Sleep(breakTime);
-            // leg 7 move
-            SetLeg7(-TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg7(TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg7(TurnAngle, 45, 45, driver);
+            
+            SetLeg1(TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg2(-TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg7(-TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg8(TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            Thread.Sleep(BreakTime);
+            // leg 1 and 8 move
+            SetLeg1(TurnAngle, LiftedFemur, LiftedTibia, driver);
+            SetLeg8(TurnAngle, LiftedFemur, LiftedTibia, driver);
+            Thread.Sleep(BreakTime);
+            SetLeg1(-TurnAngle, LiftedFemur, LiftedTibia, driver);
+            SetLeg8(-TurnAngle, LiftedFemur, LiftedTibia, driver);
+            Thread.Sleep(BreakTime);
+            SetLeg1(-TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg8(-TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            Thread.Sleep(BreakTime);
+            // leg 2 and 7 move
+            SetLeg2(-TurnAngle, LiftedFemur, LiftedTibia, driver);
+            SetLeg7(-TurnAngle, LiftedFemur, LiftedTibia, driver);
+            Thread.Sleep(BreakTime);
+            SetLeg2(TurnAngle, LiftedFemur, LiftedTibia, driver);
+            SetLeg7(TurnAngle, LiftedFemur, LiftedTibia, driver);
+            Thread.Sleep(BreakTime);
+            SetLeg2(TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg7(TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            Thread.Sleep(BreakTime);
         }
 
         public static void TurnRight(DynamixelDriver driver)
         {
-            const int breakTime = 75;
-            SetLeg1(-TurnAngle, 45, 45, driver);
-            SetLeg2(TurnAngle, 45, 45, driver);
-            SetLeg7(TurnAngle, 45, 45, driver);
-            SetLeg8(-TurnAngle, 45, 45, driver);
-            Thread.Sleep(breakTime);
-            // leg 1 move
-            SetLeg1(-TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg1(TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg1(TurnAngle, 45, 45, driver);
-            Thread.Sleep(breakTime);
-            // leg 8 move
-            SetLeg8(-TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg8(TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg8(TurnAngle, 45, 45, driver);
-            Thread.Sleep(breakTime);
-            // leg 2 move
-            SetLeg2(TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg2(-TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg2(-TurnAngle, 45, 45, driver);
-            Thread.Sleep(breakTime);
-            // leg 7 move
-            SetLeg7(TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg7(-TurnAngle, 0, 60, driver);
-            Thread.Sleep(breakTime);
-            SetLeg7(-TurnAngle, 45, 45, driver);
+            SetLeg1(-TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg2(TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg7(TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg8(-TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            Thread.Sleep(BreakTime);
+            // leg 1 and 8 move
+            SetLeg1(-TurnAngle, LiftedFemur, RelaxedTibia, driver);
+            SetLeg8(-TurnAngle, LiftedFemur, RelaxedTibia, driver);
+            Thread.Sleep(50);
+            SetLeg1(-TurnAngle, LiftedFemur, LiftedTibia, driver);
+            SetLeg8(-TurnAngle, LiftedFemur, LiftedTibia, driver);
+            Thread.Sleep(BreakTime);
+            SetLeg1(TurnAngle, LiftedFemur, LiftedTibia, driver);
+            SetLeg8(TurnAngle, LiftedFemur, LiftedTibia, driver);
+            Thread.Sleep(BreakTime);
+            SetLeg1(TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg8(TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            Thread.Sleep(BreakTime);
+            // leg 2 and 7 move
+            SetLeg2(TurnAngle, LiftedFemur, LiftedTibia, driver);
+            SetLeg7(TurnAngle, LiftedFemur, LiftedTibia, driver);
+            Thread.Sleep(BreakTime);
+            SetLeg2(-TurnAngle, LiftedFemur, LiftedTibia, driver);
+            SetLeg7(-TurnAngle, LiftedFemur, LiftedTibia, driver);
+            Thread.Sleep(BreakTime);
+            SetLeg2(-TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg7(-TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            Thread.Sleep(BreakTime);
         }
 
         public static void SetRobot(float coxa, float femur, float tibia, DynamixelDriver driver)
         {
-            int coxaUnits = DynamixelDriver.DegreesToUnits(coxa);
-            int femurUnits = DynamixelDriver.DegreesToUnits(femur);
-            int tibiaUnits = DynamixelDriver.DegreesToUnits(tibia);
-            // coxa
-            ExceptionHelper.RepeatCatch(() => driver.SetGoalPosition(1, (ushort)(512 - coxaUnits)));
-            ExceptionHelper.RepeatCatch(() => driver.SetGoalPosition(2, (ushort)(512 + coxaUnits)));
-            ExceptionHelper.RepeatCatch(() => driver.SetGoalPosition(7, (ushort)(512 + coxaUnits)));
-            ExceptionHelper.RepeatCatch(() => driver.SetGoalPosition(8, (ushort)(512 - coxaUnits)));
-            // femur
-            ExceptionHelper.RepeatCatch(() => driver.SetGoalPosition(3, (ushort)(512 + femurUnits)));
-            ExceptionHelper.RepeatCatch(() => driver.SetGoalPosition(4, (ushort)(512 - femurUnits)), swallow: true);
-            ExceptionHelper.RepeatCatch(() => driver.SetGoalPosition(9, (ushort)(512 - femurUnits)));
-            ExceptionHelper.RepeatCatch(() => driver.SetGoalPosition(10, (ushort)(512 + femurUnits)));
-            // tibia
-            ExceptionHelper.RepeatCatch(() => driver.SetGoalPosition(5, (ushort)(512 + tibiaUnits)));
-            ExceptionHelper.RepeatCatch(() => driver.SetGoalPosition(6, (ushort)(512 - tibiaUnits)), swallow: true);
-            ExceptionHelper.RepeatCatch(() => driver.SetGoalPosition(11, (ushort)(512 - tibiaUnits)));
-            ExceptionHelper.RepeatCatch(() => driver.SetGoalPosition(12, (ushort)(512 + tibiaUnits)));
+            SetLeg1(coxa, femur, tibia, driver);
+            SetLeg2(coxa, femur, tibia, driver);
+            SetLeg7(coxa, femur, tibia, driver);
+            SetLeg8(coxa, femur, tibia, driver);
         }
 
         public static void SetLeg1(float coxa, float femur, float tibia, DynamixelDriver driver)
