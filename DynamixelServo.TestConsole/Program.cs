@@ -32,6 +32,12 @@ namespace DynamixelServo.TestConsole
                         case ConsoleKey.RightArrow:
                             Quadropod.TurnRight(driver);
                             break;
+                        case ConsoleKey.UpArrow:
+                            Quadropod.MoveForward(driver);
+                            break;
+                        case ConsoleKey.DownArrow:
+                            Quadropod.Stance(driver);
+                            break;
                         case ConsoleKey.Escape:
                             keepGoing = false;
                             break;
@@ -51,7 +57,6 @@ namespace DynamixelServo.TestConsole
                 //}
                 Quadropod.Stance(driver);
                 Console.Beep();
-                Thread.Sleep(1000);
                 foreach (var servo in driver.Search(1, 20))
                 {
                     driver.SetTorque(servo, false);
