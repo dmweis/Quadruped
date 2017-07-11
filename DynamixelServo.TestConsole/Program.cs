@@ -6,6 +6,7 @@ using System.Threading;
 using DynamixelServo.Driver;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
+using DynamixelServo.Quadruped;
 using Timer = System.Timers.Timer;
 
 namespace DynamixelServo.TestConsole
@@ -17,8 +18,9 @@ namespace DynamixelServo.TestConsole
             Console.WriteLine("Starting");
             //StartTelemetricObserver();
             using (DynamixelDriver driver = new DynamixelDriver("COM4"))
+            using (QuadrupedDriver quadruped = new QuadrupedDriver(driver))
             {
-                Quadropod.SetupAndStance(driver);
+                quadruped.SetupAndStance();
                 Thread.Sleep(1000);
                 Console.Beep();
                 bool keepGoing = true;
@@ -27,16 +29,15 @@ namespace DynamixelServo.TestConsole
                     switch (GetCurrentConsoleKey())
                     {
                         case ConsoleKey.LeftArrow:
-                            Quadropod.TurnLeft(driver);
+                            quadruped.TurnLeft();
                             break;
                         case ConsoleKey.RightArrow:
-                            Quadropod.TurnRight(driver);
+                            quadruped.TurnRight();
                             break;
                         case ConsoleKey.UpArrow:
-                            Quadropod.MoveForward(driver);
                             break;
                         case ConsoleKey.DownArrow:
-                            Quadropod.Stance(driver);
+                            quadruped.Stance();
                             break;
                         case ConsoleKey.Escape:
                             keepGoing = false;
@@ -55,7 +56,7 @@ namespace DynamixelServo.TestConsole
                 //    Quadropod.TurnLeft(driver);
                 //    Thread.Sleep(100);
                 //}
-                Quadropod.Stance(driver);
+                quadruped.Stance();
                 Console.Beep();
                 foreach (var servo in driver.Search(1, 20))
                 {
