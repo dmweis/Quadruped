@@ -37,6 +37,23 @@ namespace DynamixelServo.TestConsole
             
         }
 
+        public static void MoveForward(DynamixelDriver driver)
+        {
+            SetRobot(-20, RelaxedFemur, RelaxedTibia, driver);
+            Thread.Sleep(BreakTime);
+            SetLeg1(-10, LiftedFemur, LiftedTibia, driver);
+            SetLeg8(-10, LiftedFemur, LiftedTibia, driver);
+            SetLeg2(-10, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg7(-10, RelaxedFemur, RelaxedTibia, driver);
+            Thread.Sleep(BreakTime);
+            SetLeg1(0, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg8(0, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg2(0, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg7(0, RelaxedFemur, RelaxedTibia, driver);
+            Thread.Sleep(BreakTime);
+
+        }
+
         public static void Stance(DynamixelDriver driver)
         {
             SetRobot(0, RelaxedFemur, RelaxedTibia, driver);
@@ -101,6 +118,34 @@ namespace DynamixelServo.TestConsole
             Thread.Sleep(BreakTime);
             SetLeg2(-TurnAngle, RelaxedFemur, RelaxedTibia, driver);
             SetLeg7(-TurnAngle, RelaxedFemur, RelaxedTibia, driver);
+            Thread.Sleep(BreakTime);
+        }
+
+        public static void MoveLegsSet1(int fromAngle, int toAngle, DynamixelDriver driver)
+        {
+            // leg 1 and 8 move
+            SetLeg1(fromAngle, LiftedFemur, LiftedTibia, driver);
+            SetLeg8(-fromAngle, LiftedFemur, LiftedTibia, driver);
+            Thread.Sleep(BreakTime);
+            SetLeg1(toAngle, LiftedFemur, LiftedTibia, driver);
+            SetLeg8(-toAngle, LiftedFemur, LiftedTibia, driver);
+            Thread.Sleep(BreakTime);
+            SetLeg1(toAngle, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg8(-toAngle, RelaxedFemur, RelaxedTibia, driver);
+            Thread.Sleep(BreakTime);
+        }
+
+        public static void MoveLegsSet2(int fromAngle, int toAngle, DynamixelDriver driver)
+        {
+            // leg 2 and 7 move
+            SetLeg2(fromAngle, LiftedFemur, LiftedTibia, driver);
+            SetLeg7(-fromAngle, LiftedFemur, LiftedTibia, driver);
+            Thread.Sleep(BreakTime);
+            SetLeg2(toAngle, LiftedFemur, LiftedTibia, driver);
+            SetLeg7(-toAngle, LiftedFemur, LiftedTibia, driver);
+            Thread.Sleep(BreakTime);
+            SetLeg2(toAngle, RelaxedFemur, RelaxedTibia, driver);
+            SetLeg7(-toAngle, RelaxedFemur, RelaxedTibia, driver);
             Thread.Sleep(BreakTime);
         }
 
