@@ -8,7 +8,7 @@ namespace DynamixelServo.TestConsole
         private const int TurnAngle = 20;
         private const int RelaxedFemur = -20;
         private const int RelaxedTibia = 60;
-        public const int BreakTime = 500;
+        public const int BreakTime = 250;
         private const int LiftedFemur = -80;
         private const int LiftedTibia = 90;
 
@@ -20,18 +20,18 @@ namespace DynamixelServo.TestConsole
         {
             foreach (var servo in Coxas)
             {
-                driver.SetComplianceSlope(servo, ComplianceSlope.Default);
-                driver.SetMovingSpeed(servo, 200);
+                driver.SetComplianceSlope(servo, ComplianceSlope.S32);
+                driver.SetMovingSpeed(servo, 300);
             }
             foreach (var servo in Femurs)
             {
-                driver.SetComplianceSlope(servo, ComplianceSlope.Default);
-                driver.SetMovingSpeed(servo, 200);
+                driver.SetComplianceSlope(servo, ComplianceSlope.S32);
+                driver.SetMovingSpeed(servo, 300);
             }
             foreach (var servo in Tibias)
             {
-                driver.SetComplianceSlope(servo, ComplianceSlope.Default);
-                driver.SetMovingSpeed(servo, 200);
+                driver.SetComplianceSlope(servo, ComplianceSlope.S32);
+                driver.SetMovingSpeed(servo, 300);
             }
             SetRobot(0, RelaxedFemur, RelaxedTibia, driver);
             
