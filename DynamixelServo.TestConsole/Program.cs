@@ -19,30 +19,39 @@ namespace DynamixelServo.TestConsole
             using (DynamixelDriver driver = new DynamixelDriver("COM4"))
             {
                 Quadropod.SetupAndStance(driver);
-                
-                Console.Beep(2000, 200);
-                Thread.Sleep(2000);
-                Console.Beep(2000, 200);
-                Console.Beep(2000, 200);
-                Console.Beep(2000, 200);
-                for (int i = 0; i < 8; i++)
+                Thread.Sleep(1000);
+                Console.Beep();
+                bool keepGoing = true;
+                while (keepGoing)
                 {
-                    Quadropod.TurnLeft(driver);
-                    Thread.Sleep(100);
+                    switch (GetCurrentConsoleKey())
+                    {
+                        case ConsoleKey.LeftArrow:
+                            Quadropod.TurnLeft(driver);
+                            break;
+                        case ConsoleKey.RightArrow:
+                            Quadropod.TurnRight(driver);
+                            break;
+                        case ConsoleKey.Escape:
+                            keepGoing = false;
+                            break;
+                    }
                 }
+                // rotate to both sides
+                //const int turnTimes = 3;
+                //for (int index = 0; index < turnTimes; index++)
+                //{
+                //    Quadropod.TurnRight(driver);
+                //    Thread.Sleep(100);
+                //}
+                //for (int index = 0; index < turnTimes; index++)
+                //{
+                //    Quadropod.TurnLeft(driver);
+                //    Thread.Sleep(100);
+                //}
                 Quadropod.Stance(driver);
                 Console.Beep();
                 Thread.Sleep(1000);
-                for (int i = 0; i < 8; i++)
-                {
-                    Quadropod.TurnRight(driver);
-                    Thread.Sleep(100);
-                }
-                Quadropod.SetRobot(0, 45, 45, driver);
-                Thread.Sleep(700);
-                Console.Beep(4000, 1000);
-
-                // relax
                 foreach (var servo in driver.Search(1, 20))
                 {
                     driver.SetTorque(servo, false);
@@ -209,6 +218,15 @@ namespace DynamixelServo.TestConsole
                 }
 
             }
+        }
+
+        private static ConsoleKey GetCurrentConsoleKey()
+        {
+            while (Console.KeyAvailable)
+            {
+                Console.ReadKey(true);
+            }
+            return Console.ReadKey(true).Key;
         }
     }
 
