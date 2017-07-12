@@ -16,6 +16,20 @@ namespace DynamixelServo.TestConsole
         static void Main(string[] args)
         {
             Console.WriteLine("Starting");
+            while (true)
+            {
+                Console.WriteLine("Enter point B");
+                float[] input = Console
+                    .ReadLine()
+                    .Split(new [] {' '}, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(float.Parse)
+                    .ToArray();
+                float x = input[0];
+                float y = input[1];
+                Console.WriteLine($"Result {QuadrupedIkDriver.MoveFrontLeftLeg(new Vector3(x, y, 0))}");
+            }
+            Console.WriteLine("Press enter to exit");
+            Console.ReadLine();
             //StartTelemetricObserver();
             using (DynamixelDriver driver = new DynamixelDriver("COM4"))
             using (QuadrupedDriver quadruped = new QuadrupedDriver(driver))
