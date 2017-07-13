@@ -61,37 +61,13 @@ namespace DynamixelServo.Quadruped
             _driver.SetGoalPositionInDegrees(legConfig.TibiaId, legGoalPositions.Tibia);
         }
 
-        public void MoveFrontLeftLeg(Vector3 target)
-        {
-            var frontLeft = CalculateIkForLeg(target, FrontLeft);
-            _driver.SetGoalPositionInDegrees(FrontLeft.CoxaId, frontLeft.Coxa);
-            _driver.SetGoalPositionInDegrees(FrontLeft.FemurId, frontLeft.Femur);
-            _driver.SetGoalPositionInDegrees(FrontLeft.TibiaId, frontLeft.Tibia);
-        }
+        public void MoveFrontLeftLeg(Vector3 target) => MoveLeg(target, FrontLeft);
 
-        public void MoveFrontRightLeg(Vector3 target)
-        {
-            var frontRight = CalculateIkForLeg(target, FrontRight);
-            _driver.SetGoalPositionInDegrees(FrontRight.CoxaId, frontRight.Coxa);
-            _driver.SetGoalPositionInDegrees(FrontRight.FemurId, frontRight.Femur);
-            _driver.SetGoalPositionInDegrees(FrontRight.TibiaId, frontRight.Tibia);
-        }
+        public void MoveFrontRightLeg(Vector3 target) => MoveLeg(target, FrontRight);
 
-        public void MoveRearLeftLeg(Vector3 target)
-        {
-            var rearLeft = CalculateIkForLeg(target, RearLeft);
-            _driver.SetGoalPositionInDegrees(RearLeft.CoxaId, rearLeft.Coxa);
-            _driver.SetGoalPositionInDegrees(RearLeft.FemurId, rearLeft.Femur);
-            _driver.SetGoalPositionInDegrees(RearLeft.TibiaId, rearLeft.Tibia);
-        }
+        public void MoveRearLeftLeg(Vector3 target) => MoveLeg(target, RearLeft);
 
-        public void MoveRearRightLeg(Vector3 target)
-        {
-            var rearRight = CalculateIkForLeg(target, RearRight);
-            _driver.SetGoalPositionInDegrees(RearRight.CoxaId, rearRight.Coxa);
-            _driver.SetGoalPositionInDegrees(RearRight.FemurId, rearRight.Femur);
-            _driver.SetGoalPositionInDegrees(RearRight.TibiaId, rearRight.Tibia);
-        }
+        public void MoveRearRightLeg(Vector3 target) => MoveLeg(target, RearRight);
 
         public void Dispose()
         {
