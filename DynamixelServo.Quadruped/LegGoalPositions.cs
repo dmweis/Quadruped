@@ -2,9 +2,9 @@
 {
     struct LegGoalPositions
     {
-        public float Coxa;
-        public float Femur;
-        public float Tibia;
+        public readonly float Coxa;
+        public readonly float Femur;
+        public readonly float Tibia;
 
         public LegGoalPositions(float coxa, float femur, float tibia)
         {
