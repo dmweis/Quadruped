@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using DynamixelServo.Driver;
 
 namespace DynamixelServo.Quadruped
@@ -59,12 +60,38 @@ namespace DynamixelServo.Quadruped
             MoveLeg(new Vector3( 15, -15, -13), RearRight);
         }
 
-        private void MoveLeg(Vector3 target, LegConfiguration legConfig)
+        public void TurnRight() => Turn(20, 10, -13, -10, 350);
+
+        public void TurnLeft() => Turn(10, 20, -13, -10, 350);
+
+        private void Turn(int a, int b, int ground, int lifted, int breakTime)
         {
-            var legGoalPositions = CalculateIkForLeg(target, legConfig);
-            _driver.SetGoalPositionInDegrees(legConfig.CoxaId, legGoalPositions.Coxa);
-            _driver.SetGoalPositionInDegrees(legConfig.FemurId, legGoalPositions.Femur);
-            _driver.SetGoalPositionInDegrees(legConfig.TibiaId, legGoalPositions.Tibia);
+            // initial turn
+            MoveFrontLeftLeg(new Vector3(-a, b, ground));
+            MoveFrontRightLeg(new Vector3(b, a, ground));
+            MoveRearLeftLeg(new Vector3(-b, -a, ground));
+            MoveRearRightLeg(new Vector3(a, -b, ground));
+            Thread.Sleep(breakTime);
+            // FrontLeft and RearRight
+            MoveFrontLeftLeg(new Vector3(-a, b, lifted));
+            MoveRearRightLeg(new Vector3(a, -b, lifted));
+            Thread.Sleep(breakTime);
+            MoveFrontLeftLeg(new Vector3(-b, a, lifted));
+            MoveRearRightLeg(new Vector3(b, -a, lifted));
+            Thread.Sleep(breakTime);
+            MoveFrontLeftLeg(new Vector3(-b, a, ground));
+            MoveRearRightLeg(new Vector3(b, -a, ground));
+            Thread.Sleep(breakTime);
+            // FrontRight and RearLeft
+            MoveFrontRightLeg(new Vector3(b, a, lifted));
+            MoveRearLeftLeg(new Vector3(-b, -a, lifted));
+            Thread.Sleep(breakTime);
+            MoveFrontRightLeg(new Vector3(a, b, lifted));
+            MoveRearLeftLeg(new Vector3(-a, -b, lifted));
+            Thread.Sleep(breakTime);
+            MoveFrontRightLeg(new Vector3(a, b, ground));
+            MoveRearLeftLeg(new Vector3(-a, -b, ground));
+            Thread.Sleep(breakTime);
         }
 
         public void MoveFrontLeftLeg(Vector3 target) => MoveLeg(target, FrontLeft);
@@ -94,6 +121,14 @@ namespace DynamixelServo.Quadruped
         public void Dispose()
         {
             _driver?.Dispose();
+        }
+
+        private void MoveLeg(Vector3 target, LegConfiguration legConfig)
+        {
+            var legGoalPositions = CalculateIkForLeg(target, legConfig);
+            _driver.SetGoalPositionInDegrees(legConfig.CoxaId, legGoalPositions.Coxa);
+            _driver.SetGoalPositionInDegrees(legConfig.FemurId, legGoalPositions.Femur);
+            _driver.SetGoalPositionInDegrees(legConfig.TibiaId, legGoalPositions.Tibia);
         }
 
         private static LegGoalPositions CalculateIkForLeg(Vector3 target, LegConfiguration legConfig)
