@@ -13,31 +13,16 @@ namespace DynamixelServo.TestConsole
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
             Console.WriteLine("Starting");
-            //while (true)
-            //{
-            //    float[] input = Console
-            //        .ReadLine()
-            //        .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-            //        .Select(float.Parse)
-            //        .ToArray();
-            //    float x = input[0];
-            //    float y = input[1];
-            //    float z = input[2];
-            //    QuadrupedIkDriver.MoveFrontLeftLeg(new Vector3(x, y, z), null);
-            //}
             //StartTelemetricObserver();
             using (DynamixelDriver driver = new DynamixelDriver("COM4"))
-            using (QuadrupedDriver quadruped = new QuadrupedDriver(driver))
+            using (QuadrupedIkDriver quadruped = new QuadrupedIkDriver(driver))
             {
-                //foreach (var servo in driver.Search(1, 20))
-                //{
-                //    driver.SetTorque(servo, false);
-                //}
-                //Environment.Exit(0);
-                quadruped.SetupAndStance();
+                quadruped.Setup();
+                quadruped.RelaxedStance();
                 Thread.Sleep(1000);
                 Console.Beep();
                 bool keepGoing = true;
@@ -52,43 +37,18 @@ namespace DynamixelServo.TestConsole
                             quadruped.TurnRight();
                             break;
                         case ConsoleKey.UpArrow:
-                            Console.WriteLine("Enter point B");
-                            float[] input = Console
-                                .ReadLine()
-                                .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                                .Select(float.Parse)
-                                .ToArray();
-                            float x = input[0];
-                            float y = input[1];
-                            float z = input[2];
-                            QuadrupedIkDriver.MoveFrontLeftLeg(new Vector3(x, y, z), quadruped);
+                            Console.WriteLine("Not available");
                             break;
                         case ConsoleKey.DownArrow:
-                            quadruped.Stance();
+                            quadruped.RelaxedStance();
                             break;
                         case ConsoleKey.Escape:
                             keepGoing = false;
                             break;
                     }
                 }
-                // rotate to both sides
-                //const int turnTimes = 3;
-                //for (int index = 0; index < turnTimes; index++)
-                //{
-                //    Quadropod.TurnRight(driver);
-                //    Thread.Sleep(100);
-                //}
-                //for (int index = 0; index < turnTimes; index++)
-                //{
-                //    Quadropod.TurnLeft(driver);
-                //    Thread.Sleep(100);
-                //}
-                quadruped.Stance();
                 Console.Beep();
-                foreach (var servo in driver.Search(1, 20))
-                {
-                    driver.SetTorque(servo, false);
-                }
+                quadruped.DisableMotors();
             }
             Console.WriteLine("Press enter to exit");
             Console.ReadLine();
