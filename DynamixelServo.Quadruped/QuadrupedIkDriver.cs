@@ -54,7 +54,10 @@ namespace DynamixelServo.Quadruped
             _driver.SetGoalPositionInDegrees(RearRight.TibiaId, rearRight.Tibia);
         }
 
+
+        public void Dispose()
         {
+            _driver?.Dispose();
         }
 
         private static LegGoalPositions CalculateIkForLeg(Vector3 target, Vector3 legPosition, float angleOffset)
@@ -91,9 +94,5 @@ namespace DynamixelServo.Quadruped
             return Math.Acos((b.ToPower(2) + c.ToPower(2) - a.ToPower(2)) / (2 * b * c)).RadToDegree();
         }
 
-        public void Dispose()
-        {
-            _driver?.Dispose();
-        }
     }
 }
