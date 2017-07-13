@@ -11,6 +11,10 @@ namespace DynamixelServo.Quadruped
         public static readonly LegConfiguration RearLeft   = new LegConfiguration(7, 9, 11, 135, new Vector3(-6.5f, -6.5f, 0));
         public static readonly LegConfiguration RearRight  = new LegConfiguration(8, 10, 12, -135, new Vector3(6.5f, -6.5f, 0));
 
+        private static readonly byte[] Coxas  = { FrontLeft.CoxaId, FrontRight.CoxaId, RearLeft.CoxaId, RearRight.CoxaId };
+        private static readonly byte[] Femurs = { FrontLeft.FemurId, FrontRight.FemurId, RearLeft.FemurId, RearRight.FemurId };
+        private static readonly byte[] Tibias = { FrontLeft.TibiaId, FrontRight.TibiaId, RearLeft.TibiaId, RearRight.TibiaId };
+
         private const float CoxaLength = 5.3f;
         private const float FemurLength = 6.5f;
         private const float TibiaLength = 13f;
@@ -22,6 +26,24 @@ namespace DynamixelServo.Quadruped
             _driver = driver;
         }
 
+        public void Setup()
+        {
+            foreach (var servo in Coxas)
+            {
+                _driver.SetComplianceSlope(servo, ComplianceSlope.S32);
+                _driver.SetMovingSpeed(servo, 300);
+            }
+            foreach (var servo in Femurs)
+            {
+                _driver.SetComplianceSlope(servo, ComplianceSlope.S32);
+                _driver.SetMovingSpeed(servo, 300);
+            }
+            foreach (var servo in Tibias)
+            {
+                _driver.SetComplianceSlope(servo, ComplianceSlope.S32);
+                _driver.SetMovingSpeed(servo, 300);
+            }
+        }
         public void MoveFrontLeftLeg(Vector3 target)
         {
             var frontLeft = CalculateIkForLeg(target, FrontLeft);
