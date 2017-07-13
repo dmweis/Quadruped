@@ -24,7 +24,7 @@ namespace DynamixelServo.Quadruped
 
         public void MoveFrontLeftLeg(Vector3 target)
         {
-            var frontLeft = CalculateIkForLeg(new Vector3(-15, 15, -13), FrontLeft);
+            var frontLeft = CalculateIkForLeg(target, FrontLeft);
             _driver.SetGoalPositionInDegrees(FrontLeft.CoxaId, frontLeft.Coxa);
             _driver.SetGoalPositionInDegrees(FrontLeft.FemurId, frontLeft.Femur);
             _driver.SetGoalPositionInDegrees(FrontLeft.TibiaId, frontLeft.Tibia);
