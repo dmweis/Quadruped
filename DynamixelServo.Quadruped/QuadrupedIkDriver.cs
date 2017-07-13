@@ -59,7 +59,7 @@ namespace DynamixelServo.Quadruped
             MoveLeg(new Vector3( 15, -15, -13), RearRight);
         }
 
-        public void MoveLeg(Vector3 target, LegConfiguration legConfig)
+        private void MoveLeg(Vector3 target, LegConfiguration legConfig)
         {
             var legGoalPositions = CalculateIkForLeg(target, legConfig);
             _driver.SetGoalPositionInDegrees(legConfig.CoxaId, legGoalPositions.Coxa);
