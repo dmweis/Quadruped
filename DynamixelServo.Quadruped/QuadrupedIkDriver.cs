@@ -1,15 +1,21 @@
 ﻿using System;
+using System.Linq;
 using DynamixelServo.Driver;
 
 namespace DynamixelServo.Quadruped
 {
     public class QuadrupedIkDriver : IDisposable
     {
+        // angles by which the legs are ofcenter from the motor centers
+        private const int FemurOffset = 13;
+        private const int TibiaOffset = 35;
 
-        public static readonly LegConfiguration FrontLeft  = new LegConfiguration(1, 3, 5, 45, new Vector3(-6.5f, 6.5f, 0));
-        public static readonly LegConfiguration FrontRight = new LegConfiguration(2, 4, 6, -45, new Vector3(6.5f, 6.5f, 0));
-        public static readonly LegConfiguration RearLeft   = new LegConfiguration(7, 9, 11, 135, new Vector3(-6.5f, -6.5f, 0));
-        public static readonly LegConfiguration RearRight  = new LegConfiguration(8, 10, 12, -135, new Vector3(6.5f, -6.5f, 0));
+        // Correction numbers are set up so that if you add them to the angle the motor center will bo pointing to the desired angle
+        // the offset for each axis is than added to compensate for the shape of the legs
+        private static readonly LegConfiguration FrontLeft  = new LegConfiguration(1, 3,  5,   45,  new Vector3(-6.5f, 6.5f, 0), -240 + FemurOffset, -330 + TibiaOffset);
+        private static readonly LegConfiguration FrontRight = new LegConfiguration(2, 4,  6,  -45,  new Vector3(6.5f, 6.5f, 0),   60 + FemurOffset,  -30 + TibiaOffset);
+        private static readonly LegConfiguration RearLeft   = new LegConfiguration(7, 9,  11,  135, new Vector3(-6.5f, -6.5f, 0), 60 + FemurOffset,  -30 + TibiaOffset);
+        private static readonly LegConfiguration RearRight  = new LegConfiguration(8, 10, 12, -135, new Vector3(6.5f, -6.5f, 0), -240 + FemurOffset, -330 + TibiaOffset);
 
         private static readonly byte[] Coxas  = { FrontLeft.CoxaId, FrontRight.CoxaId, RearLeft.CoxaId, RearRight.CoxaId };
         private static readonly byte[] Femurs = { FrontLeft.FemurId, FrontRight.FemurId, RearLeft.FemurId, RearRight.FemurId };
@@ -48,7 +54,7 @@ namespace DynamixelServo.Quadruped
         public void RelaxedStance()
         {
             MoveLeg(new Vector3(-15,  15, -13), FrontLeft);
-            MoveLeg(new Vector3( 15,  15, -13), FrontRight);
+            MoveLeg(new Vector3(15, 15, -13), FrontRight);
             MoveLeg(new Vector3(-15, -15, -13), RearLeft);
             MoveLeg(new Vector3( 15, -15, -13), RearRight);
         }
@@ -68,6 +74,22 @@ namespace DynamixelServo.Quadruped
         public void MoveRearLeftLeg(Vector3 target) => MoveLeg(target, RearLeft);
 
         public void MoveRearRightLeg(Vector3 target) => MoveLeg(target, RearRight);
+
+        public void DisableMotors()
+        {
+            foreach (var servo in Coxas)
+            {
+                _driver.SetTorque(servo, false);
+            }
+            foreach (var servo in Femurs)
+            {
+                _driver.SetTorque(servo, false);
+            }
+            foreach (var servo in Tibias)
+            {
+                _driver.SetTorque(servo, false);
+            }
+        }
 
         public void Dispose()
         {
@@ -97,8 +119,8 @@ namespace DynamixelServo.Quadruped
             float femurAngle = angleByFemur + groundToTargetAngleSize;
             // these angles need to be converted to the dynamixel angles
             // in other words horizon is 150 for the dynamixel angles so we need to recalcualate them
-            float correctedFemur = 240 - femurAngle - 13;
-            float correctedTibia = 330 - angleByTibia - 35;
+            float correctedFemur = Math.Abs(legConfig.FemurCorrection + femurAngle);
+            float correctedTibia = Math.Abs(legConfig.TibiaCorrection + angleByTibia);
             float correctedCoxa = 150f - targetAngle;
             return new LegGoalPositions(correctedCoxa, correctedFemur, correctedTibia);
         }
