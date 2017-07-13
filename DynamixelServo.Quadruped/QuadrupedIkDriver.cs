@@ -38,17 +38,17 @@ namespace DynamixelServo.Quadruped
             foreach (var servo in Coxas)
             {
                 _driver.SetComplianceSlope(servo, ComplianceSlope.S32);
-                _driver.SetMovingSpeed(servo, 300);
+                _driver.SetMovingSpeed(servo, 200);
             }
             foreach (var servo in Femurs)
             {
                 _driver.SetComplianceSlope(servo, ComplianceSlope.S32);
-                _driver.SetMovingSpeed(servo, 300);
+                _driver.SetMovingSpeed(servo, 200);
             }
             foreach (var servo in Tibias)
             {
                 _driver.SetComplianceSlope(servo, ComplianceSlope.S32);
-                _driver.SetMovingSpeed(servo, 300);
+                _driver.SetMovingSpeed(servo, 200);
             }
         }
 
@@ -58,6 +58,48 @@ namespace DynamixelServo.Quadruped
             MoveLeg(new Vector3(15, 15, -13), FrontRight);
             MoveLeg(new Vector3(-15, -15, -13), RearLeft);
             MoveLeg(new Vector3( 15, -15, -13), RearRight);
+        }
+
+        public void Forward()
+        {
+            int ground = -13;
+            int lifted = -10;
+            int breakTime = 600;
+            int a = 15;
+            int b = 10;
+            int c = 20;
+            
+            // move forward
+            MoveFrontLeftLeg(new Vector3(-a, b, ground));
+            MoveFrontRightLeg(new Vector3(a, b, ground));
+            MoveRearLeftLeg(new Vector3(-a, -c, ground));
+            MoveRearRightLeg(new Vector3(a, -c, ground));
+            Thread.Sleep(breakTime);
+            // FrontLeft and RearRight
+            MoveFrontLeftLeg(new Vector3(-a, b, lifted));
+            MoveRearRightLeg(new Vector3(a, -c, lifted));
+            Thread.Sleep(breakTime);
+            MoveFrontLeftLeg(new Vector3(-a, c, lifted));
+            MoveRearRightLeg(new Vector3(a, -b, lifted));
+            Thread.Sleep(breakTime);
+            MoveFrontLeftLeg(new Vector3(-a, c, ground));
+            MoveRearRightLeg(new Vector3(a, -b, ground));
+            Thread.Sleep(breakTime);
+            // FrontRight and RearLeft
+            MoveFrontRightLeg(new Vector3(a, b, lifted));
+            MoveRearLeftLeg(new Vector3(-a, -c, lifted));
+            Thread.Sleep(breakTime);
+            MoveFrontRightLeg(new Vector3(a, c, lifted));
+            MoveRearLeftLeg(new Vector3(-a, -b, lifted));
+            Thread.Sleep(breakTime);
+            MoveFrontRightLeg(new Vector3(a, c, ground));
+            MoveRearLeftLeg(new Vector3(-a, -b, ground));
+            Thread.Sleep(breakTime);
+            MoveFrontLeftLeg(new Vector3(-a, c, ground));
+            MoveFrontRightLeg(new Vector3(a, c, ground));
+            MoveRearLeftLeg(new Vector3(-a, -b, ground));
+            MoveRearRightLeg(new Vector3(a, -b, ground));
+            Thread.Sleep(breakTime);
         }
 
         public void TurnRight() => Turn(20, 10, -13, -10, 350);

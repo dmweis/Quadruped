@@ -37,7 +37,7 @@ namespace DynamixelServo.TestConsole
                             quadruped.TurnRight();
                             break;
                         case ConsoleKey.UpArrow:
-                            Console.WriteLine("Not available");
+                            quadruped.Forward();
                             break;
                         case ConsoleKey.DownArrow:
                             quadruped.RelaxedStance();
