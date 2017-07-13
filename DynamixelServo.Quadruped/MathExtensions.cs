@@ -13,5 +13,10 @@ namespace DynamixelServo.Quadruped
         {
             return Math.PI * angle / 180.0;
         }
+
+        public static double ToPower(this double number, double powerOf)
+        {
+            return Math.Pow(number, powerOf);
+        }
     }
 }

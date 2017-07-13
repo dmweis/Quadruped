@@ -161,6 +161,11 @@ namespace DynamixelServo.Driver
             WriteByte(servoId, address, torqueFlag, protocol);
         }
 
+        public void SetGoalPositionInDegrees(byte servoId, float angle, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+        {
+            SetGoalPosition(servoId, DegreesToUnits(angle), protocol);
+        }
+
         public void SetGoalPosition(byte servoId, ushort goalPosition, DynamixelProtocol protocol = DynamixelProtocol.Version1)
         {
             ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_GOAL_POSITION : ADDR_XL_GOAL_POSITION;
@@ -228,6 +233,11 @@ namespace DynamixelServo.Driver
         {
             ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_TORQUE_LIMIT : ADDR_XL_GOAL_TORQUE;
             WriteUInt16(servoId, address, torque, protocol);
+        }
+
+        public float GetPresentPositionInDegrees(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+        {
+            return UnitsToDegrees(GetPresentPosition(servoId, protocol));
         }
 
         public ushort GetPresentPosition(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)

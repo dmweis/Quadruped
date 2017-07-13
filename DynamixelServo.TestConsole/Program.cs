@@ -16,24 +16,27 @@ namespace DynamixelServo.TestConsole
         static void Main(string[] args)
         {
             Console.WriteLine("Starting");
-            while (true)
-            {
-                Console.WriteLine("Enter point B");
-                float[] input = Console
-                    .ReadLine()
-                    .Split(new [] {' '}, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(float.Parse)
-                    .ToArray();
-                float x = input[0];
-                float y = input[1];
-                Console.WriteLine($"Result {QuadrupedIkDriver.MoveFrontLeftLeg(new Vector3(x, y, 0))}");
-            }
-            Console.WriteLine("Press enter to exit");
-            Console.ReadLine();
+            //while (true)
+            //{
+            //    float[] input = Console
+            //        .ReadLine()
+            //        .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+            //        .Select(float.Parse)
+            //        .ToArray();
+            //    float x = input[0];
+            //    float y = input[1];
+            //    float z = input[2];
+            //    QuadrupedIkDriver.MoveFrontLeftLeg(new Vector3(x, y, z), null);
+            //}
             //StartTelemetricObserver();
             using (DynamixelDriver driver = new DynamixelDriver("COM4"))
             using (QuadrupedDriver quadruped = new QuadrupedDriver(driver))
             {
+                //foreach (var servo in driver.Search(1, 20))
+                //{
+                //    driver.SetTorque(servo, false);
+                //}
+                //Environment.Exit(0);
                 quadruped.SetupAndStance();
                 Thread.Sleep(1000);
                 Console.Beep();
@@ -49,6 +52,16 @@ namespace DynamixelServo.TestConsole
                             quadruped.TurnRight();
                             break;
                         case ConsoleKey.UpArrow:
+                            Console.WriteLine("Enter point B");
+                            float[] input = Console
+                                .ReadLine()
+                                .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                                .Select(float.Parse)
+                                .ToArray();
+                            float x = input[0];
+                            float y = input[1];
+                            float z = input[2];
+                            QuadrupedIkDriver.MoveFrontLeftLeg(new Vector3(x, y, z), quadruped);
                             break;
                         case ConsoleKey.DownArrow:
                             quadruped.Stance();

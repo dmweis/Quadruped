@@ -23,6 +23,11 @@
             return new Vector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
         }
 
+        public static Vector3 operator -(Vector3 a, Vector2 b)
+        {
+            return new Vector3(a.X - b.X, a.Y - b.Y, a.Z);
+        }
+
         public static explicit operator Vector3(Vector2 vector)
         {
             return new Vector3(vector.X, vector.Y, 0);

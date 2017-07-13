@@ -6,7 +6,7 @@ namespace DynamixelServo.Quadruped
 {
     public class QuadrupedDriver : IDisposable
     {
-        private readonly DynamixelDriver _driver;
+        public readonly DynamixelDriver _driver;
         private const int TurnAngle = 20;
         private const int RelaxedFemur = -20;
         private const int RelaxedTibia = 60;
