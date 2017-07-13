@@ -77,7 +77,7 @@ namespace DynamixelServo.Quadruped
             {
                 // target is behind me
                 // can still happen if target is right bellow me
-                throw new NotSupportedException();
+                throw new NotSupportedException($"Target angle is {targetAngle}");
             }
             float femurAngle = angleByFemur + groundToTargetAngleSize;
             // these angles need to be converted to the dynamixel angles
