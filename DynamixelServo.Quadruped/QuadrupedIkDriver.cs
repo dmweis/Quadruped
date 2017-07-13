@@ -24,7 +24,7 @@ namespace DynamixelServo.Quadruped
 
         public void MoveFrontLeftLeg(Vector3 target)
         {
-            var frontLeft = CalculateIkForLeg(new Vector3(-15, 15, -13), FrontLeft.CoxaPosition, FrontLeft.AngleOffset);
+            var frontLeft = CalculateIkForLeg(new Vector3(-15, 15, -13), FrontLeft);
             _driver.SetGoalPositionInDegrees(FrontLeft.CoxaId, frontLeft.Coxa);
             _driver.SetGoalPositionInDegrees(FrontLeft.FemurId, frontLeft.Femur);
             _driver.SetGoalPositionInDegrees(FrontLeft.TibiaId, frontLeft.Tibia);
@@ -32,7 +32,7 @@ namespace DynamixelServo.Quadruped
 
         public void MoveFrontRightLeg(Vector3 target)
         {
-            var frontRight = CalculateIkForLeg(target, FrontRight.CoxaPosition, FrontRight.AngleOffset);
+            var frontRight = CalculateIkForLeg(target, FrontRight);
             _driver.SetGoalPositionInDegrees(FrontRight.CoxaId, frontRight.Coxa);
             _driver.SetGoalPositionInDegrees(FrontRight.FemurId, frontRight.Femur);
             _driver.SetGoalPositionInDegrees(FrontRight.TibiaId, frontRight.Tibia);
@@ -40,7 +40,7 @@ namespace DynamixelServo.Quadruped
 
         public void MoveRearLeftLeg(Vector3 target)
         {
-            var rearLeft = CalculateIkForLeg(target, RearLeft.CoxaPosition, RearLeft.AngleOffset);
+            var rearLeft = CalculateIkForLeg(target, RearLeft);
             _driver.SetGoalPositionInDegrees(RearLeft.CoxaId, rearLeft.Coxa);
             _driver.SetGoalPositionInDegrees(RearLeft.FemurId, rearLeft.Femur);
             _driver.SetGoalPositionInDegrees(RearLeft.TibiaId, rearLeft.Tibia);
@@ -48,22 +48,21 @@ namespace DynamixelServo.Quadruped
 
         public void MoveRearRightLeg(Vector3 target)
         {
-            var rearRight = CalculateIkForLeg(target, RearRight.CoxaPosition, RearRight.AngleOffset);
+            var rearRight = CalculateIkForLeg(target, RearRight);
             _driver.SetGoalPositionInDegrees(RearRight.CoxaId, rearRight.Coxa);
             _driver.SetGoalPositionInDegrees(RearRight.FemurId, rearRight.Femur);
             _driver.SetGoalPositionInDegrees(RearRight.TibiaId, rearRight.Tibia);
         }
-
 
         public void Dispose()
         {
             _driver?.Dispose();
         }
 
-        private static LegGoalPositions CalculateIkForLeg(Vector3 target, Vector3 legPosition, float angleOffset)
+        private static LegGoalPositions CalculateIkForLeg(Vector3 target, LegConfiguration legConfig)
         {
-            Vector3 relativeVector = target - legPosition;
-            float targetAngle = (float)(Math.Atan2(relativeVector.X, relativeVector.Y).RadToDegree() + angleOffset);
+            Vector3 relativeVector = target - legConfig.CoxaPosition;
+            float targetAngle = (float)(Math.Atan2(relativeVector.X, relativeVector.Y).RadToDegree() + legConfig.AngleOffset);
 
             float horizontalDistanceToTarget = (float)Math.Sqrt(Math.Pow(relativeVector.X, 2) + Math.Pow(relativeVector.Y, 2));
             float horizontalDistanceWithoutCoxa = horizontalDistanceToTarget - CoxaLength;
