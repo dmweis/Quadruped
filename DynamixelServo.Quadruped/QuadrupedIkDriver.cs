@@ -44,6 +44,15 @@ namespace DynamixelServo.Quadruped
                 _driver.SetMovingSpeed(servo, 300);
             }
         }
+
+        public void RelaxedStance()
+        {
+            MoveLeg(new Vector3(-15,  15, -13), FrontLeft);
+            MoveLeg(new Vector3( 15,  15, -13), FrontRight);
+            MoveLeg(new Vector3(-15, -15, -13), RearLeft);
+            MoveLeg(new Vector3( 15, -15, -13), RearRight);
+        }
+
         public void MoveFrontLeftLeg(Vector3 target)
         {
             var frontLeft = CalculateIkForLeg(target, FrontLeft);
