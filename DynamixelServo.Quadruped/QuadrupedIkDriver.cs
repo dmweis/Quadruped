@@ -54,12 +54,7 @@ namespace DynamixelServo.Quadruped
             _driver.SetGoalPositionInDegrees(RearRight.TibiaId, rearRight.Tibia);
         }
 
-        public static void TestIk()
         {
-            var frontLeft = CalculateIkForLeg(new Vector3(-15, 15, -13), FrontLeft.CoxaPosition, FrontLeft.AngleOffset);
-            var frontRight = CalculateIkForLeg(new Vector3(15, 15, -13), FrontRight.CoxaPosition, FrontRight.AngleOffset);
-            var rearLeft = CalculateIkForLeg(new Vector3(-15, -15, -13), RearLeft.CoxaPosition, RearLeft.AngleOffset);
-            var rearRight = CalculateIkForLeg(new Vector3(15, -15, -13), RearRight.CoxaPosition, RearRight.AngleOffset);
         }
 
         private static LegGoalPositions CalculateIkForLeg(Vector3 target, Vector3 legPosition, float angleOffset)
