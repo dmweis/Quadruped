@@ -129,14 +129,6 @@ namespace DynamixelServo.Quadruped
             Thread.Sleep(breakTime);
         }
 
-        public void MoveFrontLeftLeg(Vector3 target) => MoveLeg(target, FrontLeft);
-
-        public void MoveFrontRightLeg(Vector3 target) => MoveLeg(target, FrontRight);
-
-        public void MoveRearLeftLeg(Vector3 target) => MoveLeg(target, RearLeft);
-
-        public void MoveRearRightLeg(Vector3 target) => MoveLeg(target, RearRight);
-
         public void DisableMotors()
         {
             foreach (var servo in Coxas)
@@ -156,6 +148,31 @@ namespace DynamixelServo.Quadruped
         public void Dispose()
         {
             _driver?.Dispose();
+        }
+
+        public void MoveFrontLeftLeg(Vector3 target) => MoveLeg(target, FrontLeft);
+
+        public void MoveFrontRightLeg(Vector3 target) => MoveLeg(target, FrontRight);
+
+        public void MoveRearLeftLeg(Vector3 target) => MoveLeg(target, RearLeft);
+
+        public void MoveRearRightLeg(Vector3 target) => MoveLeg(target, RearRight);
+
+        public Vector3 GetFrontLeftLegPosition() => GetCurrentLegPosition(FrontLeft);
+
+        public Vector3 GetFrontRightLegPosition() => GetCurrentLegPosition(FrontRight);
+
+        public Vector3 GetRearLeftLegPosition() => GetCurrentLegPosition(RearLeft);
+
+        public Vector3 GetRearRightLegPosition() => GetCurrentLegPosition(RearRight);
+
+        public Vector3 GetCurrentLegPosition(LegConfiguration legConfig)
+        {
+            float coxa = _driver.GetPresentPositionInDegrees(legConfig.CoxaId);
+            float femur = _driver.GetPresentPositionInDegrees(legConfig.FemurId);
+            float tibia = _driver.GetPresentPositionInDegrees(legConfig.TibiaId);
+            LegGoalPositions positions = new LegGoalPositions(coxa, femur, tibia);
+            return CalculateFkForLeg(positions, legConfig);
         }
 
         private void MoveLeg(Vector3 target, LegConfiguration legConfig)
