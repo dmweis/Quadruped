@@ -54,22 +54,22 @@ namespace DynamixelServo.Quadruped
 
         public void StandUpfromGround()
         {
-            MoveFrontLeftLeg(new Vector3(-15, 15, 0));
-            MoveFrontRightLeg(new Vector3(15, 15, 0));
-            MoveRearLeftLeg(new Vector3(-15, -15, 0));
-            MoveRearRightLeg(new Vector3(15, -15, 0));
-            Thread.Sleep(500);
-            MoveFrontLeftLeg(new Vector3(-15, 15, -10));
-            MoveFrontRightLeg(new Vector3(15, 15, -10));
-            MoveRearLeftLeg(new Vector3(-15, -15, -10));
-            MoveRearRightLeg(new Vector3(15, -15, -10));
-            Thread.Sleep(500);
+            float average = (GetFrontLeftLegPosition().Z +
+                GetFrontRightLegPosition().Z +
+                GetRearLeftLegPosition().Z +
+                GetRearRightLegPosition().Z) / 4;
+            if (average > -9)
+            {
+                MoveFrontLeftLeg(new Vector3(-15, 15, 0));
+                MoveFrontRightLeg(new Vector3(15, 15, 0));
+                MoveRearLeftLeg(new Vector3(-15, -15, 0));
+                MoveRearRightLeg(new Vector3(15, -15, 0));
+                Thread.Sleep(1000);
+            }
             MoveFrontLeftLeg(new Vector3(-15, 15, -13));
             MoveFrontRightLeg(new Vector3(15, 15, -13));
             MoveRearLeftLeg(new Vector3(-15, -15, -13));
             MoveRearRightLeg(new Vector3(15, -15, -13));
-            Thread.Sleep(2000);
-            MoveRearLeftLeg(new Vector3(-7f, -20, -13));
         }
 
         public void RelaxedStance()
