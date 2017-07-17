@@ -58,7 +58,7 @@ namespace DynamixelServo.Quadruped
             MoveFrontRightLeg(new Vector3(15, 15, 0));
             MoveRearLeftLeg(new Vector3(-15, -15, 0));
             MoveRearRightLeg(new Vector3(15, -15, 0));
-            Thread.Sleep(2000);
+            Thread.Sleep(500);
             MoveFrontLeftLeg(new Vector3(-15, 15, -10));
             MoveFrontRightLeg(new Vector3(15, 15, -10));
             MoveRearLeftLeg(new Vector3(-15, -15, -10));
@@ -68,6 +68,8 @@ namespace DynamixelServo.Quadruped
             MoveFrontRightLeg(new Vector3(15, 15, -13));
             MoveRearLeftLeg(new Vector3(-15, -15, -13));
             MoveRearRightLeg(new Vector3(15, -15, -13));
+            Thread.Sleep(2000);
+            MoveRearLeftLeg(new Vector3(-7f, -20, -13));
         }
 
         public void RelaxedStance()
@@ -165,6 +167,51 @@ namespace DynamixelServo.Quadruped
             MoveFrontRightLeg(new Vector3(a, b, ground));
             MoveRearLeftLeg(new Vector3(-a, -b, ground));
             Thread.Sleep(breakTime);
+        }
+
+        public void TurnLeftNew()
+        {
+            RelaxedStance();
+
+            MoveRelativeCenterMass(new Vector3(-2.5f, -2.5f, 0));
+            Thread.Sleep(500);
+            Vector3 currentPos = GetFrontRightLegPosition();
+            MoveFrontRightLeg(new Vector3(currentPos.X, currentPos.Y, -8));
+            Thread.Sleep(250);
+            MoveFrontRightLeg(new Vector3(10, 20, -8));
+            Thread.Sleep(250);
+            MoveFrontRightLeg(new Vector3(10, 20, -13));
+            Thread.Sleep(250);
+
+            MoveRelativeCenterMass(new Vector3(5, 0, 0));
+            Thread.Sleep(500);
+            currentPos = GetFrontLeftLegPosition();
+            MoveFrontLeftLeg(new Vector3(currentPos.X, currentPos.Y, -8));
+            Thread.Sleep(250);
+            MoveFrontLeftLeg(new Vector3(-20, 10, -8));
+            Thread.Sleep(250);
+            MoveFrontLeftLeg(new Vector3(-20, 10, -13));
+            Thread.Sleep(250);
+
+            MoveRelativeCenterMass(new Vector3(0, 5, 0));
+            Thread.Sleep(500);
+            currentPos = GetRearLeftLegPosition();
+            MoveRearLeftLeg(new Vector3(currentPos.X, currentPos.Y, -8));
+            Thread.Sleep(250);
+            MoveRearLeftLeg(new Vector3(-10, -20, -8));
+            Thread.Sleep(250);
+            MoveRearLeftLeg(new Vector3(-10, -20, -13));
+            Thread.Sleep(250);
+
+            MoveRelativeCenterMass(new Vector3(-5, 0, 0));
+            Thread.Sleep(500);
+            currentPos = GetRearRightLegPosition();
+            MoveRearRightLeg(new Vector3(currentPos.X, currentPos.Y, -8));
+            Thread.Sleep(250);
+            MoveRearRightLeg(new Vector3(10, 20, -8));
+            Thread.Sleep(250);
+            MoveRearRightLeg(new Vector3(10, 20, -13));
+            Thread.Sleep(250);
         }
 
         public void DisableMotors()

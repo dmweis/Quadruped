@@ -31,7 +31,7 @@ namespace DynamixelServo.TestConsole
                     switch (GetCurrentConsoleKey())
                     {
                         case ConsoleKey.LeftArrow:
-                            quadruped.TurnLeft();
+                            quadruped.TurnLeftNew();
                             break;
                         case ConsoleKey.RightArrow:
                             quadruped.TurnRight();
