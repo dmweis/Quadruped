@@ -22,6 +22,8 @@ namespace DynamixelServo.Quadruped
         private static readonly byte[] Femurs = { FrontLeft.FemurId, FrontRight.FemurId, RearLeft.FemurId, RearRight.FemurId };
         private static readonly byte[] Tibias = { FrontLeft.TibiaId, FrontRight.TibiaId, RearLeft.TibiaId, RearRight.TibiaId };
 
+        private static readonly byte[] AllMotorIds = new [] {Coxas, Femurs, Tibias}.SelectMany(x => x).ToArray();
+
         private const float CoxaLength = 5.3f;
         private const float FemurLength = 6.5f;
         private const float TibiaLength = 13f;
