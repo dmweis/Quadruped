@@ -166,6 +166,14 @@ namespace DynamixelServo.Quadruped
             _driver.SetGoalPositionInDegrees(legConfig.TibiaId, legGoalPositions.Tibia);
         }
 
+        public void MoveToHeight(float height, float distance)
+        {
+            MoveLeg(new Vector3(-distance, distance, height), FrontLeft);
+            MoveLeg(new Vector3(distance, distance, height), FrontRight);
+            MoveLeg(new Vector3(-distance, -distance, height), RearLeft);
+            MoveLeg(new Vector3(distance, -distance, height), RearRight);
+        }
+
         private static Vector3 CalculateFkForLeg(LegGoalPositions currentPsoitions, LegConfiguration legConfig)
         {
             float femurAngle = Math.Abs(currentPsoitions.Femur - Math.Abs(legConfig.FemurCorrection));
