@@ -1,4 +1,6 @@
-﻿namespace DynamixelServo.Quadruped
+﻿using System;
+
+namespace DynamixelServo.Quadruped
 {
     public struct Vector3
     {
@@ -26,6 +28,11 @@
         public static Vector3 operator -(Vector3 a, Vector3 b)
         {
             return new Vector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        }
+
+        public static float Distance(Vector3 a, Vector3 b)
+        {
+            return (float) Math.Sqrt((a.X - b.X).Square() + (a.Y - b.Y).Square() + (a.Z - b.Z).Square());
         }
 
         public override string ToString()
