@@ -90,6 +90,14 @@ namespace DynamixelServo.Quadruped
             MoveRearRightLeg(rearRightPosition - transform);
         }
 
+        public void MoveAbsoluteCenterMass(Vector3 transform, float legDistance, float height)
+        {
+            MoveFrontLeftLeg(new Vector3(-legDistance, legDistance, height) - transform);
+            MoveFrontRightLeg(new Vector3(legDistance, legDistance, height) - transform);
+            MoveRearLeftLeg(new Vector3(-legDistance, -legDistance, height) - transform);
+            MoveRearRightLeg(new Vector3(legDistance, -legDistance, height) - transform);
+        }
+
         public void ForwardSimple()
         {
             int ground = -13;
