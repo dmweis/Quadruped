@@ -42,6 +42,13 @@ namespace DynamixelServo.TestConsole
                         case ConsoleKey.DownArrow:
                             quadruped.RelaxedStance();
                             break;
+                        case ConsoleKey.Spacebar:
+                            Console.WriteLine("Enter height and distance");
+                            float[] input = Console.ReadLine().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries).Select(float.Parse).ToArray();
+                            float height = input[0];
+                            float distance = input[1];
+                            quadruped.MoveToHeight(height, distance);
+                            break;
                         case ConsoleKey.Escape:
                             keepGoing = false;
                             break;
