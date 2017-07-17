@@ -78,7 +78,7 @@ namespace DynamixelServo.Quadruped
             MoveLeg(new Vector3( 15, -15, -13), RearRight);
         }
 
-        public void MoveCenterMass(Vector3 transform)
+        public void MoveRelativeCenterMass(Vector3 transform)
         {
             Vector3 frontLeftPosition = GetFrontLeftLegPosition();
             Vector3 frontRightPosition = GetFrontRightLegPosition();

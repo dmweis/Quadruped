@@ -48,7 +48,7 @@ namespace DynamixelServo.TestConsole
                             float x = input[0];
                             float y = input[1];
                             float z = input[2];
-                            quadruped.MoveCenterMass(new Vector3(x, y, z));
+                            quadruped.MoveRelativeCenterMass(new Vector3(x, y, z));
                             break;
                         case ConsoleKey.Escape:
                             keepGoing = false;
