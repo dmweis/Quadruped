@@ -166,6 +166,27 @@ namespace DynamixelServo.Quadruped
             _driver.SetGoalPositionInDegrees(legConfig.TibiaId, legGoalPositions.Tibia);
         }
 
+        private static Vector3 CalculateFkForLeg(LegGoalPositions currentPsoitions, LegConfiguration legConfig)
+        {
+            float femurAngle = Math.Abs(currentPsoitions.Femur - Math.Abs(legConfig.FemurCorrection));
+            float tibiaAngle = Math.Abs(currentPsoitions.Tibia - Math.Abs(legConfig.TibiaCorrection));
+            float coxaAngle = 150 - currentPsoitions.Coxa - legConfig.AngleOffset;
+            float baseX = (float)Math.Sin(coxaAngle.DegreeToRad());
+            float baseY = (float)Math.Cos(coxaAngle.DegreeToRad());
+            Vector3 coxaVector = new Vector3(baseX, baseY, 0) * CoxaLength;
+            float femurX = (float) Math.Sin((femurAngle - 90).DegreeToRad()) * FemurLength;
+            float femurY = (float) Math.Cos((femurAngle - 90).DegreeToRad()) * FemurLength;
+            Vector3 femurVector = new Vector3(baseX * femurY, baseY * femurY, femurX);
+            // to calculate tibia we need angle between tibia and a vertical line
+            // we get this by calculating the angles formed by a horizontal line from femur, femur and part of fibia by knowing that the sum of angles is 180
+            // than we just remove this from teh tibia andgle and done
+            float angleForTibiaVector = tibiaAngle - (180 - 90 - (femurAngle - 90));
+            float tibiaX = (float) Math.Sin(angleForTibiaVector.DegreeToRad()) * TibiaLength;
+            float tibiaY = (float) Math.Cos(angleForTibiaVector.DegreeToRad()) * TibiaLength;
+            Vector3 tibiaVector = new Vector3(baseX * tibiaX, baseY * tibiaX, -tibiaY);
+            return legConfig.CoxaPosition + coxaVector + femurVector + tibiaVector;
+        }
+        
         private static LegGoalPositions CalculateIkForLeg(Vector3 target, LegConfiguration legConfig)
         {
             Vector3 relativeVector = target - legConfig.CoxaPosition;
