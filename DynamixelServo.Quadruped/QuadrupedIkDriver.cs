@@ -37,18 +37,18 @@ namespace DynamixelServo.Quadruped
         {
             foreach (var servo in Coxas)
             {
-                _driver.SetComplianceSlope(servo, ComplianceSlope.S128);
-                _driver.SetMovingSpeed(servo, 200);
+                _driver.SetComplianceSlope(servo, ComplianceSlope.S64);
+                _driver.SetMovingSpeed(servo, 300);
             }
             foreach (var servo in Femurs)
             {
-                _driver.SetComplianceSlope(servo, ComplianceSlope.S128);
-                _driver.SetMovingSpeed(servo, 200);
+                _driver.SetComplianceSlope(servo, ComplianceSlope.S64);
+                _driver.SetMovingSpeed(servo, 300);
             }
             foreach (var servo in Tibias)
             {
-                _driver.SetComplianceSlope(servo, ComplianceSlope.S128);
-                _driver.SetMovingSpeed(servo, 200);
+                _driver.SetComplianceSlope(servo, ComplianceSlope.S64);
+                _driver.SetMovingSpeed(servo, 300);
             }
         }
 
@@ -95,9 +95,9 @@ namespace DynamixelServo.Quadruped
             MoveRearRightLeg(new Vector3(close, -far, ground));
         }
 
-        public void TurnRight() => Turn(20, 10, -13, -10, 350);
+        public void TurnRight() => Turn(20, 10, -13, -8, 200);
 
-        public void TurnLeft() => Turn(10, 20, -13, -10, 350);
+        public void TurnLeft() => Turn(10, 20, -13, -8, 200);
 
         private void Turn(int a, int b, int ground, int lifted, int breakTime)
         {
