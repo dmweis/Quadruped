@@ -60,7 +60,7 @@ namespace DynamixelServo.Quadruped
             MoveLeg(new Vector3( 15, -15, -13), RearRight);
         }
 
-        public void Forward()
+        public void ForwardSimple()
         {
             int ground = -13;
             int lifted = -11;

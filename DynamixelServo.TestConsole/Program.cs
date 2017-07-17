@@ -37,7 +37,7 @@ namespace DynamixelServo.TestConsole
                             quadruped.TurnRight();
                             break;
                         case ConsoleKey.UpArrow:
-                            quadruped.Forward();
+                            quadruped.ForwardSimple();
                             break;
                         case ConsoleKey.DownArrow:
                             quadruped.RelaxedStance();
