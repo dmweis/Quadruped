@@ -22,7 +22,7 @@ namespace DynamixelServo.TestConsole
             using (QuadrupedIkDriver quadruped = new QuadrupedIkDriver(driver))
             {
                 quadruped.Setup();
-                quadruped.RelaxedStance();
+                quadruped.StandUpfromGround();
                 Thread.Sleep(1000);
                 Console.Beep();
                 bool keepGoing = true;
@@ -43,11 +43,12 @@ namespace DynamixelServo.TestConsole
                             quadruped.RelaxedStance();
                             break;
                         case ConsoleKey.Spacebar:
-                            Console.WriteLine("Enter height and distance");
+                            Console.WriteLine("Enter x y z");
                             float[] input = Console.ReadLine().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries).Select(float.Parse).ToArray();
-                            float height = input[0];
-                            float distance = input[1];
-                            quadruped.MoveToHeight(height, distance);
+                            float x = input[0];
+                            float y = input[1];
+                            float z = input[2];
+                            quadruped.MoveCenterMass(new Vector3(x, y, z));
                             break;
                         case ConsoleKey.Escape:
                             keepGoing = false;
