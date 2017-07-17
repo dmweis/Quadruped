@@ -145,11 +145,6 @@ namespace DynamixelServo.Quadruped
             }
         }
 
-        public void Dispose()
-        {
-            _driver?.Dispose();
-        }
-
         public void MoveFrontLeftLeg(Vector3 target) => MoveLeg(target, FrontLeft);
 
         public void MoveFrontRightLeg(Vector3 target) => MoveLeg(target, FrontRight);
@@ -189,6 +184,11 @@ namespace DynamixelServo.Quadruped
             MoveLeg(new Vector3(distance, distance, height), FrontRight);
             MoveLeg(new Vector3(-distance, -distance, height), RearLeft);
             MoveLeg(new Vector3(distance, -distance, height), RearRight);
+        }
+
+        public void Dispose()
+        {
+            _driver?.Dispose();
         }
 
         private static Vector3 CalculateFkForLeg(LegGoalPositions currentPsoitions, LegConfiguration legConfig)
