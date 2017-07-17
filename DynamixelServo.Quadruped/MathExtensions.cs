@@ -28,5 +28,10 @@ namespace DynamixelServo.Quadruped
         {
             return Math.Pow(number, powerOf);
         }
+
+        public static float Square(this float number)
+        {
+            return number * number;
+        }
     }
 }
