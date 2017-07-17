@@ -13,6 +13,11 @@
             Z = z;
         }
 
+        public static Vector3 operator *(Vector3 vector, float multiplier)
+        {
+            return new Vector3(vector.X * multiplier, vector.Y * multiplier, vector.Z * multiplier);
+        }
+
         public static Vector3 operator +(Vector3 a, Vector3 b)
         {
             return new Vector3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
