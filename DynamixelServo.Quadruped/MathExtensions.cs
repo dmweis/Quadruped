@@ -33,5 +33,10 @@ namespace DynamixelServo.Quadruped
         {
             return number * number;
         }
+
+        public static float Difference(this float a, float b)
+        {
+            return Math.Abs(a - b);
+        }
     }
 }

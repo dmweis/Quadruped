@@ -8,6 +8,18 @@ namespace DynamixelServo.Quadruped
         public readonly float Y;
         public readonly float Z;
 
+        public float Length => (float)Math.Sqrt(X.Square() + Y.Square() + Z.Square());
+
+        public Vector3 Normal
+        {
+            get
+            {
+                float length = Length;
+                return new Vector3(X/length, Y/length, Z/length);
+            }
+        }
+
+
         public Vector3(float x, float y, float z)
         {
             X = x;
@@ -33,6 +45,11 @@ namespace DynamixelServo.Quadruped
         public static float Distance(Vector3 a, Vector3 b)
         {
             return (float) Math.Sqrt((a.X - b.X).Square() + (a.Y - b.Y).Square() + (a.Z - b.Z).Square());
+        }
+
+        public static bool Similar(Vector3 a, Vector3 b, float marginOfError = float.Epsilon)
+        {
+            return Distance(a, b) <= marginOfError;
         }
 
         public override string ToString()
