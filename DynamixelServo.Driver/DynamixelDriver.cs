@@ -172,6 +172,11 @@ namespace DynamixelServo.Driver
             WriteUInt16(servoId, address, goalPosition, protocol);
         }
 
+        public float GetGoalPositionInDegrees(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+        {
+            return UnitsToDegrees(GetGoalPosition(servoId, protocol));
+        }
+
         public ushort GetGoalPosition(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
         {
             ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_GOAL_POSITION : ADDR_XL_GOAL_POSITION;
