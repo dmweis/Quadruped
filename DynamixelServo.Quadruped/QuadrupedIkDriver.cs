@@ -84,10 +84,10 @@ namespace DynamixelServo.Quadruped
 
         public void MoveRelativeCenterMass(Vector3 transform)
         {
-            Vector3 frontLeftPosition = GetFrontLeftLegPosition();
-            Vector3 frontRightPosition = GetFrontRightLegPosition();
-            Vector3 rearLeftPosition = GetRearLeftLegPosition();
-            Vector3 rearRightPosition = GetRearRightLegPosition();
+            Vector3 frontLeftPosition = GetFrontLeftLegGoal();
+            Vector3 frontRightPosition = GetFrontRightLegGoal();
+            Vector3 rearLeftPosition = GetRearLeftLegGoal();
+            Vector3 rearRightPosition = GetRearRightLegGoal();
             MoveFrontLeftLeg(frontLeftPosition - transform);
             MoveFrontRightLeg(frontRightPosition - transform);
             MoveRearLeftLeg(rearLeftPosition - transform);
@@ -177,7 +177,7 @@ namespace DynamixelServo.Quadruped
 
             MoveRelativeCenterMass(new Vector3(-2.5f, -2.5f, 0));
             Thread.Sleep(500);
-            Vector3 currentPos = GetFrontRightLegPosition();
+            Vector3 currentPos = GetFrontRightLegGoal();
             MoveFrontRightLeg(new Vector3(currentPos.X, currentPos.Y, -8));
             Thread.Sleep(250);
             MoveFrontRightLeg(new Vector3(10, 20, -8));
@@ -187,7 +187,7 @@ namespace DynamixelServo.Quadruped
 
             MoveRelativeCenterMass(new Vector3(5, 0, 0));
             Thread.Sleep(500);
-            currentPos = GetFrontLeftLegPosition();
+            currentPos = GetFrontLeftLegGoal();
             MoveFrontLeftLeg(new Vector3(currentPos.X, currentPos.Y, -8));
             Thread.Sleep(250);
             MoveFrontLeftLeg(new Vector3(-20, 10, -8));
@@ -197,7 +197,7 @@ namespace DynamixelServo.Quadruped
 
             MoveRelativeCenterMass(new Vector3(0, 5, 0));
             Thread.Sleep(500);
-            currentPos = GetRearLeftLegPosition();
+            currentPos = GetRearLeftLegGoal();
             MoveRearLeftLeg(new Vector3(currentPos.X, currentPos.Y, -8));
             Thread.Sleep(250);
             MoveRearLeftLeg(new Vector3(-10, -20, -8));
@@ -207,7 +207,7 @@ namespace DynamixelServo.Quadruped
 
             MoveRelativeCenterMass(new Vector3(-5, 0, 0));
             Thread.Sleep(500);
-            currentPos = GetRearRightLegPosition();
+            currentPos = GetRearRightLegGoal();
             MoveRearRightLeg(new Vector3(currentPos.X, currentPos.Y, -8));
             Thread.Sleep(250);
             MoveRearRightLeg(new Vector3(10, 20, -8));
@@ -239,6 +239,23 @@ namespace DynamixelServo.Quadruped
         public void MoveRearLeftLeg(Vector3 target) => MoveLeg(target, RearLeft);
 
         public void MoveRearRightLeg(Vector3 target) => MoveLeg(target, RearRight);
+
+        public Vector3 GetFrontLeftLegGoal() => GetGoalLegPosition(FrontLeft);
+
+        public Vector3 GetFrontRightLegGoal() => GetGoalLegPosition(FrontRight);
+
+        public Vector3 GetRearLeftLegGoal() => GetGoalLegPosition(RearLeft);
+
+        public Vector3 GetRearRightLegGoal() => GetGoalLegPosition(RearRight);
+
+        public Vector3 GetGoalLegPosition(LegConfiguration legConfig)
+        {
+            float coxa = _driver.GetGoalPositionInDegrees(legConfig.CoxaId);
+            float femur = _driver.GetGoalPositionInDegrees(legConfig.FemurId);
+            float tibia = _driver.GetGoalPositionInDegrees(legConfig.TibiaId);
+            LegGoalPositions positions = new LegGoalPositions(coxa, femur, tibia);
+            return CalculateFkForLeg(positions, legConfig);
+        }
 
         public Vector3 GetFrontLeftLegPosition() => GetCurrentLegPosition(FrontLeft);
 
