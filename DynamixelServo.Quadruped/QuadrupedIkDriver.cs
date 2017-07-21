@@ -240,15 +240,15 @@ namespace DynamixelServo.Quadruped
 
         public void MoveRearRightLeg(Vector3 target) => MoveLeg(target, RearRight);
 
-        public Vector3 GetFrontLeftLegGoal() => GetGoalLegPosition(FrontLeft);
+        public Vector3 GetFrontLeftLegGoal() => GetLegGoalPosition(FrontLeft);
 
-        public Vector3 GetFrontRightLegGoal() => GetGoalLegPosition(FrontRight);
+        public Vector3 GetFrontRightLegGoal() => GetLegGoalPosition(FrontRight);
 
-        public Vector3 GetRearLeftLegGoal() => GetGoalLegPosition(RearLeft);
+        public Vector3 GetRearLeftLegGoal() => GetLegGoalPosition(RearLeft);
 
-        public Vector3 GetRearRightLegGoal() => GetGoalLegPosition(RearRight);
+        public Vector3 GetRearRightLegGoal() => GetLegGoalPosition(RearRight);
 
-        public Vector3 GetGoalLegPosition(LegConfiguration legConfig)
+        public Vector3 GetLegGoalPosition(LegConfiguration legConfig)
         {
             float coxa = _driver.GetGoalPositionInDegrees(legConfig.CoxaId);
             float femur = _driver.GetGoalPositionInDegrees(legConfig.FemurId);
