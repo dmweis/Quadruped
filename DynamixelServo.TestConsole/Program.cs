@@ -31,20 +31,33 @@ namespace DynamixelServo.TestConsole
                     switch (GetCurrentConsoleKey())
                     {
                         case ConsoleKey.LeftArrow:
+                        case ConsoleKey.A:
                             quadruped.TurnLeft();
                             break;
                         case ConsoleKey.RightArrow:
+                        case ConsoleKey.D:
                             quadruped.TurnRight();
                             break;
                         case ConsoleKey.UpArrow:
                             quadruped.ForwardSimple();
                             break;
+                        case ConsoleKey.W:
+                            quadruped.ForwardCreeper();
+                            break;
+                        case ConsoleKey.E:
+                            quadruped.ForwardCreeperStable();
+                            break;
                         case ConsoleKey.DownArrow:
+                        case ConsoleKey.S:
                             quadruped.RelaxedStance();
                             break;
                         case ConsoleKey.Spacebar:
                             Console.WriteLine("Enter x y z");
-                            float[] input = Console.ReadLine().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries).Select(float.Parse).ToArray();
+                            float[] input = Console
+                                .ReadLine()
+                                .Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries)
+                                .Select(float.Parse)
+                                .ToArray();
                             float x = input[0];
                             float y = input[1];
                             float z = input[2];
@@ -59,7 +72,7 @@ namespace DynamixelServo.TestConsole
                 quadruped.DisableMotors();
             }
             Console.WriteLine("Press enter to exit");
-            Console.ReadLine();
+            //Console.ReadLine();
         }
 
         public static void RecordContinuouse()
