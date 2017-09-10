@@ -234,8 +234,10 @@ namespace DynamixelServo.Quadruped
         }
 
         public void TurnRight() => Turn(20, 10, -13, -8, 200);
+        public void TurnRightSlow() => Turn(16, 12, -13, -8, 150);
 
         public void TurnLeft() => Turn(10, 20, -13, -8, 200);
+        public void TurnLeftSlow() => Turn(12, 16, -13, -8, 150);
 
         private void Turn(int a, int b, int ground, int lifted, int breakTime)
         {
@@ -267,6 +269,7 @@ namespace DynamixelServo.Quadruped
             Thread.Sleep(breakTime);
         }
 
+        [System.Obsolete("Emthod is obsolete please use TurnLeft")]
         public void TurnLeftNew()
         {
             RelaxedStance();

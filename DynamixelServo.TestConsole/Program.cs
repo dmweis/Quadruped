@@ -13,7 +13,7 @@ namespace DynamixelServo.TestConsole
 {
     class Program
     {
-        
+        private static ConsoleKeyInfo _lastPressedKeyInfo;   
         static void Main(string[] args)
         {
             Console.WriteLine("Starting");
@@ -32,11 +32,25 @@ namespace DynamixelServo.TestConsole
                     {
                         case ConsoleKey.LeftArrow:
                         case ConsoleKey.A:
-                            quadruped.TurnLeft();
+                            if (_lastPressedKeyInfo.Modifiers == ConsoleModifiers.Shift)
+                            {
+                                quadruped.TurnLeft();
+                            }
+                            else
+                            {
+                                quadruped.TurnLeftSlow();
+                            }
                             break;
                         case ConsoleKey.RightArrow:
                         case ConsoleKey.D:
-                            quadruped.TurnRight();
+                            if (_lastPressedKeyInfo.Modifiers == ConsoleModifiers.Shift)
+                            {
+                                quadruped.TurnRight();
+                            }
+                            else
+                            {
+                                quadruped.TurnRightSlow();
+                            }
                             break;
                         case ConsoleKey.UpArrow:
                             quadruped.ForwardSimple();
@@ -240,7 +254,8 @@ namespace DynamixelServo.TestConsole
             {
                 Console.ReadKey(true);
             }
-            return Console.ReadKey(true).Key;
+            _lastPressedKeyInfo = Console.ReadKey(true);
+            return _lastPressedKeyInfo.Key;
         }
     }
 
