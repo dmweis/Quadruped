@@ -45,17 +45,19 @@ namespace DynamixelServo.Quadruped
         private Vector3 RearLeftTarget;
         private Vector3 RearRightTarget;
 
-        private Vector3 FrontLeftLastWrittenTarget;
-        private Vector3 FrontRightLastWrittenTarget;
-        private Vector3 RearLeftLastWrittenTarget;
-        private Vector3 RearRightLastWrittenTarget;
+        private Vector3 _frontLeftLastWrittenTarget;
+        private Vector3 _frontRightLastWrittenTarget;
+        private Vector3 _rearLeftLastWrittenTarget;
+        private Vector3 _rearRightLastWrittenTarget;
 
         public QuadrupedInterpolationDriver(DynamixelDriver driver)
         {
             _driver = driver;
-            _interpolationThread = new Thread(Interpolate);
-            _interpolationThread.IsBackground = true;
-            _interpolationThread.Name = "Quadruped Interpolation Thread";
+            _interpolationThread = new Thread(Interpolate)
+            {
+                IsBackground = true,
+                Name = "Quadruped Interpolation Thread"
+            };
             _interpolationThread.Start();
         }
 
@@ -63,10 +65,10 @@ namespace DynamixelServo.Quadruped
         {
             while (true)
             {
-                CompareAndMove(ref FrontLeftLastWrittenTarget, FrontLeftTarget, FrontLeft);
-                CompareAndMove(ref FrontRightLastWrittenTarget, FrontRightTarget, FrontRight);
-                CompareAndMove(ref RearLeftLastWrittenTarget, RearLeftTarget, RearLeft);
-                CompareAndMove(ref RearRightLastWrittenTarget, RearRightTarget, RearRight);
+                CompareAndMove(ref _frontLeftLastWrittenTarget, FrontLeftTarget, FrontLeft);
+                CompareAndMove(ref _frontRightLastWrittenTarget, FrontRightTarget, FrontRight);
+                CompareAndMove(ref _rearLeftLastWrittenTarget, RearLeftTarget, RearLeft);
+                CompareAndMove(ref _rearRightLastWrittenTarget, RearRightTarget, RearRight);
                 Thread.Sleep(_frameLength);
             }
         }
