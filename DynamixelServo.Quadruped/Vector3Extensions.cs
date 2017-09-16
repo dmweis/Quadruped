@@ -6,8 +6,7 @@ namespace DynamixelServo.Quadruped
     {
         public static Vector3 Normal(this Vector3 vector)
         {
-            float len = vector.Length();
-            return new Vector3(vector.X / len, vector.Y / len, vector.Z / len);
+            return Vector3.Normalize(vector);
         }
 
         public static bool Similar(this Vector3 a, Vector3 b, float marginOfError = float.Epsilon)
