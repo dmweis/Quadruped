@@ -10,7 +10,6 @@ using RabbitMQ.Client;
 using DynamixelServo.Quadruped;
 using RabbitMQ.Client.Events;
 using Timer = System.Timers.Timer;
-using Vector3 = DynamixelServo.Quadruped.Vector3;
 
 namespace DynamixelServo.TestConsole
 {

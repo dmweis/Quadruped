@@ -1,4 +1,6 @@
-﻿namespace DynamixelServo.Quadruped
+﻿using System.Numerics;
+
+namespace DynamixelServo.Quadruped
 {
     public class LegConfiguration
     {

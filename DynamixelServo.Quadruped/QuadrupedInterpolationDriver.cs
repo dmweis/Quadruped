@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Numerics;
 using System.Threading;
 using DynamixelServo.Driver;
 
@@ -75,12 +76,13 @@ namespace DynamixelServo.Quadruped
 
         private void CompareAndMove(ref Vector3 lastWrittenTarget, Vector3 target, LegConfiguration config)
         {
-            if (Vector3.Similar(lastWrittenTarget, target))
-            {
+            //if (Vector3.Similar(lastWrittenTarget, target))
+            if (lastWrittenTarget.Similar(target))
+                {
                 return;
             }
             // A to B vector is B - A
-            Vector3 translationVector = (target - lastWrittenTarget).Normal * (float)(Speed / _frameLength.TotalSeconds);
+            Vector3 translationVector = (target - lastWrittenTarget).Normal() * (float)(Speed / _frameLength.TotalSeconds);
             Vector3 nextSteptarget = translationVector + lastWrittenTarget;
             MoveLeg(nextSteptarget, config);
             lastWrittenTarget = nextSteptarget;
