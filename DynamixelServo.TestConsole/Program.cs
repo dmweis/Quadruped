@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading;
 using DynamixelServo.Driver;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using DynamixelServo.Quadruped;
+using RabbitMQ.Client.Events;
 using Timer = System.Timers.Timer;
+using Vector3 = DynamixelServo.Quadruped.Vector3;
 
 namespace DynamixelServo.TestConsole
 {
@@ -16,6 +19,8 @@ namespace DynamixelServo.TestConsole
         private static ConsoleKeyInfo _lastPressedKeyInfo;   
         static void Main(string[] args)
         {
+            TrackerListener();
+            Environment.Exit(0);
             Console.WriteLine("Starting");
             //StartTelemetricObserver();
             using (DynamixelDriver driver = new DynamixelDriver("COM4"))
@@ -87,6 +92,35 @@ namespace DynamixelServo.TestConsole
             }
             Console.WriteLine("Press enter to exit");
             //Console.ReadLine();
+        }
+
+        public static void TrackerListener()
+        {
+            Console.WriteLine("Starting");
+            ConnectionFactory factory = new ConnectionFactory() { HostName = "localhost" };
+            using (IConnection connection = factory.CreateConnection())
+            using (IModel channel = connection.CreateModel())
+            using (DynamixelDriver driver = new DynamixelDriver("COM4"))
+            using (QuadrupedIkDriver quadruped = new QuadrupedIkDriver(driver))
+            {
+                quadruped.Setup();
+                quadruped.StandUpfromGround();
+                string queueName = channel.QueueDeclare().QueueName;
+                channel.QueueBind(queueName, "TrackerService", string.Empty);
+                EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
+                channel.BasicConsume(consumer, queueName);
+                consumer.Received += (sender, args) =>
+                {
+                    DeviceTrackingData trackingData =
+                        JsonConvert.DeserializeObject<DeviceTrackingData>(Encoding.UTF8.GetString(args.Body));
+                    Console.WriteLine($"Position {trackingData.Position}");
+                    Vector3 correctedPos = new Vector3(trackingData.Position.X, trackingData.Position.Z, trackingData.Position.Y);
+                    quadruped.MoveAbsoluteCenterMass(correctedPos, 15, -13);
+                };
+                Console.WriteLine("Enter to stop");
+                Console.ReadLine();
+            }
+            Console.WriteLine("Done");
         }
 
         public static void RecordContinuouse()
@@ -273,5 +307,12 @@ namespace DynamixelServo.TestConsole
             Elbow = elbow;
             Wrist = wrist;
         }
+    }
+
+    class DeviceTrackingData
+    {
+        public int DeviceIndex { get; set; }
+        public Vector3 Position { get; set; }
+        public Quaternion Rotation { get; set; }
     }
 }
