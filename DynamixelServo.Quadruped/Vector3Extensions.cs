@@ -14,10 +14,5 @@ namespace DynamixelServo.Quadruped
         {
             return Vector3.Distance(a, b) <= marginOfError;
         }
-
-        public static string ToData(this Vector3 vector)
-        {
-            return $"[{vector.X:f3}; {vector.Y:f3}; {vector.Z:f3}]";
-        }
     }
 }
