@@ -18,7 +18,7 @@ namespace DynamixelServo.TestConsole
         private static ConsoleKeyInfo _lastPressedKeyInfo;   
         static void Main(string[] args)
         {
-            TrackerListener();
+            GaitEngineTest();
             Environment.Exit(0);
             Console.WriteLine("Starting");
             //StartTelemetricObserver();
@@ -91,6 +91,19 @@ namespace DynamixelServo.TestConsole
             }
             Console.WriteLine("Press enter to exit");
             //Console.ReadLine();
+        }
+
+        private static void GaitEngineTest()
+        {
+            Console.WriteLine("Starting");
+            using (DynamixelDriver driver = new DynamixelDriver("COM4"))
+            using (QuadrupedIkDriver quadruped = new QuadrupedIkDriver(driver))
+            using (BasicQuadrupedGaitEngine gaiteEngine = new BasicQuadrupedGaitEngine(quadruped))
+            {                
+                Console.WriteLine("Enter to stop");
+                Console.ReadLine();
+            }
+            Console.WriteLine("Done");
         }
 
         public static void TrackerListener()
