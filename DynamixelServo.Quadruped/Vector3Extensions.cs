@@ -13,5 +13,16 @@ namespace DynamixelServo.Quadruped
         {
             return Vector3.Distance(a, b) <= marginOfError;
         }
+
+        public static Vector3 MoveTowards(this Vector3 current, Vector3 target, float distance)
+        {
+            var transport = target - current;
+            var len = transport.Length();
+            if (len < distance)
+            {
+                return target;
+            }
+            return current + transport.Normal() * distance;
+        }
     }
 }
