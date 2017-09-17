@@ -55,7 +55,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuadrupedGaitEngine.cs" />
     <Compile Include="QuadrupedIkDriver.cs" />
-    <Compile Include="QuadrupedInterpolationDriver.cs" />
     <Compile Include="Vector3Extensions.cs" />
   </ItemGroup>
   <ItemGroup>
