@@ -271,52 +271,6 @@ namespace DynamixelServo.Quadruped
             Thread.Sleep(breakTime);
         }
 
-        [System.Obsolete("Emthod is obsolete please use TurnLeft")]
-        public void TurnLeftNew()
-        {
-            RelaxedStance();
-
-            MoveRelativeCenterMass(new Vector3(-2.5f, -2.5f, 0));
-            Thread.Sleep(500);
-            Vector3 currentPos = GetRightFrontLegGoal();
-            MoveRightFrontLeg(new Vector3(currentPos.X, currentPos.Y, -8));
-            Thread.Sleep(250);
-            MoveRightFrontLeg(new Vector3(10, 20, -8));
-            Thread.Sleep(250);
-            MoveRightFrontLeg(new Vector3(10, 20, -13));
-            Thread.Sleep(250);
-
-            MoveRelativeCenterMass(new Vector3(5, 0, 0));
-            Thread.Sleep(500);
-            currentPos = GetLeftFrontLegGoal();
-            MoveLeftFrontLeg(new Vector3(currentPos.X, currentPos.Y, -8));
-            Thread.Sleep(250);
-            MoveLeftFrontLeg(new Vector3(-20, 10, -8));
-            Thread.Sleep(250);
-            MoveLeftFrontLeg(new Vector3(-20, 10, -13));
-            Thread.Sleep(250);
-
-            MoveRelativeCenterMass(new Vector3(0, 5, 0));
-            Thread.Sleep(500);
-            currentPos = GetLeftRearLegGoal();
-            MoveLeftRearLeg(new Vector3(currentPos.X, currentPos.Y, -8));
-            Thread.Sleep(250);
-            MoveLeftRearLeg(new Vector3(-10, -20, -8));
-            Thread.Sleep(250);
-            MoveLeftRearLeg(new Vector3(-10, -20, -13));
-            Thread.Sleep(250);
-
-            MoveRelativeCenterMass(new Vector3(-5, 0, 0));
-            Thread.Sleep(500);
-            currentPos = GetRightRearLegGoal();
-            MoveRightRearLeg(new Vector3(currentPos.X, currentPos.Y, -8));
-            Thread.Sleep(250);
-            MoveRightRearLeg(new Vector3(10, 20, -8));
-            Thread.Sleep(250);
-            MoveRightRearLeg(new Vector3(10, 20, -13));
-            Thread.Sleep(250);
-        }
-
         public void DisableMotors()
         {
             foreach (var servo in AllMotorIds)
