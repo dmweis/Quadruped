@@ -6,6 +6,7 @@ namespace DynamixelServo.Quadruped
     public class BasicQuadrupedGaitEngine : QuadrupedGaitEngine
     {
         private const int Speed = 12;
+        private float NextStepLength => Speed * 0.001f * TimeSincelastTick;
 
         private int _currentIndex;
 
@@ -40,7 +41,7 @@ namespace DynamixelServo.Quadruped
                 }
             }
             _lastWrittenPosition =
-                _lastWrittenPosition.MoveTowards(_positions[_currentIndex], Speed * 0.001f * TimeSincelastTick);
+                _lastWrittenPosition.MoveTowards(_positions[_currentIndex], NextStepLength);
             Driver.MoveAbsoluteCenterMass(_lastWrittenPosition, LegDistance, LegHeight);
         }
     }
