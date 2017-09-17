@@ -63,6 +63,7 @@ namespace DynamixelServo.Quadruped
             MoveFrontRightLeg(new Vector3(15, 15, -13));
             MoveRearLeftLeg(new Vector3(-15, -15, -13));
             MoveRearRightLeg(new Vector3(15, -15, -13));
+            Thread.Sleep(500);
         }
 
         public void RelaxedStance()
