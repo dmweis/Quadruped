@@ -313,6 +313,16 @@ namespace DynamixelServo.Driver
             return telemetrics;
         }
 
+        public void SetCcwMaxAngleLimit(byte servoId, ushort maxAngle, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+        {
+            WriteUInt16(servoId, ADDR_MX_CCW_ANGLE_LIMIT, maxAngle, protocol);
+        }
+
+        public void SetCwMinAngleLimit(byte servoId, ushort minAngle, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+        {
+            WriteUInt16(servoId, ADDR_MX_CW_ANGLE_LIMIT, minAngle, protocol);
+        }
+
         public void SetWheelMode(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
         {
             if (protocol != DynamixelProtocol.Version1)
