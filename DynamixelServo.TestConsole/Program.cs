@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -18,13 +19,13 @@ namespace DynamixelServo.TestConsole
         private static ConsoleKeyInfo _lastPressedKeyInfo;
         static void Main(string[] args)
         {
-            TrackerListener();
-            Environment.Exit(0);
+            //Environment.Exit(0);
             Console.WriteLine("Starting");
             //StartTelemetricObserver();
             using (DynamixelDriver driver = new DynamixelDriver("COM4"))
             using (QuadrupedIkDriver quadruped = new QuadrupedIkDriver(driver))
             {
+                LoadLimits(driver);
                 quadruped.Setup();
                 quadruped.StandUpfromGround();
                 Thread.Sleep(1000);
@@ -103,6 +104,97 @@ namespace DynamixelServo.TestConsole
                 Console.WriteLine("Enter to stop");
                 Console.ReadLine();
             }
+            Console.WriteLine("Done");
+        }
+
+        class MinMax
+        {
+            public float Min { get; set; } = float.MaxValue;
+            public float Max { get; set; } = float.MinValue;
+            public int Index { get; set; }
+
+            public MinMax(int index)
+            {
+                Index = index;
+            }
+        }
+
+        private static void LoadLimits(DynamixelDriver driver)
+        {
+            Console.WriteLine("Loading motor limits");
+            List<MinMax> minMaxPairs = JsonConvert.DeserializeObject<List<MinMax>>(File.ReadAllText("MinMaxPairs.json"));
+            foreach (var minMaxPair in minMaxPairs)
+            {
+                ushort maxAngle = DynamixelDriver.DegreesToUnits(minMaxPair.Max);
+                ushort minAngle = DynamixelDriver.DegreesToUnits(minMaxPair.Min);
+                driver.SetCcwMaxAngleLimit((byte)minMaxPair.Index, maxAngle);
+                driver.SetCwMinAngleLimit((byte)minMaxPair.Index, minAngle);
+            }
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine(JsonConvert.SerializeObject(minMaxPairs));
+            Console.ResetColor();
+            Console.WriteLine("Limits loaded");
+        }
+
+        private static void LimitTest()
+        {
+            Console.WriteLine("Starting");
+            using (DynamixelDriver driver = new DynamixelDriver("COM4"))
+            {
+                var servos = driver.Search(0, 20);
+                // list of min maxes
+                List<MinMax> minMaxPairs = new List<MinMax>();
+                for (int index = 0; index < servos.Length; index++)
+                {
+                    minMaxPairs.Add(new MinMax(index + 1));
+                }
+
+                // read it from file
+                minMaxPairs = JsonConvert.DeserializeObject<List<MinMax>>(File.ReadAllText("MinMaxPairs.json"));
+                foreach (var servo in servos)
+                {
+                    driver.SetTorque(servo, false);
+                }
+                while (true)
+                {
+                    string serovStatuses = String.Empty;;
+                    foreach (var servo in servos)
+                    {
+                        float posInDegrees = driver.GetPresentPositionInDegrees(servo);
+                        if (servo == 1)
+                        {
+                            serovStatuses += $" {servo}-{posInDegrees}";
+                        }
+                        if (posInDegrees < minMaxPairs[servo - 1].Min)
+                        {
+                            minMaxPairs[servo - 1].Min = posInDegrees;
+                        }
+                        if (posInDegrees > minMaxPairs[servo - 1].Max)
+                        {
+                            minMaxPairs[servo - 1].Max = posInDegrees;
+                        }
+                    }
+                    Console.WriteLine(serovStatuses);
+                    if (Console.KeyAvailable)
+                    {
+                        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                        while (Console.KeyAvailable)
+                        {
+                            keyInfo = Console.ReadKey(true);
+                        }
+                        if (keyInfo.Key == ConsoleKey.Escape)
+                        {
+                            break;
+                        }
+                    }
+                }
+                // after loop
+                string json = JsonConvert.SerializeObject(minMaxPairs);
+                Console.WriteLine(json);
+                File.WriteAllText("MinMaxPairs.json", json);
+            }
+            Console.WriteLine("Press enter to exit");
+            Console.ReadLine();
             Console.WriteLine("Done");
         }
 
