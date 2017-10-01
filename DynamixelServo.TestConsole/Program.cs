@@ -15,10 +15,10 @@ namespace DynamixelServo.TestConsole
 {
     class Program
     {
-        private static ConsoleKeyInfo _lastPressedKeyInfo;   
+        private static ConsoleKeyInfo _lastPressedKeyInfo;
         static void Main(string[] args)
         {
-            GaitEngineTest();
+            TrackerListener();
             Environment.Exit(0);
             Console.WriteLine("Starting");
             //StartTelemetricObserver();
@@ -126,7 +126,15 @@ namespace DynamixelServo.TestConsole
                     DeviceTrackingData trackingData =
                         JsonConvert.DeserializeObject<DeviceTrackingData>(Encoding.UTF8.GetString(args.Body));
                     Console.WriteLine($"Position {trackingData.Position}");
-                    Vector3 correctedPos = new Vector3(trackingData.Position.X, trackingData.Position.Z, trackingData.Position.Y);
+                    Vector3 correctedPos = new Vector3(trackingData.Position.X, -trackingData.Position.Z, trackingData.Position.Y);
+                    // validate
+                    if (Math.Abs(correctedPos.X) > 8 || Math.Abs(correctedPos.Y) > 8 || correctedPos.Z > 4.5 || correctedPos.Z < -7.5)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"Error! {correctedPos}");
+                        Console.ResetColor();
+                        return;
+                    }
                     quadruped.MoveAbsoluteCenterMass(correctedPos, 15, -13);
                 };
                 Console.WriteLine("Enter to stop");
