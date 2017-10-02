@@ -108,7 +108,7 @@ namespace DynamixelServo.TestConsole
                     while (GetCurrentConsoleKey() != ConsoleKey.Escape)
                     {
                         Console.WriteLine("Enqueing");
-                        gaiteEngine.EnqueuePositions();
+                        gaiteEngine.EnqueueOneStep();
                     }
                 }
             }

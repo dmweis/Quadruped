@@ -73,7 +73,11 @@ namespace DynamixelServo.Quadruped
             }
             
             _moves.Enqueue(RelaxedStance);
+            EnqueueOneStep();
+        }
 
+        public void EnqueueOneStep()
+        {
             var nextStep = RelaxedStance;
             nextStep.Transform(new Vector3(3, 0, 0));
             _moves.Enqueue(nextStep);
@@ -123,7 +127,7 @@ namespace DynamixelServo.Quadruped
             _moves.Enqueue(nextStep);
 
             nextStep = nextStep.Copy();
-            nextStep.Transform(new Vector3(-6, 0, 0));
+            nextStep.Transform(new Vector3(-6, -3, 0));
             _moves.Enqueue(nextStep);
 
             nextStep = nextStep.Copy();
@@ -137,8 +141,6 @@ namespace DynamixelServo.Quadruped
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(0, 0, -3), LegFlags.LeftRear);
             _moves.Enqueue(nextStep);
-
-            _moves.Enqueue(RelaxedStance);
         }
     }
 }
