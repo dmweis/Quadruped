@@ -44,8 +44,6 @@ namespace DynamixelServo.Quadruped
 
         protected override void EngineSpin()
         {
-            _lastWrittenPosition.MoveTowards(_nextMove, NextStepLength);
-            _lastWrittenPosition.MoveRobot(Driver);
             if (_lastWrittenPosition.MoveFinished(_nextMove))
             {
                 if (_moves.Count > 0)
@@ -53,6 +51,8 @@ namespace DynamixelServo.Quadruped
                     _nextMove = _moves.Dequeue();
                 }
             }
+            _lastWrittenPosition.MoveTowards(_nextMove, NextStepLength);
+            _lastWrittenPosition.MoveRobot(Driver);
         }
 
         public void EnqueuePositions()
