@@ -102,13 +102,12 @@ namespace DynamixelServo.TestConsole
             using (QuadrupedIkDriver quadruped = new QuadrupedIkDriver(driver))
             {
                 LoadLimits(driver);
-                using (BasicQuadrupedGaitEngine gaiteEngine = new BasicQuadrupedGaitEngine(quadruped))
+                using (FunctionalQuadrupedGaitEngine gaiteEngine = new FunctionalQuadrupedGaitEngine(quadruped))
                 {                
                     Console.WriteLine("Esc to stop");
                     while (GetCurrentConsoleKey() != ConsoleKey.Escape)
                     {
-                        Console.WriteLine("Enqueing");
-                        gaiteEngine.EnqueueOneStep();
+                        Console.WriteLine("Not exiting yet!");
                     }
                 }
             }

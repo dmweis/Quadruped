@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Angle.cs" />
     <Compile Include="BasicQuadrupedGaitEngine.cs" />
+    <Compile Include="FunctionalQuadrupedGaitEngine.cs" />
     <Compile Include="LegConfiguration.cs" />
     <Compile Include="LegGoalPositions.cs" />
     <Compile Include="MathExtensions.cs" />
