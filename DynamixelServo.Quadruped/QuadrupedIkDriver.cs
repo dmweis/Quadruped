@@ -289,21 +289,25 @@ namespace DynamixelServo.Quadruped
 
         public void MoveLeg(Vector3 target, LegFlags legs = LegFlags.All)
         {
-            if ((legs & LegFlags.LeftFront) != 0)
+            if (legs == LegFlags.LeftFront)
             {
                 MoveLeftFrontLeg(target);
             }
-            if ((legs & LegFlags.RightFront) != 0)
+            if (legs == LegFlags.RightFront)
             {
                 MoveRightFrontLeg(target);
             }
-            if ((legs & LegFlags.LeftRear) != 0)
+            if (legs == LegFlags.LeftRear)
             {
                 MoveLeftRearLeg(target);
             }
-            if ((legs & LegFlags.RightRear) != 0)
+            if (legs == LegFlags.RightRear)
             {
                 MoveRightRearLeg(target);
+            }
+            else
+            {
+                throw new InvalidOperationException("Moveing multiple legs to the same position is not advisable");
             }
         }
 
