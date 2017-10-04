@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace DynamixelServo.Quadruped
 {
-    class MotorPositions
+    public class MotorPositions
     {
         public Vector3 LeftFront { get; set; }
         public Vector3 RightFront { get; set; }
