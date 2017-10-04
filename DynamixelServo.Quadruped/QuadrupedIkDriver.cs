@@ -287,6 +287,26 @@ namespace DynamixelServo.Quadruped
 
         public void MoveRightRearLeg(Vector3 target) => MoveLeg(target, RightRear);
 
+        public void MoveLeg(Vector3 target, LegFlags legs = LegFlags.All)
+        {
+            if ((legs & LegFlags.LeftFront) != 0)
+            {
+                MoveLeftFrontLeg(target);
+            }
+            if ((legs & LegFlags.RightFront) != 0)
+            {
+                MoveRightFrontLeg(target);
+            }
+            if ((legs & LegFlags.LeftRear) != 0)
+            {
+                MoveLeftRearLeg(target);
+            }
+            if ((legs & LegFlags.RightRear) != 0)
+            {
+                MoveRightRearLeg(target);
+            }
+        }
+
         public Vector3 GetLeftFrontLegGoal() => GetLegGoalPosition(LeftFront);
 
         public Vector3 GetRightFrontLegGoal() => GetLegGoalPosition(RightFront);

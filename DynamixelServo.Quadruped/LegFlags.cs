@@ -3,7 +3,7 @@
 namespace DynamixelServo.Quadruped
 {
     [Flags]
-    enum LegFlags
+    public enum LegFlags
     {
         LeftFront = 1,
         RightFront = 2,
