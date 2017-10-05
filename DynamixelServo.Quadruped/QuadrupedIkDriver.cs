@@ -186,15 +186,6 @@ namespace DynamixelServo.Quadruped
 
         public Vector3 GetRightRearLegGoal() => GetLegGoalPosition(RightRear);
 
-        public Vector3 GetLegGoalPosition(LegConfiguration legConfig)
-        {
-            float coxa = _driver.GetGoalPositionInDegrees(legConfig.CoxaId);
-            float femur = _driver.GetGoalPositionInDegrees(legConfig.FemurId);
-            float tibia = _driver.GetGoalPositionInDegrees(legConfig.TibiaId);
-            MotorGoalPositions positions = new MotorGoalPositions(coxa, femur, tibia);
-            return CalculateFkForLeg(positions, legConfig);
-        }
-
         public Vector3 GetLeftFrontLegPosition() => GetCurrentLegPosition(LeftFront);
 
         public Vector3 GetRightFrontLegPosition() => GetCurrentLegPosition(RightFront);
@@ -203,7 +194,29 @@ namespace DynamixelServo.Quadruped
 
         public Vector3 GetRightRearLegPosition() => GetCurrentLegPosition(RightRear);
 
-        public Vector3 GetCurrentLegPosition(LegConfiguration legConfig)
+        public void MoveToHeight(float height, float distance)
+        {
+            MoveLeg(new Vector3(-distance, distance, height), LeftFront);
+            MoveLeg(new Vector3(distance, distance, height), RightFront);
+            MoveLeg(new Vector3(-distance, -distance, height), LeftRear);
+            MoveLeg(new Vector3(distance, -distance, height), RightRear);
+        }
+
+        public void Dispose()
+        {
+            _driver?.Dispose();
+        }
+
+        private Vector3 GetLegGoalPosition(LegConfiguration legConfig)
+        {
+            float coxa = _driver.GetGoalPositionInDegrees(legConfig.CoxaId);
+            float femur = _driver.GetGoalPositionInDegrees(legConfig.FemurId);
+            float tibia = _driver.GetGoalPositionInDegrees(legConfig.TibiaId);
+            MotorGoalPositions positions = new MotorGoalPositions(coxa, femur, tibia);
+            return CalculateFkForLeg(positions, legConfig);
+        }
+
+        private Vector3 GetCurrentLegPosition(LegConfiguration legConfig)
         {
             float coxa = _driver.GetPresentPositionInDegrees(legConfig.CoxaId);
             float femur = _driver.GetPresentPositionInDegrees(legConfig.FemurId);
@@ -218,19 +231,6 @@ namespace DynamixelServo.Quadruped
             _driver.SetGoalPositionInDegrees(legConfig.CoxaId, legGoalPositions.Coxa);
             _driver.SetGoalPositionInDegrees(legConfig.FemurId, legGoalPositions.Femur);
             _driver.SetGoalPositionInDegrees(legConfig.TibiaId, legGoalPositions.Tibia);
-        }
-
-        public void MoveToHeight(float height, float distance)
-        {
-            MoveLeg(new Vector3(-distance, distance, height), LeftFront);
-            MoveLeg(new Vector3(distance, distance, height), RightFront);
-            MoveLeg(new Vector3(-distance, -distance, height), LeftRear);
-            MoveLeg(new Vector3(distance, -distance, height), RightRear);
-        }
-
-        public void Dispose()
-        {
-            _driver?.Dispose();
         }
 
         private static Vector3 CalculateFkForLeg(MotorGoalPositions currentPsoitions, LegConfiguration legConfig)
