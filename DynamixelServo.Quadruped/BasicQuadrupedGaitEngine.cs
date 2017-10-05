@@ -54,7 +54,7 @@ namespace DynamixelServo.Quadruped
             _lastWrittenPosition.MoveTowards(_nextMove, NextStepLength);
             try
             {
-                _lastWrittenPosition.MoveRobot(Driver);
+                Driver.MoveLegs(_lastWrittenPosition);
             }
             catch (IOException e)
             {

@@ -90,14 +90,6 @@ namespace DynamixelServo.Quadruped
             RightRear = RightRear.MoveTowards(target.RightRear, distance);
         }
 
-        public void MoveRobot(QuadrupedIkDriver driver)
-        {
-            driver.MoveLeftFrontLeg(LeftFront);
-            driver.MoveRightFrontLeg(RightFront);
-            driver.MoveLeftRearLeg(LeftRear);
-            driver.MoveRightRearLeg(RightRear);
-        }
-
         public bool MoveFinished(MotorPositions other)
         {
             return LeftFront == other.LeftFront &&
