@@ -1,16 +1,15 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace DynamixelServo.Quadruped
 {
-    public class MotorPositions
+    public class LegPositions
     {
         public Vector3 LeftFront { get; set; }
         public Vector3 RightFront { get; set; }
         public Vector3 LeftRear { get; set; }
         public Vector3 RightRear { get; set; }
 
-        public MotorPositions(QuadrupedIkDriver driver)
+        public LegPositions(QuadrupedIkDriver driver)
         {
             LeftFront = driver.GetLeftFrontLegGoal();
             RightFront = driver.GetRightFrontLegGoal();
@@ -18,15 +17,15 @@ namespace DynamixelServo.Quadruped
             RightRear = driver.GetRightRearLegGoal();
         }
 
-        public MotorPositions(MotorPositions motorPositions)
+        public LegPositions(LegPositions legPositions)
         {
-            LeftFront = motorPositions.LeftFront;
-            RightFront = motorPositions.RightFront;
-            LeftRear = motorPositions.LeftRear;
-            RightRear = motorPositions.RightRear;
+            LeftFront = legPositions.LeftFront;
+            RightFront = legPositions.RightFront;
+            LeftRear = legPositions.LeftRear;
+            RightRear = legPositions.RightRear;
         }
 
-        public MotorPositions(Vector3 leftFront, Vector3 rightFront, Vector3 leftRear, Vector3 rightRear)
+        public LegPositions(Vector3 leftFront, Vector3 rightFront, Vector3 leftRear, Vector3 rightRear)
         {
             LeftFront = leftFront;
             RightFront = rightFront;
@@ -34,7 +33,7 @@ namespace DynamixelServo.Quadruped
             RightRear = rightRear;
         }
 
-        public MotorPositions()
+        public LegPositions()
         {
             LeftFront = new Vector3();
             RightFront = new Vector3();
@@ -82,7 +81,7 @@ namespace DynamixelServo.Quadruped
             }
         }
 
-        public void MoveTowards(MotorPositions target, float distance)
+        public void MoveTowards(LegPositions target, float distance)
         {
             LeftFront = LeftFront.MoveTowards(target.LeftFront, distance);
             RightFront = RightFront.MoveTowards(target.RightFront, distance);
@@ -90,7 +89,7 @@ namespace DynamixelServo.Quadruped
             RightRear = RightRear.MoveTowards(target.RightRear, distance);
         }
 
-        public bool MoveFinished(MotorPositions other)
+        public bool MoveFinished(LegPositions other)
         {
             return LeftFront == other.LeftFront &&
                    RightFront == other.RightFront &&
@@ -98,9 +97,9 @@ namespace DynamixelServo.Quadruped
                    RightRear == other.RightRear;
         }
 
-        public MotorPositions Copy()
+        public LegPositions Copy()
         {
-            return new MotorPositions(this);
+            return new LegPositions(this);
         }
     }
 }

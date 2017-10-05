@@ -10,18 +10,18 @@ namespace DynamixelServo.Quadruped
         private const int Speed = 20;
         private float NextStepLength => Speed * 0.001f * TimeSincelastTick;
 
-        private readonly Queue<MotorPositions> _moves = new Queue<MotorPositions>();
+        private readonly Queue<LegPositions> _moves = new Queue<LegPositions>();
 
-        private MotorPositions _nextMove;
+        private LegPositions _nextMove;
 
         private const float LegHeight = -11f;
         private const int LegDistance = 15;
 
-        private MotorPositions RelaxedStance
+        private LegPositions RelaxedStance
         {
             get
             {
-                return new MotorPositions
+                return new LegPositions
                 {
                     LeftFront = new Vector3(-LegDistance, LegDistance, LegHeight),
                     RightFront = new Vector3(LegDistance, LegDistance, LegHeight),
@@ -31,12 +31,12 @@ namespace DynamixelServo.Quadruped
             }
         }
 
-        private readonly MotorPositions _lastWrittenPosition;
+        private readonly LegPositions _lastWrittenPosition;
 
         public BasicQuadrupedGaitEngine(QuadrupedIkDriver driver) : base(driver)
         {
             Driver.Setup();
-            _lastWrittenPosition = new MotorPositions(driver);
+            _lastWrittenPosition = new LegPositions(driver);
             EnqueuePositions();
             _nextMove = _moves.Dequeue();
             StartEngine();
@@ -73,7 +73,7 @@ namespace DynamixelServo.Quadruped
                              _lastWrittenPosition.RightRear.Z) / 4;
             if (average > -9)
             {
-                _moves.Enqueue(new MotorPositions
+                _moves.Enqueue(new LegPositions
                 {
                     LeftFront = new Vector3(-LegDistance, LegDistance, 0),
                     RightFront = new Vector3(LegDistance, LegDistance, 0),

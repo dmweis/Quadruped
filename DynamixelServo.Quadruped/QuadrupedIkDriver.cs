@@ -311,7 +311,7 @@ namespace DynamixelServo.Quadruped
             }
         }
 
-        public void MoveLegs(MotorPositions position)
+        public void MoveLegs(LegPositions position)
         {
             MoveLeftFrontLeg(position.LeftFront);
             MoveRightFrontLeg(position.RightFront);

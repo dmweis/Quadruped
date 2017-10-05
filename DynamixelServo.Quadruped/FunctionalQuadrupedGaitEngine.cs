@@ -19,13 +19,13 @@ namespace DynamixelServo.Quadruped
 
         private bool _wasPositive = true;
         private readonly LegPicker _legSelector = new LegPicker();
-        private MotorPositions _lastWrittenPosition;
+        private LegPositions _lastWrittenPosition;
 
-        private MotorPositions RelaxedStance
+        private LegPositions RelaxedStance
         {
             get
             {
-                return new MotorPositions
+                return new LegPositions
                 {
                     LeftFront = new Vector3(-LegDistance, LegDistance, LegHeight),
                     RightFront = new Vector3(LegDistance, LegDistance, LegHeight),
@@ -39,14 +39,14 @@ namespace DynamixelServo.Quadruped
         public FunctionalQuadrupedGaitEngine(QuadrupedIkDriver driver) : base(driver)
         {
             Driver.Setup();
-            var currentPosition = new MotorPositions(driver);
+            var currentPosition = new LegPositions(driver);
             float average = (currentPosition.LeftFront.Z +
                              currentPosition.RightFront.Z +
                              currentPosition.LeftRear.Z +
                              currentPosition.RightRear.Z) / 4;
             if (average > -9)
             {
-                Driver.MoveLegs(new MotorPositions
+                Driver.MoveLegs(new LegPositions
                 {
                     LeftFront = new Vector3(-LegDistance, LegDistance, 0),
                     RightFront = new Vector3(LegDistance, LegDistance, 0),
