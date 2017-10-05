@@ -147,13 +147,8 @@ namespace DynamixelServo.TestConsole
                             }
                             break;
                         case ConsoleKey.UpArrow:
-                            quadruped.ForwardSimple();
-                            break;
                         case ConsoleKey.W:
-                            quadruped.ForwardCreeper();
-                            break;
-                        case ConsoleKey.E:
-                            quadruped.ForwardCreeperStable();
+                            // call forward movement
                             break;
                         case ConsoleKey.DownArrow:
                         case ConsoleKey.S:
