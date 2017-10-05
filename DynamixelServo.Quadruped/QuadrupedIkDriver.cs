@@ -204,7 +204,7 @@ namespace DynamixelServo.Quadruped
 
         public void Dispose()
         {
-            _driver?.Dispose();
+            _driver.Dispose();
         }
 
         private Vector3 GetLegGoalPosition(LegConfiguration legConfig)
