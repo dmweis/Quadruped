@@ -51,7 +51,7 @@
     <Compile Include="FunctionalQuadrupedGaitEngine.cs" />
     <Compile Include="LegConfiguration.cs" />
     <Compile Include="LegFlags.cs" />
-    <Compile Include="LegGoalPositions.cs" />
+    <Compile Include="MotorGoalPositions.cs" />
     <Compile Include="MathExtensions.cs" />
     <Compile Include="LegPositions.cs" />
     <Compile Include="QuadrupedDriver.cs" />

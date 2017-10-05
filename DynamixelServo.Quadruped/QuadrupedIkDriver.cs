@@ -332,7 +332,7 @@ namespace DynamixelServo.Quadruped
             float coxa = _driver.GetGoalPositionInDegrees(legConfig.CoxaId);
             float femur = _driver.GetGoalPositionInDegrees(legConfig.FemurId);
             float tibia = _driver.GetGoalPositionInDegrees(legConfig.TibiaId);
-            LegGoalPositions positions = new LegGoalPositions(coxa, femur, tibia);
+            MotorGoalPositions positions = new MotorGoalPositions(coxa, femur, tibia);
             return CalculateFkForLeg(positions, legConfig);
         }
 
@@ -349,7 +349,7 @@ namespace DynamixelServo.Quadruped
             float coxa = _driver.GetPresentPositionInDegrees(legConfig.CoxaId);
             float femur = _driver.GetPresentPositionInDegrees(legConfig.FemurId);
             float tibia = _driver.GetPresentPositionInDegrees(legConfig.TibiaId);
-            LegGoalPositions positions = new LegGoalPositions(coxa, femur, tibia);
+            MotorGoalPositions positions = new MotorGoalPositions(coxa, femur, tibia);
             return CalculateFkForLeg(positions, legConfig);
         }
 
@@ -374,7 +374,7 @@ namespace DynamixelServo.Quadruped
             _driver?.Dispose();
         }
 
-        private static Vector3 CalculateFkForLeg(LegGoalPositions currentPsoitions, LegConfiguration legConfig)
+        private static Vector3 CalculateFkForLeg(MotorGoalPositions currentPsoitions, LegConfiguration legConfig)
         {
             float femurAngle = Math.Abs(currentPsoitions.Femur - Math.Abs(legConfig.FemurCorrection));
             float tibiaAngle = Math.Abs(currentPsoitions.Tibia - Math.Abs(legConfig.TibiaCorrection));
@@ -395,7 +395,7 @@ namespace DynamixelServo.Quadruped
             return legConfig.CoxaPosition + coxaVector + femurVector + tibiaVector;
         }
         
-        private static LegGoalPositions CalculateIkForLeg(Vector3 target, LegConfiguration legConfig)
+        private static MotorGoalPositions CalculateIkForLeg(Vector3 target, LegConfiguration legConfig)
         {
             Vector3 relativeVector = target - legConfig.CoxaPosition;
             float targetAngle = (float)(Math.Atan2(relativeVector.X, relativeVector.Y).RadToDegree() + legConfig.AngleOffset);
@@ -421,7 +421,7 @@ namespace DynamixelServo.Quadruped
             float correctedFemur = Math.Abs(legConfig.FemurCorrection + femurAngle);
             float correctedTibia = Math.Abs(legConfig.TibiaCorrection + angleByTibia);
             float correctedCoxa = 150f - targetAngle;
-            return new LegGoalPositions(correctedCoxa, correctedFemur, correctedTibia);
+            return new MotorGoalPositions(correctedCoxa, correctedFemur, correctedTibia);
         }
 
         private static double GetAngleByA(double a, double b, double c)
