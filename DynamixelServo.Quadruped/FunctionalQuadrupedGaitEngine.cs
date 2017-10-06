@@ -14,11 +14,10 @@ namespace DynamixelServo.Quadruped
         /// <summary>
         /// Forward speed
         /// </summary>
-        private const int Speed = 9;
+        private const int Speed = 15;
         private float NextStepLength => Speed * 0.001f * TimeSincelastTick;
 
-        private bool _wasPositive = true;
-        private readonly LegPicker _legSelector = new LegPicker();
+        private readonly LegFlags[] _legs = { LegFlags.RightRear, LegFlags.RightFront, LegFlags.LeftRear, LegFlags.LeftFront };
         private LegPositions _lastWrittenPosition;
 
         private LegPositions RelaxedStance
@@ -67,24 +66,13 @@ namespace DynamixelServo.Quadruped
 
         protected override void EngineSpin()
         {
-            double angle = TimeSinceStart / 1000.0 * 320.0; // this determins the speed of switching legs
-            double legLiftSin = Math.Sin(angle.DegreeToRad());
-            double swaySin = Math.Sin((angle / 2).DegreeToRad());
-            if (_wasPositive && legLiftSin < 0)
-            {
-                _wasPositive = false;
-                _legSelector.SwitchLeg();
-                Console.WriteLine($"Switched to {_legSelector.CurrentLeg}");
-            }
-            else if (!_wasPositive && legLiftSin > 0)
-            {
-                _wasPositive = true;
-                _legSelector.SwitchLeg();
-                Console.WriteLine($"Switched to {_legSelector.CurrentLeg}");
-            }
+            double angle = TimeSinceStart / 1000.0 * 280.0; // this determins the speed of switching legs
+            double legLiftSin = Math.Sin((angle * 2).DegreeToRad());
+            double swaySin = Math.Sin(angle.DegreeToRad());
+            var currentLeg = _legs[(int) (angle % 360 / 90)];
             // shift leg offsets
             // TODO refactor
-            if (_legSelector.CurrentLeg == LegFlags.RightFront)
+            if (currentLeg == LegFlags.RightFront)
             {
                 _rightFrontOffset += 3 * NextStepLength;
             }
@@ -92,7 +80,7 @@ namespace DynamixelServo.Quadruped
             {
                 _rightFrontOffset -= NextStepLength;
             }
-            if (_legSelector.CurrentLeg == LegFlags.RightRear)
+            if (currentLeg == LegFlags.RightRear)
             {
                 _rightRearOffset += 3 * NextStepLength;
             }
@@ -100,7 +88,7 @@ namespace DynamixelServo.Quadruped
             {
                 _rightRearOffset -= NextStepLength;
             }
-            if (_legSelector.CurrentLeg == LegFlags.LeftFront)
+            if (currentLeg == LegFlags.LeftFront)
             {
                 _leftFrontOffset += 3 * NextStepLength;
             }
@@ -108,7 +96,7 @@ namespace DynamixelServo.Quadruped
             {
                 _leftFrontOffset -= NextStepLength;
             }
-            if (_legSelector.CurrentLeg == LegFlags.LeftRear)
+            if (currentLeg == LegFlags.LeftRear)
             {
                 _leftRearOffset += 3 * NextStepLength;
             }
@@ -123,7 +111,7 @@ namespace DynamixelServo.Quadruped
             newPosition.Transform(new Vector3(0, _rightRearOffset, 0), LegFlags.RightRear);
             newPosition.Transform(new Vector3(0, _leftFrontOffset, 0), LegFlags.LeftFront);
             newPosition.Transform(new Vector3(0, _leftRearOffset, 0), LegFlags.LeftRear);
-            newPosition.Transform(new Vector3(0, 0, (float)Math.Abs(legLiftSin) * 3), _legSelector.CurrentLeg);
+            newPosition.Transform(new Vector3(0, 0, (float)Math.Abs(legLiftSin) * 3), currentLeg);
             _lastWrittenPosition = newPosition;
             try
             {
@@ -137,15 +125,5 @@ namespace DynamixelServo.Quadruped
                 throw;
             }
         }
-    }
-
-    class LegPicker
-    {
-        public LegFlags CurrentLeg => _legs[_currentLegIndex];
-
-        private readonly LegFlags[] _legs = { LegFlags.RightRear, LegFlags.RightFront, LegFlags.LeftRear, LegFlags.LeftFront };
-        private int _currentLegIndex;
-
-        public void SwitchLeg() => _currentLegIndex = _currentLegIndex == _legs.Length - 1 ? 0 : _currentLegIndex + 1;
     }
 }
