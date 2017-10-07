@@ -90,7 +90,7 @@ namespace DynamixelServo.Quadruped
         public void EnqueueOneStep()
         {
 
-
+            // Move LR and RF forward
             var nextStep = RelaxedStance;
             nextStep.Transform(new Vector3(0, 2, 1), LegFlags.LeftRear | LegFlags.RightFront);
             nextStep.Transform(new Vector3(0, -2, 0), LegFlags.LeftFront | LegFlags.RightRear);
@@ -101,6 +101,12 @@ namespace DynamixelServo.Quadruped
             nextStep.Transform(new Vector3(0, -2, 0), LegFlags.LeftFront | LegFlags.RightRear);
             _moves.Enqueue(nextStep);
 
+            // Move all
+            nextStep = nextStep.Copy();
+            nextStep.Transform(new Vector3(0, -2, 0));
+            _moves.Enqueue(nextStep);
+
+            // Move RR and LF forward
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(0, 2, 1), LegFlags.LeftFront | LegFlags.RightRear);
             nextStep.Transform(new Vector3(0, -2, 0), LegFlags.LeftRear | LegFlags.RightFront);
