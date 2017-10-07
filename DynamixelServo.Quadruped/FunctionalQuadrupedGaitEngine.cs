@@ -111,7 +111,7 @@ namespace DynamixelServo.Quadruped
             }
 
             var newPosition = RelaxedStance;
-            newPosition.Transform(new Vector3((float)(swaySin * 4) * _direction.Y, -(float)(swaySin * 4) * _direction.X, 0));
+            newPosition.Transform(new Vector3((float)(swaySin * 3) * _direction.Y, -(float)(swaySin * 3) * _direction.X, 0));
             newPosition.Transform(new Vector3(_rightFrontOffset * _direction.X, _rightFrontOffset * _direction.Y, 0), LegFlags.RightFront);
             newPosition.Transform(new Vector3(_rightRearOffset * _direction.X, _rightRearOffset * _direction.Y, 0), LegFlags.RightRear);
             newPosition.Transform(new Vector3(_leftFrontOffset * _direction.X, _leftFrontOffset * _direction.Y, 0), LegFlags.LeftFront);
