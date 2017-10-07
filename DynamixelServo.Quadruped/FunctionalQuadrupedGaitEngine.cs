@@ -19,8 +19,8 @@ namespace DynamixelServo.Quadruped
         private float NextStepLength => Speed * 0.001f * TimeSincelastTick;
 
         private readonly LegFlags[] _legs = { LegFlags.RightRear, LegFlags.RightFront, LegFlags.LeftRear, LegFlags.LeftFront };
-        //private readonly LegFlags[] _legs = { LegFlags.LeftFront, LegFlags.LeftRear, LegFlags.RightFront, LegFlags.RightRear };
-        //private readonly LegFlags[] _legs = { LegFlags.RightFront, LegFlags.LeftFront, LegFlags.RightRear, LegFlags.LeftRear };
+        //private readonly LegFlags[] _legs = { LegFlags.LeftFront, LegFlags.LeftRear, LegFlags.RightFront, LegFlags.RightRear }; // for backwards
+        //private readonly LegFlags[] _legs = { LegFlags.RightFront, LegFlags.LeftFront, LegFlags.RightRear, LegFlags.LeftRear }; // for side
         private LegPositions _lastWrittenPosition;
 
         private LegPositions RelaxedStance
