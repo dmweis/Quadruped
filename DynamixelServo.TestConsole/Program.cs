@@ -20,7 +20,7 @@ namespace DynamixelServo.TestConsole
             const string portName = "COM4";
             const ConsoleOptions defaultSelection = ConsoleOptions.GaitEngine;
 
-            ConsoleOptions option = args.Length < 1 ? defaultSelection : (ConsoleOptions) Enum.Parse(typeof(ConsoleOptions), args[0]);
+            ConsoleOptions option = args.Length < 1 ? defaultSelection : (ConsoleOptions)Enum.Parse(typeof(ConsoleOptions), args[0]);
             while (option == ConsoleOptions.SelectOption)
             {
                 Console.WriteLine("Select one of the following options:");
@@ -33,7 +33,7 @@ namespace DynamixelServo.TestConsole
                 try
                 {
                     input = Console.ReadLine();
-                    option = (ConsoleOptions) Enum.Parse(typeof(ConsoleOptions), input, true);
+                    option = (ConsoleOptions)Enum.Parse(typeof(ConsoleOptions), input, true);
                 }
                 catch (Exception)
                 {
@@ -71,8 +71,10 @@ namespace DynamixelServo.TestConsole
                 LoadLimits(driver);
                 using (FunctionalQuadrupedGaitEngine gaiteEngine = new FunctionalQuadrupedGaitEngine(quadruped))
                 {
-                    Console.WriteLine("Press enter to exit");
-                    Console.ReadLine();
+                    while (GetCurrentConsoleKey().Key == ConsoleKey.Spacebar)
+                    {
+                        //gaiteEngine.EnqueueOneStep();
+                    }
                 }
             }
             Console.WriteLine("Done");
