@@ -178,6 +178,17 @@ namespace DynamixelServo.Quadruped
             MoveRightRearLeg(position.RightRear);
         }
 
+        public LegPositions ReadCurrentLegPositions()
+        {
+            return new LegPositions()
+            {
+                LeftFront = GetLeftFrontLegPosition(),
+                RightFront = GetRightFrontLegPosition(),
+                LeftRear = GetLeftRearLegPosition(),
+                RightRear = GetRightRearLegPosition()
+            };
+        }
+
         public Vector3 GetLeftFrontLegGoal() => GetLegGoalPosition(LeftFront);
 
         public Vector3 GetRightFrontLegGoal() => GetLegGoalPosition(RightFront);

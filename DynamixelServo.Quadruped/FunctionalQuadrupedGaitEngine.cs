@@ -2,13 +2,14 @@
 using System.IO;
 using System.Numerics;
 using System.Threading;
+using System.Linq;
 
 namespace DynamixelServo.Quadruped
 {
     public class FunctionalQuadrupedGaitEngine : QuadrupedGaitEngine
     {
 
-        private const float LegHeight = -11f;
+        private const float LegHeight = -9f;
         private const int LegDistance = 15;
 
         /// <summary>
@@ -18,6 +19,8 @@ namespace DynamixelServo.Quadruped
         private float NextStepLength => Speed * 0.001f * TimeSincelastTick;
 
         private readonly LegFlags[] _legs = { LegFlags.RightRear, LegFlags.RightFront, LegFlags.LeftRear, LegFlags.LeftFront };
+        //private readonly LegFlags[] _legs = { LegFlags.LeftFront, LegFlags.LeftRear, LegFlags.RightFront, LegFlags.RightRear };
+        //private readonly LegFlags[] _legs = { LegFlags.RightFront, LegFlags.LeftFront, LegFlags.RightRear, LegFlags.LeftRear };
         private LegPositions _lastWrittenPosition;
 
         private LegPositions RelaxedStance
@@ -64,12 +67,14 @@ namespace DynamixelServo.Quadruped
         private float _leftFrontOffset;
         private float _leftRearOffset;
 
+        private readonly Vector2 _direction = new Vector2(0, 1);
+
         protected override void EngineSpin()
         {
             double angle = TimeSinceStart / 1000.0 * 280.0; // this determins the speed of switching legs
             double legLiftSin = Math.Sin((angle * 2).DegreeToRad());
             double swaySin = Math.Sin(angle.DegreeToRad());
-            var currentLeg = _legs[(int) (angle % 360 / 90)];
+            var currentLeg = _legs[(int)(angle % 360 / 90)];
             // shift leg offsets
             // TODO refactor
             if (currentLeg == LegFlags.RightFront)
@@ -106,11 +111,11 @@ namespace DynamixelServo.Quadruped
             }
 
             var newPosition = RelaxedStance;
-            newPosition.Transform(new Vector3((float)(swaySin * 4), 0, 0));
-            newPosition.Transform(new Vector3(0, _rightFrontOffset, 0), LegFlags.RightFront);
-            newPosition.Transform(new Vector3(0, _rightRearOffset, 0), LegFlags.RightRear);
-            newPosition.Transform(new Vector3(0, _leftFrontOffset, 0), LegFlags.LeftFront);
-            newPosition.Transform(new Vector3(0, _leftRearOffset, 0), LegFlags.LeftRear);
+            newPosition.Transform(new Vector3((float)(swaySin * 4) * _direction.Y, -(float)(swaySin * 4) * _direction.X, 0));
+            newPosition.Transform(new Vector3(_rightFrontOffset * _direction.X, _rightFrontOffset * _direction.Y, 0), LegFlags.RightFront);
+            newPosition.Transform(new Vector3(_rightRearOffset * _direction.X, _rightRearOffset * _direction.Y, 0), LegFlags.RightRear);
+            newPosition.Transform(new Vector3(_leftFrontOffset * _direction.X, _leftFrontOffset * _direction.Y, 0), LegFlags.LeftFront);
+            newPosition.Transform(new Vector3(_leftRearOffset * _direction.X, _leftRearOffset * _direction.Y, 0), LegFlags.LeftRear);
             newPosition.Transform(new Vector3(0, 0, (float)Math.Abs(legLiftSin) * 3), currentLeg);
             _lastWrittenPosition = newPosition;
             try
@@ -124,6 +129,47 @@ namespace DynamixelServo.Quadruped
                 Console.ResetColor();
                 throw;
             }
+        }
+
+        private LegFlags DetermineBestLeg(LegPositions currentPositions)
+        {
+            Vector2 rightFrontProfile = currentPositions.RightFront.ToGroundProfile().Normal();
+            Vector2 rightRearProfile = currentPositions.RightRear.ToGroundProfile().Normal();
+            Vector2 leftFrontProfile = currentPositions.LeftFront.ToGroundProfile().Normal();
+            Vector2 leftRearProfile = currentPositions.LeftRear.ToGroundProfile().Normal();
+
+            var relaxed = RelaxedStance;
+
+            double rightFrontValue = AreaOfTriangle(rightRearProfile, leftFrontProfile, relaxed.LeftRear.ToGroundProfile().Normal());
+            double rightRearValue = AreaOfTriangle(rightFrontProfile, leftRearProfile, relaxed.LeftFront.ToGroundProfile().Normal());
+            double leftFrontValue = AreaOfTriangle(rightFrontProfile, leftRearProfile, relaxed.RightRear.ToGroundProfile().Normal());
+            double leftRearValue = AreaOfTriangle(rightRearProfile, leftFrontProfile, relaxed.RightFront.ToGroundProfile().Normal());
+            double highest = new double[] { rightFrontValue, rightRearValue, leftFrontValue, leftRearValue }.Max();
+            if (highest == rightFrontValue)
+            {
+                return LegFlags.RightFront;
+            }
+            else if (highest == rightRearValue)
+            {
+                return LegFlags.RightRear;
+            }
+            else if (highest == leftFrontValue)
+            {
+                return LegFlags.LeftFront;
+            }
+            else if (highest == leftRearValue)
+            {
+                return LegFlags.LeftRear;
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
+        private static double AreaOfTriangle(Vector2 a, Vector2 b, Vector2 c)
+        {
+            return Math.Abs((a.X * (b.Y - c.Y) + b.X * (c.Y - a.Y) + c.X * (a.Y - b.Y)) / 2.0);
         }
     }
 }

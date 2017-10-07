@@ -24,5 +24,15 @@ namespace DynamixelServo.Quadruped
             }
             return current + transport.Normal() * distance;
         }
+
+        public static Vector2 ToGroundProfile(this Vector3 vector)
+        {
+            return new Vector2(vector.X, vector.Y);
+        }
+
+        public static Vector2 Normal(this Vector2 vector)
+        {
+            return Vector2.Normalize(vector);
+        }
     }
 }
