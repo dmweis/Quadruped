@@ -89,6 +89,16 @@ namespace DynamixelServo.Quadruped
             RightRear = RightRear.MoveTowards(target.RightRear, distance);
         }
 
+        public LegPositions GetShiftedTowards(LegPositions target, float distance)
+        {
+            var newLegPosition = Copy();
+            newLegPosition.LeftFront = LeftFront.MoveTowards(target.LeftFront, distance);
+            newLegPosition.RightFront = RightFront.MoveTowards(target.RightFront, distance);
+            newLegPosition.LeftRear = LeftRear.MoveTowards(target.LeftRear, distance);
+            newLegPosition.RightRear = RightRear.MoveTowards(target.RightRear, distance);
+            return newLegPosition;
+        }
+
         public bool MoveFinished(LegPositions other)
         {
             return LeftFront == other.LeftFront &&
@@ -97,9 +107,36 @@ namespace DynamixelServo.Quadruped
                    RightRear == other.RightRear;
         }
 
+        public bool CloserThan(LegPositions target, float distance)
+        {
+            float distanceSquared = distance.Square();
+            if (RightFront.DistanceSquared(target.RightFront) > distanceSquared)
+            {
+                return false;
+            }
+            if (RightRear.DistanceSquared(target.RightRear) > distanceSquared)
+            {
+                return false;
+            }
+            if (LeftFront.DistanceSquared(target.LeftFront) > distanceSquared)
+            {
+                return false;
+            }
+            if (LeftRear.DistanceSquared(target.LeftRear) > distanceSquared)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public LegPositions Copy()
         {
             return new LegPositions(this);
+        }
+
+        public override string ToString()
+        {
+            return $"RightFront {RightFront} RightRear {RightRear} LeftFront {LeftFront} LeftRear {LeftRear}";
         }
     }
 }

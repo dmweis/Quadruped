@@ -25,6 +25,11 @@ namespace DynamixelServo.Quadruped
             return current + transport.Normal() * distance;
         }
 
+        public static float DistanceSquared(this Vector3 current, Vector3 target)
+        {
+            return Vector3.DistanceSquared(current, target);
+        }
+
         public static Vector2 ToGroundProfile(this Vector3 vector)
         {
             return new Vector2(vector.X, vector.Y);
