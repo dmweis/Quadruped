@@ -7,7 +7,7 @@ namespace DynamixelServo.Quadruped
 {
     public class BasicQuadrupedGaitEngine : QuadrupedGaitEngine
     {
-        private const int Speed = 35;
+        private const int Speed = 30;
         private float NextStepLength => Speed * 0.001f * TimeSincelastTick;
 
         private readonly Queue<LegPositions> _moves = new Queue<LegPositions>();
@@ -17,6 +17,8 @@ namespace DynamixelServo.Quadruped
         private const float LegHeight = -9f;
         private const int LegDistanceLongitudinal = 17;
         private const int LegDistanceLateral = 10;
+        //private const int LegDistanceLongitudinal = 15;
+        //private const int LegDistanceLateral = 15;
 
         private LegPositions RelaxedStance
         {
@@ -90,14 +92,17 @@ namespace DynamixelServo.Quadruped
         public void EnqueueOneStep()
         {
 
-            // Move LR and RF forward
+            float liftHeight = 2;
             var nextStep = RelaxedStance;
-            nextStep.Transform(new Vector3(0, 2, 1), LegFlags.LeftRear | LegFlags.RightFront);
+
+            // Move LR and RF forward
+            nextStep = nextStep.Copy();
+            nextStep.Transform(new Vector3(0, 2, liftHeight), LegFlags.LeftRear | LegFlags.RightFront);
             nextStep.Transform(new Vector3(0, -2, 0), LegFlags.LeftFront | LegFlags.RightRear);
             _moves.Enqueue(nextStep);
 
             nextStep = nextStep.Copy();
-            nextStep.Transform(new Vector3(0, 2, -1), LegFlags.LeftRear | LegFlags.RightFront);
+            nextStep.Transform(new Vector3(0, 2, -liftHeight), LegFlags.LeftRear | LegFlags.RightFront);
             nextStep.Transform(new Vector3(0, -2, 0), LegFlags.LeftFront | LegFlags.RightRear);
             _moves.Enqueue(nextStep);
 
@@ -108,14 +113,15 @@ namespace DynamixelServo.Quadruped
 
             // Move RR and LF forward
             nextStep = nextStep.Copy();
-            nextStep.Transform(new Vector3(0, 2, 1), LegFlags.LeftFront | LegFlags.RightRear);
+            nextStep.Transform(new Vector3(0, 2, liftHeight), LegFlags.LeftFront | LegFlags.RightRear);
             nextStep.Transform(new Vector3(0, -2, 0), LegFlags.LeftRear | LegFlags.RightFront);
             _moves.Enqueue(nextStep);
 
             nextStep = nextStep.Copy();
-            nextStep.Transform(new Vector3(0, 2, -1), LegFlags.LeftFront | LegFlags.RightRear);
+            nextStep.Transform(new Vector3(0, 2, -liftHeight), LegFlags.LeftFront | LegFlags.RightRear);
             nextStep.Transform(new Vector3(0, -2, 0), LegFlags.LeftRear | LegFlags.RightFront);
             _moves.Enqueue(nextStep);
+
         }
     }
 }
