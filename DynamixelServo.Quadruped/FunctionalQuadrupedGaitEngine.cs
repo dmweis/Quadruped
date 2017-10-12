@@ -48,7 +48,7 @@ namespace DynamixelServo.Quadruped
                              currentPosition.RightRear.Z) / 4;
             if (average > -9)
             {
-                Driver.MoveLegs(new LegPositions
+                Driver.MoveLegsSynced(new LegPositions
                 {
                     LeftFront = new Vector3(-LegDistance, LegDistance, 0),
                     RightFront = new Vector3(LegDistance, LegDistance, 0),
@@ -58,7 +58,7 @@ namespace DynamixelServo.Quadruped
                 Thread.Sleep(1000);
             }
             _lastWrittenPosition = RelaxedStance;
-            Driver.MoveLegs(_lastWrittenPosition);
+            Driver.MoveLegsSynced(_lastWrittenPosition);
             StartEngine();
         }
 
@@ -120,7 +120,7 @@ namespace DynamixelServo.Quadruped
             _lastWrittenPosition = newPosition;
             try
             {
-                Driver.MoveLegs(_lastWrittenPosition);
+                Driver.MoveLegsSynced(_lastWrittenPosition);
             }
             catch (IOException e)
             {

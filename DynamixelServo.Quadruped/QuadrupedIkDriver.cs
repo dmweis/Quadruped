@@ -170,14 +170,6 @@ namespace DynamixelServo.Quadruped
             }
         }
 
-        public void MoveLegs(LegPositions position)
-        {
-            MoveLeftFrontLeg(position.LeftFront);
-            MoveRightFrontLeg(position.RightFront);
-            MoveLeftRearLeg(position.LeftRear);
-            MoveRightRearLeg(position.RightRear);
-        }
-
         public LegPositions ReadCurrentLegPositions()
         {
             return new LegPositions()
@@ -234,6 +226,55 @@ namespace DynamixelServo.Quadruped
             float tibia = _driver.GetPresentPositionInDegrees(legConfig.TibiaId);
             MotorGoalPositions positions = new MotorGoalPositions(coxa, femur, tibia);
             return CalculateFkForLeg(positions, legConfig);
+        }
+
+        public void MoveLegs(LegPositions position)
+        {
+            MoveLeftFrontLeg(position.LeftFront);
+            MoveRightFrontLeg(position.RightFront);
+            MoveLeftRearLeg(position.LeftRear);
+            MoveRightRearLeg(position.RightRear);
+        }
+
+        public void MoveLegsSynced(LegPositions position)
+        {
+            var rightFrontLegGoalPositions = CalculateIkForLeg(position.RightFront, RightFront);
+            var rightRearLegGoalPositions = CalculateIkForLeg(position.RightRear, RightRear);
+            var leftFrontLegGoalPositions = CalculateIkForLeg(position.LeftFront, LeftFront);
+            var leftRearLegGoalPositions = CalculateIkForLeg(position.LeftRear, LeftRear);
+            byte[] servoIds = new byte[12];
+            float[] servoGoals = new float[12];
+
+            // Pair motor ids with their respective goal positions
+            servoIds[0] = RightFront.CoxaId;
+            servoGoals[0] = rightFrontLegGoalPositions.Coxa;
+            servoIds[1] = RightFront.FemurId;
+            servoGoals[1] = rightFrontLegGoalPositions.Femur;
+            servoIds[2] = RightFront.TibiaId;
+            servoGoals[2] = rightFrontLegGoalPositions.Tibia;
+
+            servoIds[3] = RightRear.CoxaId;
+            servoGoals[3] = rightRearLegGoalPositions.Coxa;
+            servoIds[4] = RightRear.FemurId;
+            servoGoals[4] = rightRearLegGoalPositions.Femur;
+            servoIds[5] = RightRear.TibiaId;
+            servoGoals[5] = rightRearLegGoalPositions.Tibia;
+
+            servoIds[6] = LeftFront.CoxaId;
+            servoGoals[6] = leftFrontLegGoalPositions.Coxa;
+            servoIds[7] = LeftFront.FemurId;
+            servoGoals[7] = leftFrontLegGoalPositions.Femur;
+            servoIds[8] = LeftFront.TibiaId;
+            servoGoals[8] = leftFrontLegGoalPositions.Tibia;
+
+            servoIds[9] = LeftRear.CoxaId;
+            servoGoals[9] = leftRearLegGoalPositions.Coxa;
+            servoIds[10] = LeftRear.FemurId;
+            servoGoals[10] = leftRearLegGoalPositions.Femur;
+            servoIds[11] = LeftRear.TibiaId;
+            servoGoals[11] = leftRearLegGoalPositions.Tibia;
+
+            _driver.GroupSyncSetGoalPositionInDegrees(servoIds, servoGoals);
         }
 
         private void MoveLeg(Vector3 target, LegConfiguration legConfig)
