@@ -57,9 +57,29 @@ namespace DynamixelServo.TestConsole
                 case ConsoleOptions.TrackerListener:
                     TrackerListener(portName);
                     break;
+                case ConsoleOptions.DriverTest:
+                    DriverTest(portName);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private static void DriverTest(string comPort)
+        {
+            Console.WriteLine("Starting");
+            using (DynamixelDriver driver = new DynamixelDriver(comPort))
+            {
+                // test sync write feature
+                byte[] ids = driver.Search(1, 20);
+                ushort[] goals = new ushort[ids.Length];
+                for (int index = 0; index < goals.Length; index++)
+                {
+                    goals[index] = 512;
+                }
+                driver.GroupSyncSetGoalPosition(ids, goals);
+            }
+            Console.WriteLine("Done");
         }
 
         private static void GaitEngineTest(string comPort)

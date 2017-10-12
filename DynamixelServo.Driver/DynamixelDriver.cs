@@ -172,6 +172,49 @@ namespace DynamixelServo.Driver
             WriteUInt16(servoId, address, goalPosition, protocol);
         }
 
+        public void GroupSyncSetGoalPositionInDegrees(byte[] servoIds, float[] goalPositionsInDegrees, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+        {
+            ushort[] goalPositions = goalPositionsInDegrees.Select(DegreesToUnits).ToArray();
+            GroupSyncSetGoalPosition(servoIds, goalPositions, protocol);
+        }
+
+        public void GroupSyncSetGoalPosition(byte[] servoIds, ushort[] goalPositions, DynamixelProtocol protocol = DynamixelProtocol.Version1)
+        {
+            // assert
+            if (servoIds.Length != goalPositions.Length)
+            {
+                throw new ArgumentException($"{nameof(servoIds)} and {nameof(goalPositions)} have to be the same size");
+            }
+            ushort address = protocol == DynamixelProtocol.Version1 ? ADDR_MX_GOAL_POSITION : ADDR_XL_GOAL_POSITION;
+            // initi group write
+            int syncGroupNum = dynamixel.groupSyncWrite(_portNumber, (int)protocol, address, 2);
+            for (int index = 0; index < servoIds.Length; index++)
+            {
+                byte servoId = servoIds[index];
+                ushort goalPosition = goalPositions[index];
+                // add parameters to group write
+                bool success = dynamixel.groupSyncWriteAddParam(syncGroupNum, servoId, goalPosition, 2);
+                if (!success)
+                {
+                    throw new IOException("Group write adda param failed");
+                }
+            }
+            // Send commands
+            dynamixel.groupSyncWriteTxPacket(syncGroupNum);
+            int commResult = dynamixel.getLastTxRxResult(_portNumber, (int)protocol);
+            if (commResult != CommSuccess)
+            {
+                string servoIdDescriptor = string.Empty;
+                for (int index = 0; index < servoIds.Length; index++)
+                {
+                    servoIdDescriptor += $" {servoIds[index]}";
+                }
+                throw new IOException(DynamixelErrorHelper.GetTxRxResultDescription(commResult) + $" group write on:{servoIdDescriptor}");
+            }
+            // clear group write cache
+            dynamixel.groupSyncWriteClearParam(syncGroupNum);
+        }
+
         public float GetGoalPositionInDegrees(byte servoId, DynamixelProtocol protocol = DynamixelProtocol.Version1)
         {
             return UnitsToDegrees(GetGoalPosition(servoId, protocol));
