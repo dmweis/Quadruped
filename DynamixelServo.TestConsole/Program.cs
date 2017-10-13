@@ -92,27 +92,11 @@ namespace DynamixelServo.TestConsole
             using (var quadruped = new QuadrupedIkDriver(driver))
             {
                 LoadLimits(driver);
-                using (var gaiteEngine = new BasicQuadrupedGaitEngine(quadruped))
+                using (var gaiteEngine = new FunctionalQuadrupedGaitEngine(quadruped))
                 {
-                    while (true)
+                    while (GetCurrentConsoleKey().Key != ConsoleKey.Escape)
                     {
-                        var direction = new Vector2(0f, -1f);
-                        if (GetCurrentConsoleKey().Key == ConsoleKey.Spacebar)
-                        {
-                            gaiteEngine.EnqueueOneStep(direction, LegFlags.RfLrCross);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                        if (GetCurrentConsoleKey().Key == ConsoleKey.Spacebar)
-                        {
-                            gaiteEngine.EnqueueOneStep(direction, LegFlags.LfRrCross);
-                        }
-                        else
-                        {
-                            break;
-                        }
+                        
                     }
                 }
             }
