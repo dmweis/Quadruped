@@ -24,6 +24,11 @@ namespace DynamixelServo.Quadruped
             return (float)Math.PI * angle / 180f;
         }
 
+        public static double DegreeToRad(this Angle angle)
+        {
+            return Math.PI * angle / 180f;
+        }
+
         public static double ToPower(this double number, double powerOf)
         {
             return Math.Pow(number, powerOf);

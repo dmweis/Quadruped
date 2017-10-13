@@ -61,6 +61,26 @@ namespace DynamixelServo.Quadruped
             }
         }
 
+        public void Rotate(Angle angle, LegFlags legs = LegFlags.All)
+        {
+            if ((legs & LegFlags.LeftFront) != 0)
+            {
+                LeftFront  = new Vector3(LeftFront.ToDirectionVector2().Rotate(angle), LeftFront.Z);
+            }
+            if ((legs & LegFlags.RightFront) != 0)
+            {
+                RightFront = new Vector3(RightFront.ToDirectionVector2().Rotate(angle), RightFront.Z);
+            }
+            if ((legs & LegFlags.LeftRear) != 0)
+            {
+                LeftRear = new Vector3(LeftRear.ToDirectionVector2().Rotate(angle), LeftRear.Z);
+            }
+            if ((legs & LegFlags.RightRear) != 0)
+            {
+                RightRear = new Vector3(RightRear.ToDirectionVector2().Rotate(angle), RightRear.Z);
+            }
+        }
+
         public void SetLegs(Vector3 newVector, LegFlags legs = LegFlags.All)
         {
             if ((legs & LegFlags.LeftFront) != 0)

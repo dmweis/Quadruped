@@ -59,7 +59,7 @@
     <Compile Include="QuadrupedGaitEngine.cs" />
     <Compile Include="QuadrupedIkDriver.cs" />
     <Compile Include="ReadingQuadrupedGaitEngine.cs" />
-    <Compile Include="Vector3Extensions.cs" />
+    <Compile Include="VectorExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DynamixelServo.Driver\DynamixelServo.Driver.csproj">

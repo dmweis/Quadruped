@@ -126,7 +126,35 @@ namespace DynamixelServo.Quadruped
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, -liftHeight), backwardsMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), forwardMovingLegs);
             _moves.Enqueue(nextStep);
+        }
 
+        public void EnqueueOneRotation()
+        {
+            var nextStep = RelaxedStance;
+
+            nextStep = nextStep.Copy();
+            nextStep.Rotate(new Angle(10f), LegFlags.LfRrCross);
+            nextStep.Transform(new Vector3(0, 0, 2), LegFlags.LfRrCross);
+            nextStep.Rotate(new Angle(-10f), LegFlags.RfLrCross);
+            _moves.Enqueue(nextStep);
+
+            nextStep = nextStep.Copy();
+            nextStep.Rotate(new Angle(10f), LegFlags.LfRrCross);
+            nextStep.Transform(new Vector3(0, 0, -2), LegFlags.LfRrCross);
+            nextStep.Rotate(new Angle(-10f), LegFlags.RfLrCross);
+            _moves.Enqueue(nextStep);
+
+            nextStep = nextStep.Copy();
+            nextStep.Rotate(new Angle(10f), LegFlags.RfLrCross);
+            nextStep.Transform(new Vector3(0, 0, 2), LegFlags.RfLrCross);
+            nextStep.Rotate(new Angle(-10f), LegFlags.LfRrCross);
+            _moves.Enqueue(nextStep);
+
+            nextStep = nextStep.Copy();
+            nextStep.Rotate(new Angle(10f), LegFlags.RfLrCross);
+            nextStep.Transform(new Vector3(0, 0, -2), LegFlags.RfLrCross);
+            nextStep.Rotate(new Angle(-10f), LegFlags.LfRrCross);
+            _moves.Enqueue(nextStep);
         }
     }
 }

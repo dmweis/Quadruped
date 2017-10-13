@@ -137,6 +137,9 @@ namespace DynamixelServo.TestConsole
                             case ConsoleKey.S:
                                 direction = new Vector2(0, -1);
                                 break;
+                            case ConsoleKey.F:
+                                gaiteEngine.EnqueueOneRotation();
+                                break;
                             case ConsoleKey.Q:
                                 direction = keyInfo.Modifiers != ConsoleModifiers.Shift ? new Vector2(-1, 1) : new Vector2(-1, -1);
                                 break;

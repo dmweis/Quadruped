@@ -1,8 +1,9 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace DynamixelServo.Quadruped
 {
-    public static class Vector3Extensions
+    public static class VectorExtensions
     {
         public static Vector3 Normal(this Vector3 vector)
         {
@@ -30,7 +31,7 @@ namespace DynamixelServo.Quadruped
             return Vector3.DistanceSquared(current, target);
         }
 
-        public static Vector2 ToGroundProfile(this Vector3 vector)
+        public static Vector2 ToDirectionVector2(this Vector3 vector)
         {
             return new Vector2(vector.X, vector.Y);
         }
@@ -38,6 +39,16 @@ namespace DynamixelServo.Quadruped
         public static Vector2 Normal(this Vector2 vector)
         {
             return Vector2.Normalize(vector);
+        }
+
+        public static Vector2 Rotate(this Vector2 vector, Angle angle)
+        {
+            Vector2 rotatedVector = new Vector2
+            {
+                X = (float)(vector.X * Math.Cos(angle.DegreeToRad()) - vector.Y * Math.Sin(angle.DegreeToRad())),
+                Y = (float)(vector.X * Math.Sin(angle.DegreeToRad()) + vector.Y * Math.Cos(angle.DegreeToRad()))
+            };
+            return rotatedVector;
         }
     }
 }

@@ -133,17 +133,17 @@ namespace DynamixelServo.Quadruped
 
         private LegFlags DetermineBestLeg(LegPositions currentPositions)
         {
-            Vector2 rightFrontProfile = currentPositions.RightFront.ToGroundProfile().Normal();
-            Vector2 rightRearProfile = currentPositions.RightRear.ToGroundProfile().Normal();
-            Vector2 leftFrontProfile = currentPositions.LeftFront.ToGroundProfile().Normal();
-            Vector2 leftRearProfile = currentPositions.LeftRear.ToGroundProfile().Normal();
+            Vector2 rightFrontProfile = currentPositions.RightFront.ToDirectionVector2().Normal();
+            Vector2 rightRearProfile = currentPositions.RightRear.ToDirectionVector2().Normal();
+            Vector2 leftFrontProfile = currentPositions.LeftFront.ToDirectionVector2().Normal();
+            Vector2 leftRearProfile = currentPositions.LeftRear.ToDirectionVector2().Normal();
 
             var relaxed = RelaxedStance;
 
-            double rightFrontValue = AreaOfTriangle(rightRearProfile, leftFrontProfile, relaxed.LeftRear.ToGroundProfile().Normal());
-            double rightRearValue = AreaOfTriangle(rightFrontProfile, leftRearProfile, relaxed.LeftFront.ToGroundProfile().Normal());
-            double leftFrontValue = AreaOfTriangle(rightFrontProfile, leftRearProfile, relaxed.RightRear.ToGroundProfile().Normal());
-            double leftRearValue = AreaOfTriangle(rightRearProfile, leftFrontProfile, relaxed.RightFront.ToGroundProfile().Normal());
+            double rightFrontValue = AreaOfTriangle(rightRearProfile, leftFrontProfile, relaxed.LeftRear.ToDirectionVector2().Normal());
+            double rightRearValue = AreaOfTriangle(rightFrontProfile, leftRearProfile, relaxed.LeftFront.ToDirectionVector2().Normal());
+            double leftFrontValue = AreaOfTriangle(rightFrontProfile, leftRearProfile, relaxed.RightRear.ToDirectionVector2().Normal());
+            double leftRearValue = AreaOfTriangle(rightRearProfile, leftFrontProfile, relaxed.RightFront.ToDirectionVector2().Normal());
             double highest = new double[] { rightFrontValue, rightRearValue, leftFrontValue, leftRearValue }.Max();
             if (highest == rightFrontValue)
             {

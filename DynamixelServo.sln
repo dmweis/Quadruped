@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamixelServo.Driver", "DynamixelServo.Driver\DynamixelServo.Driver.csproj", "{6B873C2B-42B9-4699-8384-664332C0BBBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamixelServo.TestConsole", "DynamixelServo.TestConsole\DynamixelServo.TestConsole.csproj", "{6DE6B5D4-945B-45D8-9102-3544D9AFC2A5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamixelServo.Quadruped", "DynamixelServo.Quadruped\DynamixelServo.Quadruped.csproj", "{071B6695-5EAF-4679-ABBA-685E2CB1477C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamixelServo.Quadruped.Tests", "DynamixelServo.Quadruped.Tests\DynamixelServo.Quadruped.Tests.csproj", "{223F3075-8108-419C-BD2E-03CB34833F66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{071B6695-5EAF-4679-ABBA-685E2CB1477C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{071B6695-5EAF-4679-ABBA-685E2CB1477C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{071B6695-5EAF-4679-ABBA-685E2CB1477C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{223F3075-8108-419C-BD2E-03CB34833F66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{223F3075-8108-419C-BD2E-03CB34833F66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{223F3075-8108-419C-BD2E-03CB34833F66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{223F3075-8108-419C-BD2E-03CB34833F66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
