@@ -10,6 +10,7 @@ namespace DynamixelServo.TestConsole
         MeasureLimits = 4,
         TrackerListener = 8,
         SelectOption = 16,
-        DriverTest = 32
+        DriverTest = 32,
+        BasicGaitEngine = 64
     }
 }

@@ -18,7 +18,7 @@ namespace DynamixelServo.TestConsole
         static void Main(string[] args)
         {
             const string portName = "COM4";
-            const ConsoleOptions defaultSelection = ConsoleOptions.GaitEngine;
+            const ConsoleOptions defaultSelection = ConsoleOptions.BasicGaitEngine;
 
             ConsoleOptions option = args.Length < 1 ? defaultSelection : (ConsoleOptions)Enum.Parse(typeof(ConsoleOptions), args[0]);
             while (option == ConsoleOptions.SelectOption)
@@ -59,6 +59,9 @@ namespace DynamixelServo.TestConsole
                     break;
                 case ConsoleOptions.DriverTest:
                     DriverTest(portName);
+                    break;
+                case ConsoleOptions.BasicGaitEngine:
+                    BasicGaitEngineTest(portName);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -110,6 +113,63 @@ namespace DynamixelServo.TestConsole
                         {
                             break;
                         }
+                    }
+                }
+            }
+            Console.WriteLine("Done");
+        }
+
+        private static void BasicGaitEngineTest(string comPort)
+        {
+            Console.WriteLine("Starting");
+            using (var driver = new DynamixelDriver(comPort))
+            using (var quadruped = new QuadrupedIkDriver(driver))
+            {
+                LoadLimits(driver);
+                using (var gaiteEngine = new BasicQuadrupedGaitEngine(quadruped))
+                {
+                    bool keepGoing = true;
+                    LegFlags nextLegCombo = LegFlags.RfLrCross;
+                    while (keepGoing)
+                    {
+                        nextLegCombo = nextLegCombo == LegFlags.RfLrCross ? LegFlags.LfRrCross : LegFlags.RfLrCross;
+                        Vector2 direction = Vector2.Zero;
+                        ConsoleKeyInfo keyInfo = GetCurrentConsoleKey();
+                        switch (keyInfo.Key)
+                        {
+                            case ConsoleKey.LeftArrow:
+                            case ConsoleKey.A:
+                                direction = new Vector2(-1, 0);
+                                break;
+                            case ConsoleKey.RightArrow:
+                            case ConsoleKey.D:
+                                direction = new Vector2(1, 0);
+                                break;
+                            case ConsoleKey.UpArrow:
+                            case ConsoleKey.W:
+                                direction = new Vector2(0, 1);
+                                break;
+                            case ConsoleKey.DownArrow:
+                            case ConsoleKey.S:
+                                direction = new Vector2(0, -1);
+                                break;
+                            case ConsoleKey.Q:
+                                direction = keyInfo.Modifiers != ConsoleModifiers.Shift ? new Vector2(-1, 1) : new Vector2(-1, -1);
+                                break;
+                            case ConsoleKey.E:
+                                direction = keyInfo.Modifiers != ConsoleModifiers.Shift ? new Vector2(1, 1) : new Vector2(1, -1);
+                                break;
+                            case ConsoleKey.Z:
+                                direction = new Vector2(-1, -1);
+                                break;
+                            case ConsoleKey.C:
+                                direction = new Vector2(1, -1);
+                                break;
+                            case ConsoleKey.Escape:
+                                keepGoing = false;
+                                break;
+                        }
+                        gaiteEngine.EnqueueOneStep(direction, nextLegCombo);
                     }
                 }
             }

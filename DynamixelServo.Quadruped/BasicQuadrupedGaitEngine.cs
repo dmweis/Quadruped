@@ -90,6 +90,10 @@ namespace DynamixelServo.Quadruped
 
         public void EnqueueOneStep(Vector2 direction, LegFlags forwardMovingLegs = LegFlags.RfLrCross, float frontLegShift = 2, float rearLegShift = 1, float liftHeight = 2, bool normalize = true)
         {
+            if (direction.X == 0f && direction.Y == 0f)
+            {
+                return;
+            }
             if (normalize)
             {
                 direction = direction.Normal();
