@@ -20,19 +20,13 @@ namespace DynamixelServo.Quadruped
         private const int LegDistanceLongitudinal = 15;
         private const int LegDistanceLateral = 15;
 
-        private LegPositions RelaxedStance
+        private LegPositions RelaxedStance => new LegPositions
         {
-            get
-            {
-                return new LegPositions
-                {
-                    LeftFront = new Vector3(-LegDistanceLateral, LegDistanceLongitudinal, LegHeight),
-                    RightFront = new Vector3(LegDistanceLateral, LegDistanceLongitudinal, LegHeight),
-                    LeftRear = new Vector3(-LegDistanceLateral, -LegDistanceLongitudinal, LegHeight),
-                    RightRear = new Vector3(LegDistanceLateral, -LegDistanceLongitudinal, LegHeight)
-                }.Copy();
-            }
-        }
+            LeftFront = new Vector3(-LegDistanceLateral, LegDistanceLongitudinal, LegHeight),
+            RightFront = new Vector3(LegDistanceLateral, LegDistanceLongitudinal, LegHeight),
+            LeftRear = new Vector3(-LegDistanceLateral, -LegDistanceLongitudinal, LegHeight),
+            RightRear = new Vector3(LegDistanceLateral, -LegDistanceLongitudinal, LegHeight)
+        };
 
         private readonly LegPositions _lastWrittenPosition;
 
