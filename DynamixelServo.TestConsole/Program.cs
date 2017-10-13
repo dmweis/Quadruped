@@ -297,7 +297,7 @@ namespace DynamixelServo.TestConsole
                 }
                 while (true)
                 {
-                    string serovStatuses = String.Empty; ;
+                    string serovStatuses = string.Empty;
                     foreach (var servo in servos)
                     {
                         float posInDegrees = driver.GetPresentPositionInDegrees(servo);
