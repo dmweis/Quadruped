@@ -93,9 +93,10 @@ namespace DynamixelServo.TestConsole
                 {
                     while (true)
                     {
+                        var direction = new Vector2(0f, -1f);
                         if (GetCurrentConsoleKey().Key == ConsoleKey.Spacebar)
                         {
-                            gaiteEngine.EnqueueOneStep(2, 2, 1, LegFlags.RfLrCross);
+                            gaiteEngine.EnqueueOneStep(direction, LegFlags.RfLrCross);
                         }
                         else
                         {
@@ -103,7 +104,7 @@ namespace DynamixelServo.TestConsole
                         }
                         if (GetCurrentConsoleKey().Key == ConsoleKey.Spacebar)
                         {
-                            gaiteEngine.EnqueueOneStep(2, 2, 1, LegFlags.LfRrCross);
+                            gaiteEngine.EnqueueOneStep(direction, LegFlags.LfRrCross);
                         }
                         else
                         {

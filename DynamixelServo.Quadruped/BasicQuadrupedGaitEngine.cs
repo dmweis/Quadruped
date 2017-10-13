@@ -15,10 +15,10 @@ namespace DynamixelServo.Quadruped
         private LegPositions _nextMove;
 
         private const float LegHeight = -9f;
-        private const int LegDistanceLongitudinal = 17;
-        private const int LegDistanceLateral = 10;
-        //private const int LegDistanceLongitudinal = 15;
-        //private const int LegDistanceLateral = 15;
+        //private const int LegDistanceLongitudinal = 17;
+        //private const int LegDistanceLateral = 10;
+        private const int LegDistanceLongitudinal = 15;
+        private const int LegDistanceLateral = 15;
 
         private LegPositions RelaxedStance
         {
@@ -88,8 +88,12 @@ namespace DynamixelServo.Quadruped
             _moves.Enqueue(RelaxedStance);
         }
 
-        public void EnqueueOneStep(float liftHeight = 2, float frontLegShift = 2, float rearLegShift = 2, LegFlags forwardMovingLegs = LegFlags.RfLrCross)
+        public void EnqueueOneStep(Vector2 direction, LegFlags forwardMovingLegs = LegFlags.RfLrCross, float frontLegShift = 2, float rearLegShift = 1, float liftHeight = 2, bool normalize = true)
         {
+            if (normalize)
+            {
+                direction = direction.Normal();
+            }
 
             if (forwardMovingLegs != LegFlags.LfRrCross && forwardMovingLegs != LegFlags.RfLrCross)
             {
@@ -100,29 +104,29 @@ namespace DynamixelServo.Quadruped
 
             // Move LR and RF forward
             nextStep = nextStep.Copy();
-            nextStep.Transform(new Vector3(0, frontLegShift, liftHeight), forwardMovingLegs);
-            nextStep.Transform(new Vector3(0, -rearLegShift, 0), backwardsMovingLegs);
+            nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, liftHeight), forwardMovingLegs);
+            nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
             _moves.Enqueue(nextStep);
 
             nextStep = nextStep.Copy();
-            nextStep.Transform(new Vector3(0, frontLegShift, -liftHeight), forwardMovingLegs);
-            nextStep.Transform(new Vector3(0, -rearLegShift, 0), backwardsMovingLegs);
+            nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, -liftHeight), forwardMovingLegs);
+            nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
             _moves.Enqueue(nextStep);
 
             // Move all
             nextStep = nextStep.Copy();
-            nextStep.Transform(new Vector3(0, -(frontLegShift ), 0));
+            nextStep.Transform(new Vector3(-frontLegShift * direction.X, -frontLegShift * direction.Y, 0));
             _moves.Enqueue(nextStep);
 
             // Move RR and LF forward
             nextStep = nextStep.Copy();
-            nextStep.Transform(new Vector3(0, frontLegShift, liftHeight), backwardsMovingLegs);
-            nextStep.Transform(new Vector3(0, -rearLegShift, 0), forwardMovingLegs);
+            nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, liftHeight), backwardsMovingLegs);
+            nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), forwardMovingLegs);
             _moves.Enqueue(nextStep);
 
             nextStep = nextStep.Copy();
-            nextStep.Transform(new Vector3(0, frontLegShift, -liftHeight), backwardsMovingLegs);
-            nextStep.Transform(new Vector3(0, -rearLegShift, 0), forwardMovingLegs);
+            nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, -liftHeight), backwardsMovingLegs);
+            nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), forwardMovingLegs);
             _moves.Enqueue(nextStep);
 
         }
