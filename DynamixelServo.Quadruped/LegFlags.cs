@@ -13,6 +13,8 @@ namespace DynamixelServo.Quadruped
         Front = LeftFront | RightFront,
         Rear = LeftRear | RightRear,
         Right = RightFront | RightRear,
-        Left = LeftFront | LeftRear
+        Left = LeftFront | LeftRear,
+        RfLrCross = RightFront | LeftRear,
+        LfRrCross = LeftFront | RightRear
     }
 }

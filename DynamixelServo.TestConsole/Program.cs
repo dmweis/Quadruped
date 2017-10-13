@@ -85,15 +85,30 @@ namespace DynamixelServo.TestConsole
         private static void GaitEngineTest(string comPort)
         {
             Console.WriteLine("Starting");
-            using (DynamixelDriver driver = new DynamixelDriver(comPort))
-            using (QuadrupedIkDriver quadruped = new QuadrupedIkDriver(driver))
+            using (var driver = new DynamixelDriver(comPort))
+            using (var quadruped = new QuadrupedIkDriver(driver))
             {
                 LoadLimits(driver);
-                using (FunctionalQuadrupedGaitEngine gaiteEngine = new FunctionalQuadrupedGaitEngine(quadruped))
+                using (var gaiteEngine = new BasicQuadrupedGaitEngine(quadruped))
                 {
-                    while (GetCurrentConsoleKey().Key == ConsoleKey.Spacebar)
+                    while (true)
                     {
-                        //gaiteEngine.EnqueueOneStep();
+                        if (GetCurrentConsoleKey().Key == ConsoleKey.Spacebar)
+                        {
+                            gaiteEngine.EnqueueOneStep(2, 2, 1, LegFlags.RfLrCross);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        if (GetCurrentConsoleKey().Key == ConsoleKey.Spacebar)
+                        {
+                            gaiteEngine.EnqueueOneStep(2, 2, 1, LegFlags.LfRrCross);
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
             }
