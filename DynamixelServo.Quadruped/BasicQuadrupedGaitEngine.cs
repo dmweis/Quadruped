@@ -95,7 +95,7 @@ namespace DynamixelServo.Quadruped
 
             if (forwardMovingLegs != LegFlags.LfRrCross && forwardMovingLegs != LegFlags.RfLrCross)
             {
-                throw new ArgumentException(nameof(forwardMovingLegs));
+                throw new ArgumentException($"{nameof(forwardMovingLegs)} has to be {nameof(LegFlags.RfLrCross)} or {nameof(LegFlags.LfRrCross)}");
             }
             LegFlags backwardsMovingLegs = forwardMovingLegs == LegFlags.LfRrCross ? LegFlags.RfLrCross : LegFlags.LfRrCross;
             var nextStep = RelaxedStance;
@@ -128,32 +128,48 @@ namespace DynamixelServo.Quadruped
             _moves.Enqueue(nextStep);
         }
 
-        public void EnqueueOneRotation()
+        public void EnqueueOneRotation(float rotation, LegFlags firstMovingLegs = LegFlags.LfRrCross, float liftHeight = 2)
         {
+            if (rotation == 0)
+            {
+                return;
+            }
+            if (Math.Abs(rotation) > 25)
+            {
+                throw new ArgumentOutOfRangeException($"{nameof(rotation)} has to be between -25 and 25 degrees");
+            }
+
+            if (firstMovingLegs != LegFlags.LfRrCross && firstMovingLegs != LegFlags.RfLrCross)
+            {
+                throw new ArgumentException($"{nameof(firstMovingLegs)} has to be {nameof(LegFlags.RfLrCross)} or {nameof(LegFlags.LfRrCross)}");
+            }
+            LegFlags secondMovingLegs = firstMovingLegs == LegFlags.LfRrCross ? LegFlags.RfLrCross : LegFlags.LfRrCross;
+
+            rotation /= 2;
             var nextStep = RelaxedStance;
 
             nextStep = nextStep.Copy();
-            nextStep.Rotate(new Angle(10f), LegFlags.LfRrCross);
-            nextStep.Transform(new Vector3(0, 0, 2), LegFlags.LfRrCross);
-            nextStep.Rotate(new Angle(-10f), LegFlags.RfLrCross);
+            nextStep.Rotate(new Angle(-rotation), firstMovingLegs);
+            nextStep.Transform(new Vector3(0, 0, liftHeight), firstMovingLegs);
+            nextStep.Rotate(new Angle(rotation), secondMovingLegs);
             _moves.Enqueue(nextStep);
 
             nextStep = nextStep.Copy();
-            nextStep.Rotate(new Angle(10f), LegFlags.LfRrCross);
-            nextStep.Transform(new Vector3(0, 0, -2), LegFlags.LfRrCross);
-            nextStep.Rotate(new Angle(-10f), LegFlags.RfLrCross);
+            nextStep.Rotate(new Angle(-rotation), firstMovingLegs);
+            nextStep.Transform(new Vector3(0, 0, -liftHeight), firstMovingLegs);
+            nextStep.Rotate(new Angle(rotation), secondMovingLegs);
             _moves.Enqueue(nextStep);
 
             nextStep = nextStep.Copy();
-            nextStep.Rotate(new Angle(10f), LegFlags.RfLrCross);
-            nextStep.Transform(new Vector3(0, 0, 2), LegFlags.RfLrCross);
-            nextStep.Rotate(new Angle(-10f), LegFlags.LfRrCross);
+            nextStep.Rotate(new Angle(-rotation), secondMovingLegs);
+            nextStep.Transform(new Vector3(0, 0, liftHeight), secondMovingLegs);
+            nextStep.Rotate(new Angle(rotation), firstMovingLegs);
             _moves.Enqueue(nextStep);
 
             nextStep = nextStep.Copy();
-            nextStep.Rotate(new Angle(10f), LegFlags.RfLrCross);
-            nextStep.Transform(new Vector3(0, 0, -2), LegFlags.RfLrCross);
-            nextStep.Rotate(new Angle(-10f), LegFlags.LfRrCross);
+            nextStep.Rotate(new Angle(-rotation), secondMovingLegs);
+            nextStep.Transform(new Vector3(0, 0, -liftHeight), secondMovingLegs);
+            nextStep.Rotate(new Angle(rotation), firstMovingLegs);
             _moves.Enqueue(nextStep);
         }
     }

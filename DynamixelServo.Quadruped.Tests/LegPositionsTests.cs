@@ -29,5 +29,22 @@ namespace DynamixelServo.Quadruped.Tests
             positions.LeftFront.X.Should().BeApproximately(1, FloatComparasionPrecision);
             positions.LeftFront.Y.Should().BeApproximately(0, FloatComparasionPrecision);
         }
+
+        [TestMethod()]
+        public void RotatingLegPositionBy0ShouldNotChangeIt()
+        {
+            // Arrange
+            LegPositions positions = new LegPositions(Vector3.UnitX, Vector3.UnitX, Vector3.UnitX, Vector3.UnitX);
+            // Act
+            positions.Rotate(new Angle(0), LegFlags.RfLrCross);
+            // Assert
+            positions.RightFront.ShouldBeEquivalentTo(Vector3.UnitX);
+
+            positions.LeftRear.ShouldBeEquivalentTo(Vector3.UnitX);
+
+            positions.RightRear.ShouldBeEquivalentTo(Vector3.UnitX);
+
+            positions.LeftFront.ShouldBeEquivalentTo(Vector3.UnitX);
+        }
     }
 }

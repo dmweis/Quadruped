@@ -137,20 +137,26 @@ namespace DynamixelServo.TestConsole
                             case ConsoleKey.S:
                                 direction = new Vector2(0, -1);
                                 break;
-                            case ConsoleKey.F:
-                                gaiteEngine.EnqueueOneRotation();
+                            case ConsoleKey.D3:
+                                gaiteEngine.EnqueueOneRotation(keyInfo.Modifiers == ConsoleModifiers.Shift ? 25 : 12.5f, nextLegCombo);
+                                break;
+                            case ConsoleKey.D2:
+                                gaiteEngine.EnqueueOneRotation(keyInfo.Modifiers == ConsoleModifiers.Shift ? -25 : -12.5f, nextLegCombo);
                                 break;
                             case ConsoleKey.Q:
-                                direction = keyInfo.Modifiers != ConsoleModifiers.Shift ? new Vector2(-1, 1) : new Vector2(-1, -1);
+                                direction = keyInfo.Modifiers == ConsoleModifiers.Shift ? new Vector2(-1, -1) : new Vector2(-1, 1);
                                 break;
                             case ConsoleKey.E:
-                                direction = keyInfo.Modifiers != ConsoleModifiers.Shift ? new Vector2(1, 1) : new Vector2(1, -1);
+                                direction = keyInfo.Modifiers == ConsoleModifiers.Shift ? new Vector2(1, -1) : new Vector2(1, 1);
                                 break;
                             case ConsoleKey.Z:
                                 direction = new Vector2(-1, -1);
                                 break;
                             case ConsoleKey.C:
                                 direction = new Vector2(1, -1);
+                                break;
+                            case ConsoleKey.Spacebar:
+                                gaiteEngine.EnqueueOneRotation(0);
                                 break;
                             case ConsoleKey.Escape:
                                 keepGoing = false;
