@@ -253,7 +253,7 @@ namespace DynamixelServo.Driver
             {
                 SetGoalPosition(servoIds[index], goals[index], protocol);
             }
-            while (!servoIds.All(index => !IsMoving(index, protocol)))
+            while (servoIds.Any(index => IsMoving(index, protocol)))
             {
                 Thread.Sleep(querryDelay);
             }
