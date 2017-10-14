@@ -48,17 +48,20 @@ namespace DynamixelServo.Quadruped
                     _nextMove = _moves.Dequeue();
                 }
             }
-            _lastWrittenPosition.MoveTowards(_nextMove, NextStepLength);
-            try
+            else
             {
-                Driver.MoveLegsSynced(_lastWrittenPosition);
-            }
-            catch (IOException e)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(e);
-                Console.ResetColor();
-                throw;
+                _lastWrittenPosition.MoveTowards(_nextMove, NextStepLength);
+                try
+                {
+                    Driver.MoveLegsSynced(_lastWrittenPosition);
+                }
+                catch (IOException e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(e);
+                    Console.ResetColor();
+                    throw;
+                }
             }
         }
 
