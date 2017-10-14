@@ -48,9 +48,6 @@ namespace DynamixelServo.TestConsole
                 case ConsoleOptions.GaitEngine:
                     GaitEngineTest(portName);
                     break;
-                case ConsoleOptions.OldIkEngine:
-                    OldIkDriverTest(portName);
-                    break;
                 case ConsoleOptions.MeasureLimits:
                     MeasureLimits(portName);
                     break;
@@ -196,77 +193,6 @@ namespace DynamixelServo.TestConsole
             {
                 Index = index;
             }
-        }
-
-        public static void OldIkDriverTest(string comPort)
-        {
-            Console.WriteLine("Starting");
-            using (DynamixelDriver driver = new DynamixelDriver(comPort))
-            using (QuadrupedIkDriver quadruped = new QuadrupedIkDriver(driver))
-            {
-                LoadLimits(driver);
-                quadruped.Setup();
-                quadruped.StandUpfromGround();
-                Thread.Sleep(1000);
-                Console.Beep();
-                bool keepGoing = true;
-                while (keepGoing)
-                {
-                    ConsoleKeyInfo keyInfo = GetCurrentConsoleKey();
-                    switch (keyInfo.Key)
-                    {
-                        case ConsoleKey.LeftArrow:
-                        case ConsoleKey.A:
-                            if (keyInfo.Modifiers == ConsoleModifiers.Shift)
-                            {
-                                quadruped.TurnLeft();
-                            }
-                            else
-                            {
-                                quadruped.TurnLeftSlow();
-                            }
-                            break;
-                        case ConsoleKey.RightArrow:
-                        case ConsoleKey.D:
-                            if (keyInfo.Modifiers == ConsoleModifiers.Shift)
-                            {
-                                quadruped.TurnRight();
-                            }
-                            else
-                            {
-                                quadruped.TurnRightSlow();
-                            }
-                            break;
-                        case ConsoleKey.UpArrow:
-                        case ConsoleKey.W:
-                            // call forward movement
-                            break;
-                        case ConsoleKey.DownArrow:
-                        case ConsoleKey.S:
-                            quadruped.RelaxedStance();
-                            break;
-                        case ConsoleKey.Spacebar:
-                            Console.WriteLine("Enter x y z");
-                            float[] input = Console
-                                .ReadLine()
-                                .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                                .Select(float.Parse)
-                                .ToArray();
-                            float x = input[0];
-                            float y = input[1];
-                            float z = input[2];
-                            quadruped.MoveRelativeCenterMass(new Vector3(x, y, z));
-                            break;
-                        case ConsoleKey.Escape:
-                            keepGoing = false;
-                            break;
-                    }
-                }
-                Console.Beep();
-                quadruped.DisableMotors();
-            }
-            Console.WriteLine("Press enter to exit");
-            Console.ReadLine();
         }
 
         private static void MeasureLimits(string comPort)

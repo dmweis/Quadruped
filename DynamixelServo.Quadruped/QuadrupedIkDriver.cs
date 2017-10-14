@@ -45,6 +45,7 @@ namespace DynamixelServo.Quadruped
             }
         }
 
+        [Obsolete("This method is deprecated and will be removed at some point")]
         public void StandUpfromGround()
         {
             float average = (GetLeftFrontLegPosition().Z +
@@ -66,14 +67,6 @@ namespace DynamixelServo.Quadruped
             Thread.Sleep(500);
         }
 
-        public void RelaxedStance()
-        {
-            MoveLeg(new Vector3(-15,  15, -13), LeftFront);
-            MoveLeg(new Vector3(15, 15, -13), RightFront);
-            MoveLeg(new Vector3(-15, -15, -13), LeftRear);
-            MoveLeg(new Vector3( 15, -15, -13), RightRear);
-        }
-
         public void MoveRelativeCenterMass(Vector3 transform)
         {
             Vector3 leftFrontPosition = GetLeftFrontLegGoal();
@@ -92,42 +85,6 @@ namespace DynamixelServo.Quadruped
             MoveRightFrontLeg(new Vector3(legDistance, legDistance, height) - transform);
             MoveLeftRearLeg(new Vector3(-legDistance, -legDistance, height) - transform);
             MoveRightRearLeg(new Vector3(legDistance, -legDistance, height) - transform);
-        }
-
-        public void TurnRight() => Turn(20, 10, -13, -8, 200);
-        public void TurnRightSlow() => Turn(16, 12, -13, -8, 150);
-
-        public void TurnLeft() => Turn(10, 20, -13, -8, 200);
-        public void TurnLeftSlow() => Turn(12, 16, -13, -8, 150);
-
-        private void Turn(int a, int b, int ground, int lifted, int breakTime)
-        {
-            // initial turn
-            MoveLeftFrontLeg(new Vector3(-a, b, ground));
-            MoveRightFrontLeg(new Vector3(b, a, ground));
-            MoveLeftRearLeg(new Vector3(-b, -a, ground));
-            MoveRightRearLeg(new Vector3(a, -b, ground));
-            Thread.Sleep(breakTime);
-            // LeftFront and RightRear
-            MoveLeftFrontLeg(new Vector3(-a, b, lifted));
-            MoveRightRearLeg(new Vector3(a, -b, lifted));
-            Thread.Sleep(breakTime);
-            MoveLeftFrontLeg(new Vector3(-b, a, lifted));
-            MoveRightRearLeg(new Vector3(b, -a, lifted));
-            Thread.Sleep(breakTime);
-            MoveLeftFrontLeg(new Vector3(-b, a, ground));
-            MoveRightRearLeg(new Vector3(b, -a, ground));
-            Thread.Sleep(breakTime);
-            // RightFront and LeftRear
-            MoveRightFrontLeg(new Vector3(b, a, lifted));
-            MoveLeftRearLeg(new Vector3(-b, -a, lifted));
-            Thread.Sleep(breakTime);
-            MoveRightFrontLeg(new Vector3(a, b, lifted));
-            MoveLeftRearLeg(new Vector3(-a, -b, lifted));
-            Thread.Sleep(breakTime);
-            MoveRightFrontLeg(new Vector3(a, b, ground));
-            MoveLeftRearLeg(new Vector3(-a, -b, ground));
-            Thread.Sleep(breakTime);
         }
 
         public void DisableMotors()
@@ -172,7 +129,7 @@ namespace DynamixelServo.Quadruped
 
         public LegPositions ReadCurrentLegPositions()
         {
-            return new LegPositions()
+            return new LegPositions
             {
                 LeftFront = GetLeftFrontLegPosition(),
                 RightFront = GetRightFrontLegPosition(),

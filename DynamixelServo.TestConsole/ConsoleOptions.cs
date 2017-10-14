@@ -6,11 +6,10 @@ namespace DynamixelServo.TestConsole
     enum ConsoleOptions
     {
         GaitEngine = 1,
-        OldIkEngine = 2,
-        MeasureLimits = 4,
-        TrackerListener = 8,
-        SelectOption = 16,
-        DriverTest = 32,
-        BasicGaitEngine = 64
+        MeasureLimits = 2,
+        TrackerListener = 4,
+        SelectOption = 8,
+        DriverTest = 16,
+        BasicGaitEngine = 32
     }
 }
