@@ -204,11 +204,7 @@ namespace DynamixelServo.Driver
             int commResult = dynamixel.getLastTxRxResult(_portNumber, (int)protocol);
             if (commResult != CommSuccess)
             {
-                string servoIdDescriptor = string.Empty;
-                for (int index = 0; index < servoIds.Length; index++)
-                {
-                    servoIdDescriptor += $" {servoIds[index]}";
-                }
+                string servoIdDescriptor = servoIds.OrderBy(id => id).Aggregate(string.Empty, (current, id) => current + $" {id}");
                 throw new IOException(DynamixelErrorHelper.GetTxRxResultDescription(commResult) + $" group write on:{servoIdDescriptor}");
             }
             // clear group write cache
