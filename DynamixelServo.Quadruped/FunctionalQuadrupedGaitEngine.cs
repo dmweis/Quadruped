@@ -23,25 +23,19 @@ namespace DynamixelServo.Quadruped
         //private readonly LegFlags[] _legs = { LegFlags.RightFront, LegFlags.LeftFront, LegFlags.RightRear, LegFlags.LeftRear }; // for side
         private LegPositions _lastWrittenPosition;
 
-        private LegPositions RelaxedStance
+        private LegPositions RelaxedStance => new LegPositions
         {
-            get
-            {
-                return new LegPositions
-                {
-                    LeftFront = new Vector3(-LegDistance, LegDistance, LegHeight),
-                    RightFront = new Vector3(LegDistance, LegDistance, LegHeight),
-                    LeftRear = new Vector3(-LegDistance, -LegDistance, LegHeight),
-                    RightRear = new Vector3(LegDistance, -LegDistance, LegHeight)
-                }.Copy();
-            }
-        }
+            LeftFront = new Vector3(-LegDistance, LegDistance, LegHeight),
+            RightFront = new Vector3(LegDistance, LegDistance, LegHeight),
+            LeftRear = new Vector3(-LegDistance, -LegDistance, LegHeight),
+            RightRear = new Vector3(LegDistance, -LegDistance, LegHeight)
+        };
 
 
         public FunctionalQuadrupedGaitEngine(QuadrupedIkDriver driver) : base(driver)
         {
             Driver.Setup();
-            var currentPosition = new LegPositions(driver);
+            var currentPosition = driver.ReadCurrentLegPositions();
             float average = (currentPosition.LeftFront.Z +
                              currentPosition.RightFront.Z +
                              currentPosition.LeftRear.Z +

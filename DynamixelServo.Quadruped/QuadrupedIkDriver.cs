@@ -14,16 +14,16 @@ namespace DynamixelServo.Quadruped
 
         // Correction numbers are set up so that if you add them to the angle the motor center will bo pointing to the desired angle
         // the offset for each axis is than added to compensate for the shape of the legs
-        private static readonly LegConfiguration LeftFront  = new LegConfiguration(1, 3,  5,   45,  new Vector3(-6.5f, 6.5f, 0), -240 + FemurOffset, -330 + TibiaOffset);
-        private static readonly LegConfiguration RightFront = new LegConfiguration(2, 4,  6,  -45,  new Vector3(6.5f, 6.5f, 0),   60 + FemurOffset,  -30 + TibiaOffset);
-        private static readonly LegConfiguration LeftRear   = new LegConfiguration(7, 9,  11,  135, new Vector3(-6.5f, -6.5f, 0), 60 + FemurOffset,  -30 + TibiaOffset);
-        private static readonly LegConfiguration RightRear  = new LegConfiguration(8, 10, 12, -135, new Vector3(6.5f, -6.5f, 0), -240 + FemurOffset, -330 + TibiaOffset);
+        private static readonly LegConfiguration LeftFront = new LegConfiguration(1, 3, 5, 45, new Vector3(-6.5f, 6.5f, 0), -240 + FemurOffset, -330 + TibiaOffset);
+        private static readonly LegConfiguration RightFront = new LegConfiguration(2, 4, 6, -45, new Vector3(6.5f, 6.5f, 0), 60 + FemurOffset, -30 + TibiaOffset);
+        private static readonly LegConfiguration LeftRear = new LegConfiguration(7, 9, 11, 135, new Vector3(-6.5f, -6.5f, 0), 60 + FemurOffset, -30 + TibiaOffset);
+        private static readonly LegConfiguration RightRear = new LegConfiguration(8, 10, 12, -135, new Vector3(6.5f, -6.5f, 0), -240 + FemurOffset, -330 + TibiaOffset);
 
-        private static readonly byte[] Coxas  = { LeftFront.CoxaId, RightFront.CoxaId, LeftRear.CoxaId, RightRear.CoxaId };
+        private static readonly byte[] Coxas = { LeftFront.CoxaId, RightFront.CoxaId, LeftRear.CoxaId, RightRear.CoxaId };
         private static readonly byte[] Femurs = { LeftFront.FemurId, RightFront.FemurId, LeftRear.FemurId, RightRear.FemurId };
         private static readonly byte[] Tibias = { LeftFront.TibiaId, RightFront.TibiaId, LeftRear.TibiaId, RightRear.TibiaId };
 
-        private static readonly byte[] AllMotorIds = new [] {Coxas, Femurs, Tibias}.SelectMany(x => x).ToArray();
+        private static readonly byte[] AllMotorIds = new[] { Coxas, Femurs, Tibias }.SelectMany(x => x).ToArray();
 
         private const float CoxaLength = 5.3f;
         private const float FemurLength = 6.5f;
@@ -33,7 +33,7 @@ namespace DynamixelServo.Quadruped
 
         public QuadrupedIkDriver(DynamixelDriver driver)
         {
-            _driver = driver;
+            _driver = driver ?? throw new ArgumentNullException(nameof(driver));
         }
 
         public void Setup()
@@ -123,7 +123,7 @@ namespace DynamixelServo.Quadruped
             }
             else
             {
-                throw new InvalidOperationException("Moveing multiple legs to the same position is not advisable");
+                throw new InvalidOperationException("Moving multiple legs to the same position is not advisable");
             }
         }
 
@@ -195,6 +195,7 @@ namespace DynamixelServo.Quadruped
 
         public void MoveLegsSynced(LegPositions position)
         {
+            if (position == null) throw new ArgumentNullException(nameof(position));
             var rightFrontLegGoalPositions = CalculateIkForLeg(position.RightFront, RightFront);
             var rightRearLegGoalPositions = CalculateIkForLeg(position.RightRear, RightRear);
             var leftFrontLegGoalPositions = CalculateIkForLeg(position.LeftFront, LeftFront);
@@ -250,19 +251,19 @@ namespace DynamixelServo.Quadruped
             float baseX = (float)Math.Sin(coxaAngle.DegreeToRad());
             float baseY = (float)Math.Cos(coxaAngle.DegreeToRad());
             Vector3 coxaVector = new Vector3(baseX, baseY, 0) * CoxaLength;
-            float femurX = (float) Math.Sin((femurAngle - 90).DegreeToRad()) * FemurLength;
-            float femurY = (float) Math.Cos((femurAngle - 90).DegreeToRad()) * FemurLength;
+            float femurX = (float)Math.Sin((femurAngle - 90).DegreeToRad()) * FemurLength;
+            float femurY = (float)Math.Cos((femurAngle - 90).DegreeToRad()) * FemurLength;
             Vector3 femurVector = new Vector3(baseX * femurY, baseY * femurY, femurX);
             // to calculate tibia we need angle between tibia and a vertical line
             // we get this by calculating the angles formed by a horizontal line from femur, femur and part of fibia by knowing that the sum of angles is 180
             // than we just remove this from teh tibia andgle and done
             float angleForTibiaVector = tibiaAngle - (180 - 90 - (femurAngle - 90));
-            float tibiaX = (float) Math.Sin(angleForTibiaVector.DegreeToRad()) * TibiaLength;
-            float tibiaY = (float) Math.Cos(angleForTibiaVector.DegreeToRad()) * TibiaLength;
+            float tibiaX = (float)Math.Sin(angleForTibiaVector.DegreeToRad()) * TibiaLength;
+            float tibiaY = (float)Math.Cos(angleForTibiaVector.DegreeToRad()) * TibiaLength;
             Vector3 tibiaVector = new Vector3(baseX * tibiaX, baseY * tibiaX, -tibiaY);
             return legConfig.CoxaPosition + coxaVector + femurVector + tibiaVector;
         }
-        
+
         private static MotorGoalPositions CalculateIkForLeg(Vector3 target, LegConfiguration legConfig)
         {
             Vector3 relativeVector = target - legConfig.CoxaPosition;

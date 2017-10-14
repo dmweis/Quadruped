@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace DynamixelServo.Quadruped
 {
@@ -8,14 +9,6 @@ namespace DynamixelServo.Quadruped
         public Vector3 RightFront { get; set; }
         public Vector3 LeftRear { get; set; }
         public Vector3 RightRear { get; set; }
-
-        public LegPositions(QuadrupedIkDriver driver)
-        {
-            LeftFront = driver.GetLeftFrontLegGoal();
-            RightFront = driver.GetRightFrontLegGoal();
-            LeftRear = driver.GetLeftRearLegGoal();
-            RightRear = driver.GetRightRearLegGoal();
-        }
 
         public LegPositions(LegPositions legPositions)
         {
@@ -81,26 +74,6 @@ namespace DynamixelServo.Quadruped
             }
         }
 
-        public void SetLegs(Vector3 newVector, LegFlags legs = LegFlags.All)
-        {
-            if ((legs & LegFlags.LeftFront) != 0)
-            {
-                LeftFront = newVector;
-            }
-            if ((legs & LegFlags.RightFront) != 0)
-            {
-                RightFront = newVector;
-            }
-            if ((legs & LegFlags.LeftRear) != 0)
-            {
-                LeftRear = newVector;
-            }
-            if ((legs & LegFlags.RightRear) != 0)
-            {
-                RightRear = newVector;
-            }
-        }
-
         public void MoveTowards(LegPositions target, float distance)
         {
             LeftFront = LeftFront.MoveTowards(target.LeftFront, distance);
@@ -109,44 +82,12 @@ namespace DynamixelServo.Quadruped
             RightRear = RightRear.MoveTowards(target.RightRear, distance);
         }
 
-        public LegPositions GetShiftedTowards(LegPositions target, float distance)
-        {
-            var newLegPosition = Copy();
-            newLegPosition.LeftFront = LeftFront.MoveTowards(target.LeftFront, distance);
-            newLegPosition.RightFront = RightFront.MoveTowards(target.RightFront, distance);
-            newLegPosition.LeftRear = LeftRear.MoveTowards(target.LeftRear, distance);
-            newLegPosition.RightRear = RightRear.MoveTowards(target.RightRear, distance);
-            return newLegPosition;
-        }
-
         public bool MoveFinished(LegPositions other)
         {
             return LeftFront == other.LeftFront &&
                    RightFront == other.RightFront &&
                    LeftRear == other.LeftRear &&
                    RightRear == other.RightRear;
-        }
-
-        public bool CloserThan(LegPositions target, float distance)
-        {
-            float distanceSquared = distance.Square();
-            if (RightFront.DistanceSquared(target.RightFront) > distanceSquared)
-            {
-                return false;
-            }
-            if (RightRear.DistanceSquared(target.RightRear) > distanceSquared)
-            {
-                return false;
-            }
-            if (LeftFront.DistanceSquared(target.LeftFront) > distanceSquared)
-            {
-                return false;
-            }
-            if (LeftRear.DistanceSquared(target.LeftRear) > distanceSquared)
-            {
-                return false;
-            }
-            return true;
         }
 
         public LegPositions Copy()
