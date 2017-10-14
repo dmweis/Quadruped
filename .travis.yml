@@ -1,2 +1,8 @@
 language: csharp
 solution: DynamixelServo.sln
+install:
+  - nuget restore DynamixelServo.sln
+  - nuget install NUnit.Runners -Version 3.2.0 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release solution-name.sln
+  - mono ./testrunner/NUnit.ConsoleRunner.3.2.0/tools/nunit3-console.exe ./DynamixelServo.Quadruped.Tests/bin/Release/DynamixelServo.Quadruped.Tests.dll
