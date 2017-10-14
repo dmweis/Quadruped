@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Numerics;
 
@@ -10,7 +11,7 @@ namespace DynamixelServo.Quadruped
         private const int Speed = 30;
         private float NextStepLength => Speed * 0.001f * TimeSincelastTick;
 
-        private readonly Queue<LegPositions> _moves = new Queue<LegPositions>();
+        private readonly ConcurrentQueue<LegPositions> _moves = new ConcurrentQueue<LegPositions>();
 
         private LegPositions _nextMove;
 
@@ -35,7 +36,10 @@ namespace DynamixelServo.Quadruped
             Driver.Setup();
             _lastWrittenPosition = Driver.ReadCurrentLegPositions();
             EnqueuePositions();
-            _nextMove = _moves.Dequeue();
+            if (_moves.TryDequeue(out var deqeueuedLegPosition))
+            {
+                _nextMove = deqeueuedLegPosition;
+            }
             StartEngine();
         }
 
@@ -43,26 +47,27 @@ namespace DynamixelServo.Quadruped
         {
             if (_lastWrittenPosition.MoveFinished(_nextMove))
             {
-                if (_moves.Count > 0)
+                if (_moves.TryDequeue(out var deqeueuedLegPosition))
                 {
-                    _nextMove = _moves.Dequeue();
+                    _nextMove = deqeueuedLegPosition;
+                }
+                else
+                {
+                    return;
                 }
             }
-            else
+            try
             {
-                _lastWrittenPosition.MoveTowards(_nextMove, NextStepLength);
-                try
-                {
-                    Driver.MoveLegsSynced(_lastWrittenPosition);
-                }
-                catch (IOException e)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(e);
-                    Console.ResetColor();
-                    throw;
-                }
+                Driver.MoveLegsSynced(_lastWrittenPosition);
             }
+            catch (IOException e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(e);
+                Console.ResetColor();
+                throw;
+            }
+            _lastWrittenPosition.MoveTowards(_nextMove, NextStepLength);
         }
 
         public void EnqueuePositions()
