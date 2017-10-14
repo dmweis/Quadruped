@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading;
+using BrandonPotter.XBox;
 using DynamixelServo.Driver;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
@@ -18,7 +19,7 @@ namespace DynamixelServo.TestConsole
         static void Main(string[] args)
         {
             const string portName = "COM4";
-            const ConsoleOptions defaultSelection = ConsoleOptions.BasicGaitEngine;
+            const ConsoleOptions defaultSelection = ConsoleOptions.BasicGaitEngineXbox;
 
             ConsoleOptions option = args.Length < 1 ? defaultSelection : (ConsoleOptions)Enum.Parse(typeof(ConsoleOptions), args[0]);
             while (option == ConsoleOptions.SelectOption)
@@ -59,6 +60,9 @@ namespace DynamixelServo.TestConsole
                     break;
                 case ConsoleOptions.BasicGaitEngine:
                     BasicGaitEngineTest(portName);
+                    break;
+                case ConsoleOptions.BasicGaitEngineXbox:
+                    BasicGaitEngineXboxTest(portName);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -161,6 +165,49 @@ namespace DynamixelServo.TestConsole
                         }
                         gaiteEngine.EnqueueOneStep(direction, nextLegCombo);
                         gaiteEngine.WaitUntilCommandQueueIsEmpty();
+                    }
+                }
+            }
+            Console.WriteLine("Done");
+        }
+
+        private static void BasicGaitEngineXboxTest(string comPort)
+        {
+            Console.WriteLine("Starting");
+            using (var driver = new DynamixelDriver(comPort))
+            using (var quadruped = new QuadrupedIkDriver(driver))
+            {
+                LoadLimits(driver);
+                using (var gaiteEngine = new BasicQuadrupedGaitEngine(quadruped))
+                {
+                    var connectedController = XBoxController.GetConnectedControllers().FirstOrDefault();
+                    LegFlags nextLegCombo = LegFlags.RfLrCross;
+                    while (true)
+                    {
+                        Vector2 direction = Vector2.Zero;
+                        direction.X = (float)connectedController.ThumbLeftX - 50;
+                        direction.Y = (float)connectedController.ThumbLeftY - 50;
+                        if (connectedController.ButtonBackPressed)
+                        {
+                            break;
+                        }
+                        double rightStick = connectedController.ThumbRightX - 50;
+                        if (rightStick != 0)
+                        {
+                            gaiteEngine.EnqueueOneRotation((float)(rightStick / 2), nextLegCombo);
+                            nextLegCombo = nextLegCombo == LegFlags.RfLrCross ? LegFlags.LfRrCross : LegFlags.RfLrCross;
+                            gaiteEngine.WaitUntilCommandQueueIsEmpty();
+                        }
+                        else if (direction != Vector2.Zero)
+                        {
+                            gaiteEngine.EnqueueOneStep(direction, nextLegCombo);
+                            nextLegCombo = nextLegCombo == LegFlags.RfLrCross ? LegFlags.LfRrCross : LegFlags.RfLrCross;
+                            gaiteEngine.WaitUntilCommandQueueIsEmpty();
+                        }
+                        else
+                        {
+                           Thread.Sleep(20);
+                        }
                     }
                 }
             }

@@ -58,7 +58,10 @@ namespace DynamixelServo.Quadruped
                 }
                 else
                 {
-                    _moveQueueSingal.Set();
+                    if (_moves.IsEmpty)
+                    {
+                        _moveQueueSingal.Set();
+                    }
                     return;
                 }
             }
@@ -124,6 +127,7 @@ namespace DynamixelServo.Quadruped
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, liftHeight), forwardMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
             _moves.Enqueue(nextStep);
+            _moveQueueSingal.Reset();
 
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, -liftHeight), forwardMovingLegs);
@@ -173,6 +177,7 @@ namespace DynamixelServo.Quadruped
             nextStep.Transform(new Vector3(0, 0, liftHeight), firstMovingLegs);
             nextStep.Rotate(new Angle(rotation), secondMovingLegs);
             _moves.Enqueue(nextStep);
+            _moveQueueSingal.Reset();
 
             nextStep = nextStep.Copy();
             nextStep.Rotate(new Angle(-rotation), firstMovingLegs);

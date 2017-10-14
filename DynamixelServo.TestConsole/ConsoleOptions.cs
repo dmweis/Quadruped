@@ -10,6 +10,7 @@ namespace DynamixelServo.TestConsole
         TrackerListener = 4,
         SelectOption = 8,
         DriverTest = 16,
-        BasicGaitEngine = 32
+        BasicGaitEngine = 32,
+        BasicGaitEngineXbox = 64
     }
 }
