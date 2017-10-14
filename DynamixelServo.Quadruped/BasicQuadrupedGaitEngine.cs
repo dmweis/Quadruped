@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Numerics;
+using System.Threading;
 
 namespace DynamixelServo.Quadruped
 {
@@ -12,6 +13,7 @@ namespace DynamixelServo.Quadruped
         private float NextStepLength => Speed * 0.001f * TimeSincelastTick;
 
         private readonly ConcurrentQueue<LegPositions> _moves = new ConcurrentQueue<LegPositions>();
+        private readonly ManualResetEventSlim _moveQueueSingal = new ManualResetEventSlim();
 
         private LegPositions _nextMove;
 
@@ -31,11 +33,13 @@ namespace DynamixelServo.Quadruped
 
         private readonly LegPositions _lastWrittenPosition;
 
+        public bool IsComamndQueueEmpty => _moveQueueSingal.IsSet && _moves.IsEmpty;
+
         public BasicQuadrupedGaitEngine(QuadrupedIkDriver driver) : base(driver)
         {
             Driver.Setup();
             _lastWrittenPosition = Driver.ReadCurrentLegPositions();
-            EnqueuePositions();
+            EnqueueInitialStandup();
             if (_moves.TryDequeue(out var deqeueuedLegPosition))
             {
                 _nextMove = deqeueuedLegPosition;
@@ -49,10 +53,12 @@ namespace DynamixelServo.Quadruped
             {
                 if (_moves.TryDequeue(out var deqeueuedLegPosition))
                 {
+                    _moveQueueSingal.Reset();
                     _nextMove = deqeueuedLegPosition;
                 }
                 else
                 {
+                    _moveQueueSingal.Set();
                     return;
                 }
             }
@@ -70,7 +76,7 @@ namespace DynamixelServo.Quadruped
             _lastWrittenPosition.MoveTowards(_nextMove, NextStepLength);
         }
 
-        public void EnqueuePositions()
+        private void EnqueueInitialStandup()
         {
             float average = (_lastWrittenPosition.LeftFront.Z +
                              _lastWrittenPosition.RightFront.Z +
@@ -90,8 +96,13 @@ namespace DynamixelServo.Quadruped
             _moves.Enqueue(RelaxedStance);
         }
 
+        public void WaitUntilCommandQueueIsEmpty(CancellationToken cancellationToken) => _moveQueueSingal.Wait(cancellationToken);
+
+        public void WaitUntilCommandQueueIsEmpty() => _moveQueueSingal.Wait();
+
         public void EnqueueOneStep(Vector2 direction, LegFlags forwardMovingLegs = LegFlags.RfLrCross, float frontLegShift = 2, float rearLegShift = 1, float liftHeight = 2, bool normalize = true)
         {
+            // identity comparasion to prevent error on float.NaN
             if (direction.X == 0f && direction.Y == 0f)
             {
                 return;
@@ -138,6 +149,7 @@ namespace DynamixelServo.Quadruped
 
         public void EnqueueOneRotation(float rotation, LegFlags firstMovingLegs = LegFlags.LfRrCross, float liftHeight = 2)
         {
+            // identity comparasion to prevent error on float.NaN
             if (rotation == 0)
             {
                 return;
@@ -179,6 +191,12 @@ namespace DynamixelServo.Quadruped
             nextStep.Transform(new Vector3(0, 0, -liftHeight), secondMovingLegs);
             nextStep.Rotate(new Angle(rotation), firstMovingLegs);
             _moves.Enqueue(nextStep);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            _moveQueueSingal.Dispose();
         }
     }
 }

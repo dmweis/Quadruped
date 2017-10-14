@@ -160,6 +160,7 @@ namespace DynamixelServo.TestConsole
                                 break;
                         }
                         gaiteEngine.EnqueueOneStep(direction, nextLegCombo);
+                        gaiteEngine.WaitUntilCommandQueueIsEmpty();
                     }
                 }
             }

@@ -6,7 +6,7 @@ namespace DynamixelServo.Quadruped
 {
     public  abstract class QuadrupedGaitEngine : IDisposable
     {
-        protected readonly QuadrupedIkDriver Driver;
+        protected QuadrupedIkDriver Driver;
         private readonly Thread _engineThread;
         private const int UpdateFrequency = 30;
 
@@ -20,7 +20,7 @@ namespace DynamixelServo.Quadruped
 
         protected QuadrupedGaitEngine(QuadrupedIkDriver driver)
         {
-            Driver = driver;
+            Driver = driver ?? throw new ArgumentNullException(nameof(driver));
             _engineThread = new Thread(EngineThread)
             {
                 IsBackground = true,
@@ -59,7 +59,16 @@ namespace DynamixelServo.Quadruped
             _engineThread.Join();
         }
 
-        public void Dispose()
+        public void DetachDriver()
+        {
+            if (_engineThread.IsAlive)
+            {
+                throw new InvalidOperationException("Thread has to be endigne has to be stopped before detaching the driver");
+            }
+            Driver = null;
+        }
+
+        public virtual void Dispose()
         {
             if (_engineThread.IsAlive)
             {
