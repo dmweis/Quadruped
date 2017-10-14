@@ -181,6 +181,10 @@ namespace DynamixelServo.TestConsole
                 using (var gaiteEngine = new BasicQuadrupedGaitEngine(quadruped))
                 {
                     var connectedController = XBoxController.GetConnectedControllers().FirstOrDefault();
+                    if (connectedController == null)
+                    {
+                        throw new InvalidOperationException("Xbox controller not detected!");
+                    }
                     LegFlags nextLegCombo = LegFlags.RfLrCross;
                     while (true)
                     {
