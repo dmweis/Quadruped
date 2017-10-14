@@ -54,7 +54,6 @@
     <Compile Include="MotorGoalPositions.cs" />
     <Compile Include="MathExtensions.cs" />
     <Compile Include="LegPositions.cs" />
-    <Compile Include="QuadrupedDriver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuadrupedGaitEngine.cs" />
     <Compile Include="QuadrupedIkDriver.cs" />
