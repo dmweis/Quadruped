@@ -63,7 +63,7 @@ namespace DynamixelServo.Quadruped
         {
             if (_engineThread.IsAlive)
             {
-                throw new InvalidOperationException("Thread has to be endigne has to be stopped before detaching the driver");
+                throw new InvalidOperationException("Engine has to be stopped before detaching the driver");
             }
             Driver = null;
         }
@@ -72,7 +72,7 @@ namespace DynamixelServo.Quadruped
         {
             if (_engineThread.IsAlive)
             {
-                _engineThread.Abort();
+                Stop();
             }
             Driver?.Dispose();
         }
