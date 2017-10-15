@@ -74,19 +74,19 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DynamixelServo.Driver\DynamixelServo.Driver.csproj">
-      <Project>{6b873c2b-42b9-4699-8384-664332c0bbbc}</Project>
-      <Name>DynamixelServo.Driver</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DynamixelServo.Quadruped\DynamixelServo.Quadruped.csproj">
-      <Project>{071b6695-5eaf-4679-abba-685e2cb1477c}</Project>
-      <Name>DynamixelServo.Quadruped</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="dxl_x64_c.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DynamixelServo.Driver\DynamixelServo.Driver.csproj">
+      <Project>{2ba02977-c3b1-4c06-9da4-1d746a8181ca}</Project>
+      <Name>DynamixelServo.Driver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DynamixelServo.Quadruped\DynamixelServo.Quadruped.csproj">
+      <Project>{b0800974-7421-45ba-b7f8-9223c3af9b3f}</Project>
+      <Name>DynamixelServo.Quadruped</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
