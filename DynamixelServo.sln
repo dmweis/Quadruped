@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamixelServo.Driver", "Dy
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamixelServo.Quadruped", "DynamixelServo.Quadruped\DynamixelServo.Quadruped.csproj", "{B0800974-7421-45BA-B7F8-9223C3AF9B3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamixelServo.Quadruped.Tests", "DynamixelServo.Quadruped.Tests\DynamixelServo.Quadruped.Tests.csproj", "{0C7195D5-53A4-4718-8B26-54AB9E2572D7}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamixelServo.NetCore.TestConsole", "DynamixelServo.NetCore.TestConsole\DynamixelServo.NetCore.TestConsole.csproj", "{9AD529A7-B535-4F72-ABE5-DB76A3F4ED5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamixelServo.Quadruped.Tests", "DynamixelServo.Quadruped.Tests\DynamixelServo.Quadruped.Tests.csproj", "{F9747750-9906-4F1E-B81D-512C77B82CCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,14 +25,14 @@ Global
 		{B0800974-7421-45BA-B7F8-9223C3AF9B3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0800974-7421-45BA-B7F8-9223C3AF9B3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0800974-7421-45BA-B7F8-9223C3AF9B3F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0C7195D5-53A4-4718-8B26-54AB9E2572D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C7195D5-53A4-4718-8B26-54AB9E2572D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C7195D5-53A4-4718-8B26-54AB9E2572D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C7195D5-53A4-4718-8B26-54AB9E2572D7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9AD529A7-B535-4F72-ABE5-DB76A3F4ED5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9AD529A7-B535-4F72-ABE5-DB76A3F4ED5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AD529A7-B535-4F72-ABE5-DB76A3F4ED5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AD529A7-B535-4F72-ABE5-DB76A3F4ED5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9747750-9906-4F1E-B81D-512C77B82CCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9747750-9906-4F1E-B81D-512C77B82CCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9747750-9906-4F1E-B81D-512C77B82CCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9747750-9906-4F1E-B81D-512C77B82CCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

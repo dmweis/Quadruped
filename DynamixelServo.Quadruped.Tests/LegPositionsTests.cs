@@ -1,10 +1,10 @@
-﻿using System.Numerics;
+using System.Numerics;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DynamixelServo.Quadruped.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class LegPositionsTests
     {
         private const float FloatComparasionPrecision = 0.001f;
