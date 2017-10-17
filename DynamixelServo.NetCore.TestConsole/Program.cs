@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using DynamixelServo.Driver;
 using DynamixelServo.Quadruped;
 using Newtonsoft.Json;
@@ -11,9 +12,37 @@ namespace DynamixelServo.NetCore.TestConsole
 {
     class Program
     {
+        private const string DxlLib = "dxl_lib.ds";
+
         static void Main(string[] args)
         {
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
+            // This is an extremly ugly way to load the correct library for dynamixel
+            // TODO: figure out a better way
+            var architecture = RuntimeInformation.OSArchitecture;
+            if (architecture == Architecture.Arm || architecture == Architecture.Arm64)
+            {
+                File.Copy("libdxl_sbc_c.so", DxlLib, true);
+            }
+            else if (architecture == Architecture.X64)
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    File.Copy("dxl_x64_c.dll", DxlLib, true);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    File.Copy("libdxl_x64_c.so", DxlLib, true);
+                }
+                else
+                {
+                    throw new NotSupportedException("This OS is not supported!");
+                }
+            }
+            else
+            {
+                throw new NotSupportedException("This architecture is not supported!");
+            }
             Console.WriteLine("Starting");
             using (var driver = new DynamixelDriver(args.Length > 0 ? args[0] : "COM4"))
             using (var quadruped = new QuadrupedIkDriver(driver))

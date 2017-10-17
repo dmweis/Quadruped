@@ -37,7 +37,7 @@ namespace dynamixel_sdk
 {
     class dynamixel
     {
-        const string dll_path = "dxl_x64_c.dll";
+        const string dll_path = "dxl_lib.ds";
 
         #region PortHandler
         [DllImport(dll_path)]
