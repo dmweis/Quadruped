@@ -15,4 +15,10 @@
     <ProjectReference Include="..\DynamixelServo.Quadruped\DynamixelServo.Quadruped.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="run_linux.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
