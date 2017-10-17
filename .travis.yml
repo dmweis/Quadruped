@@ -6,7 +6,8 @@ dist: trusty
 script:
  - dotnet build
  - dotnet test ./*.Tests --no-build
-before_deploy: "dotnet build DynamixelServo.NetCore.TestConsole -r linux-arm"
+before_deploy:
+ - dotnet build DynamixelServo.NetCore.TestConsole -r linux-arm
 deploy:
   provider: releases
   api_key:
