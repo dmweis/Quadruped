@@ -9,7 +9,7 @@ script:
 before_deploy:
  - git stash --all
  - dotnet publish DynamixelServo.NetCore.TestConsole -r linux-arm
- - tar -zcvf arm_deploy.tar.gz DynamixelServo.NetCore.TestConsole/bin/Debug/netcoreapp2.0/linux-arm/publish
+ - tar -zcvf arm_deploy.tar.gz -C DynamixelServo.NetCore.TestConsole/bin/Debug/netcoreapp2.0/linux-arm/publish .
 deploy:
   provider: releases
   api_key:
