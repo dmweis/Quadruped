@@ -19,6 +19,6 @@ deploy:
   on:
     repo: dmweis/DynamixelServo
     branch: master
-    tags: true
+    # tags: true
 after_deploy:
  - git stash --all
