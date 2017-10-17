@@ -128,6 +128,8 @@ namespace DynamixelServo.NetCore.TestConsole
                         gaiteEngine.EnqueueOneStep(direction, nextLegCombo);
                         gaiteEngine.WaitUntilCommandQueueIsEmpty();
                     }
+                    gaiteEngine.Stop();
+                    quadruped.DisableMotors();
                 }
             }
             DeleteDxlLibrary();
