@@ -8,7 +8,7 @@ script:
  - dotnet test ./*.Tests --no-build
 before_deploy:
  - git stash --all
- - dotnet build DynamixelServo.NetCore.TestConsole -r linux-arm
+ - dotnet publish DynamixelServo.NetCore.TestConsole -r linux-arm
 deploy:
   provider: releases
   api_key:
