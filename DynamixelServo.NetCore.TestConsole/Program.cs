@@ -15,7 +15,7 @@ namespace DynamixelServo.NetCore.TestConsole
         {
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
             Console.WriteLine("Starting");
-            using (var driver = new DynamixelDriver("COM4"))
+            using (var driver = new DynamixelDriver(args.Length > 0 ? args[0] : "COM4"))
             using (var quadruped = new QuadrupedIkDriver(driver))
             {
                 LoadLimits(driver);
