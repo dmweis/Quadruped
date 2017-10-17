@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dmweis/DynamixelServo.svg?branch=master)](https://travis-ci.org/dmweis/DynamixelServo)
+
 # Dynamixel Servo driver
 
 .NET driver for Dynamixel servos with a primitive Quadruped Implementation
