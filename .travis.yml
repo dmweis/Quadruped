@@ -14,6 +14,6 @@ deploy:
     secure: WX6rhIbRxOCPYb4Iz8e6TvtRMhSYEtFjFkzTHPx/LzGTUxLQst9fusqXaz9S7uiFvitgmwq+I94wyT5LoC4W2rmTaKD3LcgJrezVjw89TD2tbhRrPeBvQL+8LgurKcZG9eOY1hY5I0C63iZXqBlM1mtl1cSgexJlP6gmdzpyacoR20lym/pRpmo0CLtGa5ah0ljVf3sCg3MUUZl9nkpgp4+QPp2Equvh7dQNWnWulM/Uni30WGGkrVh7U5sPoL3nYCfTH5yIYaGLsQ6wl0S0PzUdTj3pbngWb3k20Q+bIMiYoZmbHmGVHeLI0NgMdFAUW7ASG5k1b08AjjUAxATfQhIZ3Bqhv9dl7h/1f5+MUGmTJ8CjVLy8Jq1j9mA7nqj/z+ugLqp/3g3r0YqTNDd4c79cT2ry9qZZEp5cj1KHw7bClMDUh6lKpOOvr2ZCPSybnI9Gl6Zn4eaMCBC0ko9jRfKEBj3OSncogcytPj99ZP/ch2sbwS/raq/fBOgcn+4Q89hsVgLzhu8jmuBQqInfzdqEABzAFfs1REIPGimUKrwt47NpwSbbcfwXLCrk1yF6p3tKbFYRX1h4BVg+Wvst/8TNv8oyK2t6ogomHJm/Wqa5kBijSdYKpY/OGCYN5J7Q96/cAoh+iB9KkwdM06omfyptfXeMegSexUS4cNQvuV8=
   file_glob: true
   file: DynamixelServo.NetCore.TestConsole/bin/Debug/netcoreapp2.0/linux_arm/*
-  skip_cleanup: true
+  # skip_cleanup: true
   on:
     repo: dmweis/DynamixelServo
