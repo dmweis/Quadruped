@@ -14,25 +14,34 @@ namespace DynamixelServo.NetCore.TestConsole
     {
         private const string DxlLib = "dxl_lib.ds";
 
-        static void Main(string[] args)
+        private static void SaveCorrectDxlLibrary()
         {
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
             // This is an extremly ugly way to load the correct library for dynamixel
             // TODO: figure out a better way
+            Console.ForegroundColor = ConsoleColor.Yellow;
             var architecture = RuntimeInformation.OSArchitecture;
+            Console.WriteLine($"Current architecture {architecture}");
             if (architecture == Architecture.Arm || architecture == Architecture.Arm64)
             {
-                File.Copy("libdxl_sbc_c.so", DxlLib, true);
+                const string newFileName = "libdxl_sbc_c.so";
+                Console.WriteLine($"Saving library as {newFileName}");
+                File.Copy(newFileName, DxlLib, true);
             }
             else if (architecture == Architecture.X64)
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    File.Copy("dxl_x64_c.dll", DxlLib, true);
+                    Console.WriteLine($"Current OS is {OSPlatform.Windows}");
+                    const string newFileName = "dxl_x64_c.dll";
+                    Console.WriteLine($"Saving library as {newFileName}");
+                    File.Copy(newFileName, DxlLib, true);
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
-                    File.Copy("libdxl_x64_c.so", DxlLib, true);
+                    Console.WriteLine($"Current OS is {OSPlatform.Linux}");
+                    const string newFileName = "libdxl_x64_c.so";
+                    Console.WriteLine($"Saving library as {newFileName}");
+                    File.Copy(newFileName, DxlLib, true);
                 }
                 else
                 {
@@ -43,6 +52,22 @@ namespace DynamixelServo.NetCore.TestConsole
             {
                 throw new NotSupportedException("This architecture is not supported!");
             }
+            Console.ResetColor();
+        }
+        private static void DeleteDxlLibrary()
+        {
+            // This is an extremly ugly way to load the correct library for dynamixel
+            // TODO: figure out a better way
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"Deleting {DxlLib}");
+            File.Delete(DxlLib);
+            Console.ResetColor();
+        }
+
+        static void Main(string[] args)
+        {
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
+            SaveCorrectDxlLibrary();
             Console.WriteLine("Starting");
             using (var driver = new DynamixelDriver(args.Length > 0 ? args[0] : "COM4"))
             using (var quadruped = new QuadrupedIkDriver(driver))
@@ -105,6 +130,7 @@ namespace DynamixelServo.NetCore.TestConsole
                     }
                 }
             }
+            DeleteDxlLibrary();
             Console.WriteLine("Done");
         }
 
