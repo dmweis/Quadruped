@@ -9,4 +9,4 @@ before_build:
 build_script:
 - dotnet build
 test_script:
-- dotnet test ./*.Tests --no-build
+- dotnet test DynamixelServo.Quadruped.Tests --no-build
