@@ -1,0 +1,12 @@
+version: '1.0.{build}'
+configuration:
+- Debug
+platform: Any CPU
+init:
+- ps: $Env:LABEL = "CI" + $Env:APPVEYOR_BUILD_NUMBER.PadLeft(5, "0")
+before_build:
+- appveyor-retry dotnet restore -v Minimal
+build_script:
+- dotnet build
+test_script:
+- dotnet test ./*.Tests --no-build
