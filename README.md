@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/dmweis/DynamixelServo.svg?branch=master)](https://travis-ci.org/dmweis/DynamixelServo)
+[![Travis Build Status](https://travis-ci.org/dmweis/DynamixelServo.svg?branch=master)](https://travis-ci.org/dmweis/DynamixelServo)
+[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/36ten6o8gyh3kxuo/branch/master?svg=true)](https://ci.appveyor.com/project/dmweis/dynamixelservo/branch/master)
+
 
 # Dynamixel Servo driver
 
