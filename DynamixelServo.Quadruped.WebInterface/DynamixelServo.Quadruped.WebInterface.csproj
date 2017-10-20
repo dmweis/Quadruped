@@ -21,6 +21,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Update="downloadNewestWebInterfaceRelease.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="run_linux.sh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
