@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace dynamixelServo.Quadruped.WebInterface
 {
@@ -17,7 +13,8 @@ namespace dynamixelServo.Quadruped.WebInterface
         {
             SaveCorrectDxlLibrary();
             BuildWebHost(args).Run();
-            DeleteDxlLibrary();
+            //Console.WriteLine("Application quit. Press enter to exit");
+            //Console.ReadLine();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
@@ -29,7 +26,7 @@ namespace dynamixelServo.Quadruped.WebInterface
                         .AddJsonFile("QuadrupedConfig.json");
                 })
                 .UseStartup<Startup>()
-                .UseUrls("http://0.0.0.0:5001/")
+                .UseUrls("http://0.0.0.0:50093/")
                 .Build();
 
         private const string DxlLib = "dxl_lib.ds";
@@ -72,15 +69,6 @@ namespace dynamixelServo.Quadruped.WebInterface
             {
                 throw new NotSupportedException("This architecture is not supported!");
             }
-            Console.ResetColor();
-        }
-        private static void DeleteDxlLibrary()
-        {
-            // This is an extremly ugly way to load the correct library for dynamixel
-            // TODO: figure out a better way
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"Deleting {DxlLib}");
-            File.Delete(DxlLib);
             Console.ResetColor();
         }
     }

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Threading.Tasks;
 
 namespace dynamixelServo.Quadruped.WebInterface.RTC
 {
@@ -11,7 +8,29 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
         public JoystickType JoystickType { get; set; }
         public float Angle { get; set; }
         public MessageType MessageType { get; set; }
-        public float Force { get; set; }
+        public float Distance { get; set; }
+
+        public float GetScaledX(float deadzone, float min, float max)
+        {
+            if (MessageType != MessageType.Movement)
+            {
+                return 0;
+            }
+            float x = (float) Math.Cos(Angle) * Distance / 50;
+            if (Math.Abs(x) < deadzone)
+            {
+                return 0;
+            }
+            if (x > 0)
+            {
+                x = (x - deadzone) * (max - min) / (1 - deadzone) + min;
+            }
+            else
+            {
+                x = (x + deadzone) * (-max + min) / (-1 + deadzone) - min;
+            }
+            return x;
+        }
 
         public Vector2 CalculateHeadingVector(float deadzone = 0.0f)
         {
@@ -19,7 +38,7 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
             {
                 return Vector2.Zero;
             }
-            if (Force < deadzone)
+            if (Math.Abs(Distance / 50) < deadzone)
             {
                 return Vector2.Zero;
             }
@@ -27,8 +46,8 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
             float y = (float)Math.Sin(Angle);
             var vector = new Vector2
             {
-                X = Math.Abs(x) > deadzone ? x : 0f,
-                Y = Math.Abs(y) > deadzone ? y : 0f
+                X = x,
+                Y = y
             };
             return vector;
         }

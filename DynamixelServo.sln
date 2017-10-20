@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamixelServo.NetCore.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamixelServo.Quadruped.Tests", "DynamixelServo.Quadruped.Tests\DynamixelServo.Quadruped.Tests.csproj", "{F9747750-9906-4F1E-B81D-512C77B82CCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dynamixelServo.Quadruped.WebInterface", "dynamixelServo.Quadruped.WebInterface\dynamixelServo.Quadruped.WebInterface.csproj", "{10736C05-0EF5-415E-8EA2-786D2C37DD49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamixelServo.Quadruped.WebInterface", "DynamixelServo.Quadruped.WebInterface\DynamixelServo.Quadruped.WebInterface.csproj", "{10736C05-0EF5-415E-8EA2-786D2C37DD49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
