@@ -4,15 +4,15 @@ mono: none
 dotnet: 2.0.0
 dist: trusty
 script:
- - dotnet build
- - dotnet test ./*.Tests --no-build
+  - dotnet build
+  - dotnet test ./*.Tests --no-build
 before_deploy:
- - dotnet clean
- - dotnet publish DynamixelServo.NetCore.TestConsole -r linux-arm
- - tar -zcf arm_deploy.tar.gz -C DynamixelServo.NetCore.TestConsole/bin/Debug/netcoreapp2.0/linux-arm/publish .
- - dotnet clean
- - dotnet publish DynamixelServo.Quadruped.WebInterface -r linux-arm
- - tar -zcf arm_web_deploy.tar.gz -C DynamixelServo.Quadruped.WebInterface/bin/Debug/netcoreapp2.0/linux-arm/publish .
+  - dotnet clean
+  - dotnet publish DynamixelServo.NetCore.TestConsole -r linux-arm
+  - tar -zcf arm_deploy.tar.gz -C DynamixelServo.NetCore.TestConsole/bin/Debug/netcoreapp2.0/linux-arm/publish .
+  - dotnet clean
+  - dotnet publish DynamixelServo.Quadruped.WebInterface -r linux-arm
+  - tar -zcf arm_web_deploy.tar.gz -C DynamixelServo.Quadruped.WebInterface/bin/Debug/netcoreapp2.0/linux-arm/publish .
 deploy:
   provider: releases
   api_key:
@@ -24,5 +24,5 @@ deploy:
   on:
     repo: dmweis/DynamixelServo
 after_deploy:
- - dotnet clean
- - git stash --all
+  - dotnet clean
+  - git stash --all
