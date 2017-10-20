@@ -22,8 +22,6 @@ deploy:
   skip_cleanup: true
   on:
     repo: dmweis/DynamixelServo
-    # branch: master
-    # tags: true
 after_deploy:
  - dotnet clean
  - git stash --all
