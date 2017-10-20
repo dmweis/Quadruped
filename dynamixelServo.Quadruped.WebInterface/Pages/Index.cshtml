@@ -1,0 +1,55 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<script src="lib/nipplejs/dist/nipplejs.min.js"></script>
+<script>
+    window.onload = function () {
+        var uri = `ws://${document.domain}:${location.port}/ws`;
+        var serverSocket = new WebSocket(uri);
+        console.log(uri);
+        let moveJoystickZone = document.getElementById('move_joystick_zone');
+        let rotationJoystickZone = document.getElementById('rotate_joystick_zone');
+        let moveJoystickOptions = {
+            zone: moveJoystickZone,
+            color: 'red',
+        }
+        let rotationJoystickOptions = {
+            zone: rotationJoystickZone,
+            color: 'navy',
+        }
+        let moveJoystickManager = nipplejs.create(moveJoystickOptions);
+        let rotationJoystickManager = nipplejs.create(rotationJoystickOptions);
+        moveJoystickManager.on('added', function (evt, nipple) {
+            nipple.on('move', function (evt, arg) {
+                serverSocket.send(JSON.stringify({ joystickType: 'direction', angle: arg.angle.radian, MessageType: 'movement', force: arg.force}));
+            });
+            nipple.on('start', function (evt) {
+                serverSocket.send(JSON.stringify({ joystickType: 'direction', angle: 0, MessageType: 'start', force: 0}));
+            });
+            nipple.on('end', function (evt) {
+                serverSocket.send(JSON.stringify({ joystickType: 'direction', angle: 0, MessageType: 'stop', force: 0}));
+            });
+        });
+        rotationJoystickManager.on('added', function (evt, nipple) {
+            nipple.on('move', function (evt, arg) {
+                serverSocket.send(JSON.stringify({ joystickType: 'rotation', angle: arg.angle.radian, MessageType: 'movement', force: arg.force}));
+            });
+            nipple.on('start', function (evt) {
+                serverSocket.send(JSON.stringify({ joystickType: 'rotation', angle: 0, MessageType: 'start', force: 0}));
+            });
+            nipple.on('end', function (evt) {
+                serverSocket.send(JSON.stringify({ joystickType: 'rotation', angle: 0, MessageType: 'stop', force: 0}));
+            });
+        });
+    }
+</script>
+<div class="mainContainer">
+    <div class="joystick moveJoystick" id="move_joystick_zone">
+        <strong>Move joystick</strong>
+    </div>
+    <div class="joystick rotationJoystick" id="rotate_joystick_zone">
+        <strong>Rotation joystick</strong>
+    </div>
+</div>
