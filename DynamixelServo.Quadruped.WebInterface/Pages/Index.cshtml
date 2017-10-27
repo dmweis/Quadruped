@@ -3,57 +3,7 @@
 @{
     ViewData["Title"] = "Home page";
 }
-<script src="lib/nipplejs/dist/nipplejs.min.js"></script>
-<script>
-    window.onload = function () {
-        var uri = `ws://${document.domain}:${location.port}/ws`;
-        var serverSocket = new WebSocket(uri);
-        let moveJoystickZone = document.getElementById('move_joystick_zone');
-        var moveJoystickTextField = document.getElementById('move_joystick_text_field');
-        let rotationJoystickZone = document.getElementById('rotate_joystick_zone');
-        var rotationJoystickTextField = document.getElementById('rotation_joystick_text_field');
-        let moveJoystickOptions = {
-            zone: moveJoystickZone,
-            color: 'red'
-        }
-        let rotationJoystickOptions = {
-            zone: rotationJoystickZone,
-            color: 'navy'
-        }
-        let moveJoystickManager = nipplejs.create(moveJoystickOptions);
-        let rotationJoystickManager = nipplejs.create(rotationJoystickOptions);
-        moveJoystickManager.on('added', function (evt, nipple) {
-            nipple.on('move', function (evt, arg) {
-                var json = JSON.stringify({ joystickType: 'direction', angle: arg.angle.radian, MessageType: 'movement', distance: arg.distance });
-                serverSocket.send(json);
-                //moveJoystickTextField.innerText = json;
-            });
-            nipple.on('start', function (evt) {
-                var json = JSON.stringify({ joystickType: 'direction', angle: 0, MessageType: 'start', distance: 0 });
-                serverSocket.send(json);
-            });
-            nipple.on('end', function (evt) {
-                var json = JSON.stringify({ joystickType: 'direction', angle: 0, MessageType: 'stop', distance: 0 });
-                serverSocket.send(json);
-            });
-        });
-        rotationJoystickManager.on('added', function (evt, nipple) {
-            nipple.on('move', function (evt, arg) {
-                var json = JSON.stringify({ joystickType: 'rotation', angle: arg.angle.radian, MessageType: 'movement', distance: arg.distance });
-                serverSocket.send(json);
-                //rotationJoystickTextField.innerText = json;
-            });
-            nipple.on('start', function (evt) {
-                var json = JSON.stringify({ joystickType: 'rotation', angle: 0, MessageType: 'start', distance: 0 });
-                serverSocket.send(json);
-            });
-            nipple.on('end', function (evt) {
-                var json = JSON.stringify({ joystickType: 'rotation', angle: 0, MessageType: 'stop', distance: 0 });
-                serverSocket.send(json);
-            });
-        });
-    }
-</script>
+
 <div class="mainContainer">
     <div class="joystick moveJoystick" id="move_joystick_zone">
         <strong>Move joystick</strong>
@@ -64,3 +14,8 @@
         <div id="rotation_joystick_text_field"></div>
     </div>
 </div>
+
+@section scripts {
+    <script src="~/lib/nipplejs/dist/nipplejs.min.js"></script>
+    <script src="~/js/RobotController.js"></script>
+}

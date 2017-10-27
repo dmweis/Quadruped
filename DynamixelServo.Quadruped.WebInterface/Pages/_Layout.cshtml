@@ -8,14 +8,7 @@
     <script src="~/js/site.min.js"></script>
 </head>
 <body>
-@*<nav >
-    <a asp-page="/Index">Home</a>
-</nav>*@
 @RenderBody()
-@*<div class="container body-content">
-        <footer>
-            <p>&copy; 2017 - TestWebApp</p>
-        </footer>
-    </div>*@
+@RenderSection("scripts", required: false)
 </body>
 </html>

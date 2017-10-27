@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Numerics;
 using System.Threading.Tasks;
-using DynamixelServo.Quadruped;
 using Microsoft.AspNetCore.Hosting;
 
-namespace dynamixelServo.Quadruped.WebInterface
+namespace DynamixelServo.Quadruped.WebInterface.RobotController
 {
-    public class RobotController
+    public class Robot : IRobot
     {
+        public Vector2 Direction { get; set; }
+        public float Rotation { get; set; }
+
         private readonly BasicQuadrupedGaitEngine _basicQuadrupedGaitEngine;
         private readonly Task _robotRunnerTask;
         private LegFlags _lastUsedCombo = LegFlags.RfLrCross;
-        private Vector2 _direction;
-        private float _rotation;
         private bool _keepRunning = true;
 
-        public RobotController(BasicQuadrupedGaitEngine basicQuadrupedGaitEngine, IApplicationLifetime applicationLifetime)
+        public Robot(BasicQuadrupedGaitEngine basicQuadrupedGaitEngine, IApplicationLifetime applicationLifetime)
         {
             _basicQuadrupedGaitEngine = basicQuadrupedGaitEngine;
             _robotRunnerTask = Task.Run((Action)RobotRunnerLoop);
@@ -26,14 +26,14 @@ namespace dynamixelServo.Quadruped.WebInterface
         {
             while (_keepRunning)
             {
-                if (_direction != Vector2.Zero)
+                if (Direction != Vector2.Zero)
                 {
-                    _basicQuadrupedGaitEngine.EnqueueOneStep(_direction, GetNextLegCombo());
+                    _basicQuadrupedGaitEngine.EnqueueOneStep(Direction, GetNextLegCombo());
                     _basicQuadrupedGaitEngine.WaitUntilCommandQueueIsEmpty();
                 }
-                else if (_rotation != 0)
+                else if (Rotation != 0)
                 {
-                    _basicQuadrupedGaitEngine.EnqueueOneRotation(_rotation, GetNextLegCombo());
+                    _basicQuadrupedGaitEngine.EnqueueOneRotation(Rotation, GetNextLegCombo());
                     _basicQuadrupedGaitEngine.WaitUntilCommandQueueIsEmpty();
                 }
             }
@@ -43,16 +43,6 @@ namespace dynamixelServo.Quadruped.WebInterface
         {
             _lastUsedCombo = _lastUsedCombo == LegFlags.RfLrCross ? LegFlags.LfRrCross : LegFlags.RfLrCross;
             return _lastUsedCombo;
-        }
-
-        public void Move(Vector2 direction)
-        {
-            _direction = direction;
-        }
-
-        public void Rotate(float rotation)
-        {
-            _rotation = rotation;
         }
     }
 }

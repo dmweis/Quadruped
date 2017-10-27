@@ -4,16 +4,7 @@
     {
 
         public string StreamPath { get; set; }
-
-        public VideoStreamingService()
-        {
-            var result = BashCommand
-                .Command("ls")
-                .AddCommand("mkdir TestFolder")
-                .AddCommand("cd TestFolder")
-                .AddCommand("echo 'Test test test ' > test.txt")
-                .Execute();
-        }
+        public bool StreamRunning { get; private set; }
 
         public void StartStream(int port)
         {
@@ -22,6 +13,7 @@
                 .Execute();
             var ip = BashCommand.Command("hostname -i").Execute();
             StreamPath = $"http://{ip}:{port}/?action=stream";
+            StreamRunning = true;
         }
 
         public void KillStream()
@@ -29,6 +21,7 @@
             BashCommand
                 .Command("pkill mjpg_streamer")
                 .Execute();
+            StreamRunning = false;
             StreamPath = string.Empty;
         }
     }

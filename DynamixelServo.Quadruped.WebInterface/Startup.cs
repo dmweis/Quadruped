@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using dynamixelServo.Quadruped.WebInterface.RTC;
 using DynamixelServo.Driver;
 using DynamixelServo.Quadruped;
+using DynamixelServo.Quadruped.WebInterface.RobotController;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,22 +11,31 @@ namespace dynamixelServo.Quadruped.WebInterface
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            HostingEnvironment = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment HostingEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            string portName = Configuration["SerialPortName"];
-            services.AddSingleton(new DynamixelDriver(portName));
-            services.AddSingleton<QuadrupedIkDriver>();
-            services.AddSingleton<BasicQuadrupedGaitEngine>();
-            services.AddSingleton<RobotController>();
+            if (HostingEnvironment.IsDevelopment())
+            {
+                services.AddSingleton<IRobot, MockRobot>();
+            }
+            else
+            {
+                string portName = Configuration["SerialPortName"];
+                services.AddSingleton(new DynamixelDriver(portName));
+                services.AddSingleton<QuadrupedIkDriver>();
+                services.AddSingleton<BasicQuadrupedGaitEngine>();
+                services.AddSingleton<IRobot, Robot>();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

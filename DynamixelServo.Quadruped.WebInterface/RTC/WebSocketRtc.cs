@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DynamixelServo.Quadruped;
+using DynamixelServo.Quadruped.WebInterface.RobotController;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -20,13 +21,13 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
     public class WebSocketRtc
     {
         private readonly RequestDelegate _next;
-        private readonly RobotController _robotController;
+        private readonly IRobot _robot;
         private readonly IApplicationLifetime _applicationLifetime;
 
-        public WebSocketRtc(RequestDelegate next, RobotController robotController, IApplicationLifetime applicationLifetime)
+        public WebSocketRtc(RequestDelegate next, IRobot robot, IApplicationLifetime applicationLifetime)
         {
             _next = next;
-            _robotController = robotController;
+            _robot = robot;
             _applicationLifetime = applicationLifetime;
         }
 
@@ -60,11 +61,11 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
                     const float deadzone = 0.3f;
                     if (message.JoystickType == JoystickType.Direction)
                     {
-                        _robotController.Move(message.CalculateHeadingVector(deadzone));
+                        _robot.Direction = message.CalculateHeadingVector(deadzone);
                     }
                     else
                     {
-                        _robotController.Rotate(message.GetScaledX(deadzone, 2, 25));
+                        _robot.Rotation = message.GetScaledX(deadzone, 2, 25);
                     }
                 }
                 catch (IOException e)
