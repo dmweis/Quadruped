@@ -1,11 +1,14 @@
 ﻿@page
-@model IndexModel
+@using DynamixelServo.Quadruped.WebInterface.VideoStreaming
+@model DynamixelServo.Quadruped.WebInterface.Pages.VideoRobotModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "VideoRobot";
 }
-<link rel="stylesheet" href="~/css/RobotController.css" />
-
+@inject IVideoService VideoStreaming
+    
+<link rel="stylesheet" href="~/css/VideoRobotController.css" />
 <div class="mainContainer">
+    <img class="videoSegment" src="@VideoStreaming.StreamPath"/>
     <div class="joystick moveJoystick" id="move_joystick_zone">
         <strong>Move joystick</strong>
         <div id="move_joystick_text_field"></div>
@@ -15,7 +18,6 @@
         <div id="rotation_joystick_text_field"></div>
     </div>
 </div>
-<footer>Video page<a asp-page="/VideoRobot">Video robot controller</a></footer>
 
 @section scripts {
     <script src="~/lib/nipplejs/dist/nipplejs.min.js"></script>

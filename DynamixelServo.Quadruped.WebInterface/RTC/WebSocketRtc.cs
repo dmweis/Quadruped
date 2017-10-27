@@ -2,19 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Net.WebSockets;
-using System.Numerics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DynamixelServo.Quadruped;
 using DynamixelServo.Quadruped.WebInterface.RobotController;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Remotion.Linq.Clauses;
 
 namespace dynamixelServo.Quadruped.WebInterface.RTC
 {
@@ -23,11 +20,13 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
         private readonly RequestDelegate _next;
         private readonly IRobot _robot;
         private readonly IApplicationLifetime _applicationLifetime;
+        private readonly ILogger _logger;
 
-        public WebSocketRtc(RequestDelegate next, IRobot robot, IApplicationLifetime applicationLifetime)
+        public WebSocketRtc(RequestDelegate next, IRobot robot, IApplicationLifetime applicationLifetime, ILogger<WebSocketRtc> logger)
         {
             _next = next;
             _robot = robot;
+            _logger = logger;
             _applicationLifetime = applicationLifetime;
         }
 
@@ -70,7 +69,7 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
                 }
                 catch (IOException e)
                 {
-                    Console.WriteLine(e);
+                    _logger.LogInformation("Clinet disconnected", e);
                 }
             }
             await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "End of connection", cancellationToken);
@@ -95,7 +94,7 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
                 if (result.MessageType == WebSocketMessageType.Close)
                 {
-                    throw new IOException($"CLient disconected. Status: {result?.CloseStatus} Description: {result.CloseStatusDescription}");
+                    throw new IOException($"Client disconected. Status: {result?.CloseStatus} Description: {result.CloseStatusDescription}");
                 }
                 incoming.AddRange(buffer.Take(result.Count));
             } while (!result.EndOfMessage);

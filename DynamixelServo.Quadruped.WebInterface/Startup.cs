@@ -2,6 +2,7 @@ using dynamixelServo.Quadruped.WebInterface.RTC;
 using DynamixelServo.Driver;
 using DynamixelServo.Quadruped;
 using DynamixelServo.Quadruped.WebInterface.RobotController;
+using DynamixelServo.Quadruped.WebInterface.VideoStreaming;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +28,7 @@ namespace dynamixelServo.Quadruped.WebInterface
             if (HostingEnvironment.IsDevelopment())
             {
                 services.AddSingleton<IRobot, MockRobot>();
+                services.AddSingleton<IVideoService, MockVideoStream>();
             }
             else
             {
@@ -35,6 +37,7 @@ namespace dynamixelServo.Quadruped.WebInterface
                 services.AddSingleton<QuadrupedIkDriver>();
                 services.AddSingleton<BasicQuadrupedGaitEngine>();
                 services.AddSingleton<IRobot, Robot>();
+                services.AddSingleton<IVideoService, VideoStreamingService>();
             }
         }
 

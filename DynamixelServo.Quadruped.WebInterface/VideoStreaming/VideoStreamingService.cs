@@ -1,9 +1,9 @@
 ﻿namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
 {
-    public class VideoStreamingService
+    public class VideoStreamingService : IVideoService
     {
 
-        public string StreamPath { get; set; }
+        public string StreamPath { get; private set; }
         public bool StreamRunning { get; private set; }
 
         public void StartStream(int port)
