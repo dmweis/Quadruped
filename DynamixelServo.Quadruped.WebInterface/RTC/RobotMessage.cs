@@ -73,6 +73,7 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
     {
         Movement,
         Stop,
-        Start
+        Start,
+        Reset
     }
 }

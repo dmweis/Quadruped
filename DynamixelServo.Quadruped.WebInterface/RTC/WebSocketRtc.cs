@@ -78,6 +78,9 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
                                 case MessageType.Movement:
                                     _cameraController.StartMove(message.CalculateHeadingVector(0.5f));
                                     break;
+                                case MessageType.Reset:
+                                    _cameraController.CenterView();
+                                    break;
                             }
                             break;
                         default:
