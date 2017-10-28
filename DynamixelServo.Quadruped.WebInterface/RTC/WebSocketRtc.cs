@@ -71,8 +71,21 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
                 {
                     _logger.LogInformation("Clinet disconnected", e);
                 }
+                catch (Exception e)
+                {
+                    _logger.LogError("WebSocket threw exception", e);
+                    throw;
+                }
             }
-            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "End of connection", cancellationToken);
+            try
+            {
+                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "End of connection", cancellationToken);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("failed disconnecting from client", e);
+                throw;
+            }
         }
     }
 
