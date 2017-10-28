@@ -24,6 +24,7 @@ namespace dynamixelServo.Quadruped.WebInterface
                         .AddJsonFile("QuadrupedConfig.json");
                 })
                 .UseStartup<Startup>()
+                .UseUrls("http://0.0.0.0:50093/")
                 .Build();
 
         private const string DxlLib = "dxl_lib.ds";
