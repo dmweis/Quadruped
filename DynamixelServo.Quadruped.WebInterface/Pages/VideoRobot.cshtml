@@ -8,7 +8,7 @@
     
 <link rel="stylesheet" href="~/css/VideoRobotController.css" />
 <div class="mainContainer">
-    <img class="videoSegment" src="@VideoStreaming.StreamPath"/>
+    <img class="videoSegment" src=":@(VideoStreaming.Port)/?action=stream"/>
     <div class="joystick moveJoystick" id="move_joystick_zone">
         <strong>Move joystick</strong>
         <div id="move_joystick_text_field"></div>

@@ -2,7 +2,7 @@
 {
     public interface IVideoService
     {
-        string StreamPath { get; }
+        string Port { get; }
         bool StreamRunning { get; }
     }
 }
