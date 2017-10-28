@@ -17,30 +17,31 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
 
         public void CenterView()
         {
-            _driver.SetMovingSpeed(HorizontalMotorIndex, 0);
-            _driver.SetMovingSpeed(VerticalMotorIndex, 0);
+            _driver.SetMovingSpeed(HorizontalMotorIndex, 300);
+            _driver.SetMovingSpeed(VerticalMotorIndex, 300);
             _driver.SetGoalPositionInDegrees(HorizontalMotorIndex, 150);
             _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 60);
         }
 
         public void StartMove(Vector2 direction)
         {
+            const float deadzone = 0.5f;
             _driver.SetMovingSpeed(HorizontalMotorIndex, 20);
             _driver.SetMovingSpeed(VerticalMotorIndex, 20);
-            if (direction.X > 0)
+            if (direction.X > deadzone)
             {
                 _driver.SetGoalPositionInDegrees(HorizontalMotorIndex, 0);
             }
-            else if (direction.X < 0)
+            else if (direction.X < -deadzone)
             {
                 _driver.SetGoalPositionInDegrees(HorizontalMotorIndex, 300);
             }
 
-            if (direction.Y > 0)
+            if (direction.Y > deadzone)
             {
                 _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 240);
             }
-            else if (direction.Y < 0)
+            else if (direction.Y < -deadzone)
             {
                 _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 60);
             }
