@@ -48,9 +48,9 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
 
         public void StopMove()
         {
-            var currentPos = _driver.GetGoalPosition(HorizontalMotorIndex);
+            var currentPos = _driver.GetPresentPosition(HorizontalMotorIndex);
             _driver.SetGoalPosition(HorizontalMotorIndex, currentPos);
-            currentPos = _driver.GetGoalPosition(VerticalMotorIndex);
+            currentPos = _driver.GetPresentPosition(VerticalMotorIndex);
             _driver.SetGoalPosition(VerticalMotorIndex, currentPos);
         }
     }
