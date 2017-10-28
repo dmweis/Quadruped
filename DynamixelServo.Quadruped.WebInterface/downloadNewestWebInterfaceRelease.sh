@@ -7,7 +7,9 @@ LATEST_VERSION=$(echo $LATEST_RELEASE | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/
 ARTIFACT_URL="https://github.com/dmweis/DynamixelServo/releases/download/$LATEST_VERSION/$FILE_NAME"
 echo Downloading...
 wget $ARTIFACT_URL -q --show-progress
+echo unpacking...
 tar -xzf $FILE_NAME
+echo removing archive
 rm $FILE_NAME
 chmod +x run_linux.sh
 echo script run_linux.sh will run the program
