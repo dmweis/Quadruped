@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DynamixelServo.Quadruped.WebInterface.RobotController;
+using DynamixelServo.Quadruped.WebInterface.VideoStreaming;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,13 +20,15 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
     {
         private readonly RequestDelegate _next;
         private readonly IRobot _robot;
+        private readonly ICameraController _cameraController;
         private readonly IApplicationLifetime _applicationLifetime;
         private readonly ILogger _logger;
 
-        public WebSocketRtc(RequestDelegate next, IRobot robot, IApplicationLifetime applicationLifetime, ILogger<WebSocketRtc> logger)
+        public WebSocketRtc(RequestDelegate next, IRobot robot, ICameraController cameraController, IApplicationLifetime applicationLifetime, ILogger<WebSocketRtc> logger)
         {
             _next = next;
             _robot = robot;
+            _cameraController = cameraController;
             _logger = logger;
             _applicationLifetime = applicationLifetime;
         }
