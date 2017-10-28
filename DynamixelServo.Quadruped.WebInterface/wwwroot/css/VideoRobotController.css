@@ -30,7 +30,7 @@
     .videoSegment {
         width: 30%;
         position: relative;
-        width: auto;
+        height: auto;
     }
 
     .rotationJoystick {
