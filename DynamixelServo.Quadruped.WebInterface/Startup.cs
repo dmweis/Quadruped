@@ -37,7 +37,7 @@ namespace dynamixelServo.Quadruped.WebInterface
                 services.AddSingleton<QuadrupedIkDriver>();
                 services.AddSingleton<BasicQuadrupedGaitEngine>();
                 services.AddSingleton<IRobot, Robot>();
-                services.AddSingleton<IVideoService, IVideoService>();
+                services.AddSingleton<IVideoService, MockVideoStream>();
             }
         }
 
