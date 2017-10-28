@@ -23,19 +23,19 @@
 @media screen and (orientation:landscape) {
     .moveJoystick {
         float: left;
-        width: 35%;
+        width: 30%;
         height: 100%;
     }
 
     .videoSegment {
-        width: 30%;
+        width: 40%;
         position: relative;
         height: auto;
     }
 
     .rotationJoystick {
         float: right;
-        width: 35%;
+        width: 30%;
         height: 100%;
     }
 }
@@ -47,10 +47,10 @@
     }
 
     .videoSegment {
-        width: 100%;
+        width: auto;
         position: relative;
         display: block;
-        height: auto;
+        height: 30%;
     }
 
     .rotationJoystick {
