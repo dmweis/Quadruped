@@ -28,9 +28,8 @@
     }
 
     .videoSegment {
-        height: 100%;
+        width: 30%;
         position: relative;
-        display: block;
         width: auto;
     }
 
