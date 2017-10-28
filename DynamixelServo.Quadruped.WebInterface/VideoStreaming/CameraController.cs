@@ -20,7 +20,7 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
             _driver.SetMovingSpeed(HorizontalMotorIndex, 0);
             _driver.SetMovingSpeed(VerticalMotorIndex, 0);
             _driver.SetGoalPositionInDegrees(HorizontalMotorIndex, 150);
-            _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 240);
+            _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 60);
         }
 
         public void StartMove(Vector2 direction)
