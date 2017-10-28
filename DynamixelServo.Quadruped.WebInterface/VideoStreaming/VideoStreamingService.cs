@@ -1,23 +1,22 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
 {
     public class VideoStreamingService : IVideoService
     {
-
-        public string Port { get; private set; }
         public bool StreamRunning { get; private set; }
 
-        public VideoStreamingService(IApplicationLifetime applicationLifetime)
+        public VideoStreamingService(IApplicationLifetime applicationLifetime, ILogger<VideoStreamingService> logger)
         {
             applicationLifetime.ApplicationStopping.Register(KillStream);
             int port = 8080;
+            logger.LogInformation("Starting video server");
             BashCommand
                 .Command($"nohup mjpg_streamer -o \"output_http.so -p {port}\" -i \"input_raspicam.so -x 1280 -y 720 -fps 10\" &")
                 .Execute();
-            var ip = BashCommand.Command("hostname -i").Execute();
-            Port = $"http://{ip}:{port}/?action=stream";
             StreamRunning = true;
+            logger.LogInformation("Video server up and running");
         }
 
         public void KillStream()
@@ -26,7 +25,6 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
                 .Command("pkill mjpg_streamer")
                 .Execute();
             StreamRunning = false;
-            Port = string.Empty;
         }
     }
 }

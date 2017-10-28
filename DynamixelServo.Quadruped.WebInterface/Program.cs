@@ -13,8 +13,6 @@ namespace dynamixelServo.Quadruped.WebInterface
         {
             SaveCorrectDxlLibrary();
             BuildWebHost(args).Run();
-            Console.WriteLine("Application quit. Press enter to exit");
-            Console.ReadLine();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
