@@ -12,14 +12,19 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
         public VideoStreamingService(IApplicationLifetime applicationLifetime, ILogger<VideoStreamingService> logger)
         {
             applicationLifetime.ApplicationStopping.Register(KillStream);
-            int port = 8080;
+
+            const int port = 8080;
+            const int horizontalResolution = 800;
+            const int verticalResolution = 600;
+            const int framerate = 10;
+
             logger.LogInformation("Starting video server");
             _streamerProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "/usr/local/bin/mjpg_streamer",
-                    Arguments = $" -o \"output_http.so -p {port}\" -i \"input_raspicam.so -x 1280 -y 720 -fps 10",
+                    Arguments = $" -o \"output_http.so -p {port}\" -i \"input_raspicam.so -x {horizontalResolution} -y {verticalResolution} -fps {framerate}",
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
                     CreateNoWindow = true
