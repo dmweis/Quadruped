@@ -21,7 +21,7 @@ cameraJoystickManager.on('added',
             });
         nipple.on('start',
             function () {
-                if (lastStartClick - Date.now() < clickTimeout) {
+                if (Date.now() - lastStartClick < clickTimeout) {
                     const json = JSON.stringify(
                         { joystickType: 'camera', MessageType: 'reset' });
                     serverSocket.send(json);
