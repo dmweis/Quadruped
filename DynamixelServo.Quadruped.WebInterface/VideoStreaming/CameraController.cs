@@ -7,7 +7,7 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
     {
         private readonly DynamixelDriver _driver;
         private const byte HorizontalMotorIndex = 13;
-        private const byte VerticalMotorIndex = 13;
+        private const byte VerticalMotorIndex = 14;
 
         public CameraController(DynamixelDriver driver)
         {
