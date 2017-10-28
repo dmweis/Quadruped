@@ -6,7 +6,7 @@ let cameraJoystick = {
 };
 let cameraJoystickManager = nipplejs.create(cameraJoystick);
 const clickTimeout = 500;
-var lastStartClick = Date.now();
+var lastStopClick = Date.now();
 cameraJoystickManager.on('added',
     function (evt, nipple) {
         nipple.on('move',
@@ -21,23 +21,23 @@ cameraJoystickManager.on('added',
             });
         nipple.on('start',
             function () {
-                if (Date.now() - lastStartClick < clickTimeout) {
+                const json = JSON.stringify(
+                    { joystickType: 'camera', MessageType: 'start' });
+                serverSocket.send(json);
+            });
+        nipple.on('end',
+            function () {
+                if (Date.now() - lastStopClick < clickTimeout) {
                     const json = JSON.stringify(
                         { joystickType: 'camera', MessageType: 'reset' });
                     serverSocket.send(json);
                 } else {
-                    const json = JSON.stringify(
-                        { joystickType: 'camera', MessageType: 'start' });
+                    var json = JSON.stringify({
+                        joystickType: 'camera',
+                        MessageType: 'stop'
+                    });
                     serverSocket.send(json);
                 }
-                lastStartClick = Date.now();
-            });
-        nipple.on('end',
-            function () {
-                var json = JSON.stringify({
-                    joystickType: 'camera',
-                    MessageType: 'stop'
-                });
-                serverSocket.send(json);
+                lastStopClick = Date.now();
             });
     });
