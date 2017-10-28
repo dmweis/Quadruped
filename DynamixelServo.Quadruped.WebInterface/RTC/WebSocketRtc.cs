@@ -61,14 +61,29 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
                 {
                     var message = await webSocket.ReceiveObjectAsync<RobotMessage>(cancellationToken);
                     const float deadzone = 0.3f;
-                    if (message.JoystickType == JoystickType.Direction)
+                    switch (message.JoystickType)
                     {
-                        _robot.Direction = message.CalculateHeadingVector(deadzone);
+                        case JoystickType.Direction:
+                            _robot.Direction = message.CalculateHeadingVector(deadzone);
+                            break;
+                        case JoystickType.Rotation:
+                            _robot.Rotation = message.GetScaledX(deadzone, 2, 25);
+                            break;
+                        case JoystickType.Camera:
+                            switch (message.MessageType)
+                            {
+                                case MessageType.Stop:
+                                    _cameraController.StopMove();
+                                    break;
+                                case MessageType.Movement:
+                                    _cameraController.StartMove(message.CalculateHeadingVector(deadzone));
+                                    break;
+                            }
+                            break;
+                        default:
+                            throw new NotImplementedException();
                     }
-                    else
-                    {
-                        _robot.Rotation = message.GetScaledX(deadzone, 2, 25);
-                    }
+
                 }
                 catch (IOException e)
                 {

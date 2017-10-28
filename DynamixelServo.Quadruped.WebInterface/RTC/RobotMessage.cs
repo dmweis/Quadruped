@@ -65,7 +65,8 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
     public enum JoystickType
     {
         Direction,
-        Rotation
+        Rotation,
+        Camera
     }
 
     public enum MessageType
