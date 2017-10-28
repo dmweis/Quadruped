@@ -91,10 +91,12 @@ namespace dynamixelServo.Quadruped.WebInterface.RTC
                 catch (IOException e)
                 {
                     _logger.LogInformation("Clinet disconnected", e);
+                    break;
                 }
                 catch (WebSocketException e)
                 {
                     _logger.LogWarning($"Client disconnected. Error code: {e.WebSocketErrorCode}");
+                    break;
                 }
                 catch (Exception e)
                 {
