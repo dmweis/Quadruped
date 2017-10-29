@@ -26,7 +26,7 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
         public void StartMove(Vector2 direction)
         {
             const float deadzone = 0.5f;
-            _driver.SetMovingSpeed(HorizontalMotorIndex, 20);
+            _driver.SetMovingSpeed(HorizontalMotorIndex, 30);
             _driver.SetMovingSpeed(VerticalMotorIndex, 20);
             if (direction.X > deadzone)
             {
