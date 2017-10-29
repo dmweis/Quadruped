@@ -39,11 +39,11 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
 
             if (direction.Y > deadzone)
             {
-                _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 240);
+                _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 270);
             }
             else if (direction.Y < -deadzone)
             {
-                _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 60);
+                _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 30);
             }
         }
 
