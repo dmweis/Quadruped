@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "dynamixelServo.Quadruped.WebInterface": {
+    "DynamixelServo.Quadruped.WebInterface": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
