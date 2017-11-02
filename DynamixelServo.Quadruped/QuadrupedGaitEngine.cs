@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace DynamixelServo.Quadruped
 {
     public  abstract class QuadrupedGaitEngine : IDisposable
     {
         protected QuadrupedIkDriver Driver;
-        private readonly Thread _engineThread;
+        private Task _engineTask;
         private const int UpdateFrequency = 30;
 
         private bool _keepRunning;
@@ -21,20 +21,19 @@ namespace DynamixelServo.Quadruped
         protected QuadrupedGaitEngine(QuadrupedIkDriver driver)
         {
             Driver = driver ?? throw new ArgumentNullException(nameof(driver));
-            _engineThread = new Thread(EngineThread)
-            {
-                IsBackground = true,
-                Name = $"{nameof(QuadrupedGaitEngine)}Thread"
-            };
         }
 
         protected void StartEngine()
         {
+            if (_engineTask != null && !_engineTask.IsCompleted)
+            {
+                throw new InvalidOperationException("Can't start engine if it's alredy running");
+            }
             _keepRunning = true;
-            _engineThread.Start();
+            _engineTask = Task.Run(EngineThread);
         }
 
-        private void EngineThread()
+        private async Task EngineThread()
         {
             _watch.Restart();
             _lastTick = _watch.ElapsedMilliseconds;
@@ -42,7 +41,7 @@ namespace DynamixelServo.Quadruped
             {
                 EngineSpin();
                 _lastTick = _watch.ElapsedMilliseconds;
-                Thread.Sleep(1000 / UpdateFrequency);
+                await Task.Delay(1000 / UpdateFrequency);
             }
         }
 
@@ -56,12 +55,12 @@ namespace DynamixelServo.Quadruped
         public void Stop()
         {
             _keepRunning = false;
-            _engineThread.Join();
+            _engineTask.Wait();
         }
 
         public void DetachDriver()
         {
-            if (_engineThread.IsAlive)
+            if (!_engineTask.IsCompleted)
             {
                 throw new InvalidOperationException("Engine has to be stopped before detaching the driver");
             }
@@ -70,7 +69,7 @@ namespace DynamixelServo.Quadruped
 
         public virtual void Dispose()
         {
-            if (_engineThread.IsAlive)
+            if (!_engineTask.IsCompleted)
             {
                 Stop();
             }
