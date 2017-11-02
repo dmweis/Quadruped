@@ -18,7 +18,7 @@ namespace dynamixelServo.Quadruped.WebInterface
             catch (Exception )
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Failed to laod library!!!");
+                Console.WriteLine("Failed to load library!!!");
                 Console.ResetColor();
             }
             BuildWebHost(args).Run();
