@@ -22,7 +22,7 @@ namespace DynamixelServo.Quadruped.WebInterface.RobotController
             _basicQuadrupedGaitEngine = basicQuadrupedGaitEngine;
             _logger = logger;
             _robotRunnerTask = Task.Run((Action)RobotRunnerLoop);
-            applicationLifetime.ApplicationStopped.Register(() => _keepRunning = false);
+            applicationLifetime.ApplicationStopped.Register(OnExit);
         }
 
         public async Task DisableMotors()
@@ -73,6 +73,19 @@ namespace DynamixelServo.Quadruped.WebInterface.RobotController
         {
             _lastUsedCombo = _lastUsedCombo == LegFlags.RfLrCross ? LegFlags.LfRrCross : LegFlags.RfLrCross;
             return _lastUsedCombo;
+        }
+
+        private void OnExit()
+        {
+            _keepRunning = false;
+            try
+            {
+                DisableMotors().Wait();
+            }
+            catch
+            {
+                _logger.LogError("Failed exiting Robot");
+            }
         }
     }
 }
