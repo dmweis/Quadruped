@@ -1,5 +1,6 @@
 ﻿@page
-@model IndexModel
+@using dynamixelServo.Quadruped.WebInterface.Pages
+@model dynamixelServo.Quadruped.WebInterface.Pages.IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
@@ -13,7 +14,6 @@
     <strong>Rotation joystick</strong>
     <div id="rotation_joystick_text_field"></div>
 </div>
-<footer>Video page<a asp-page="/VideoRobot">Video robot controller</a></footer>
 
 @section scripts {
     <script src="~/lib/nipplejs/dist/nipplejs.min.js"></script>

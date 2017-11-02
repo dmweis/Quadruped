@@ -5,10 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Quadruped WebInterface</title>
     <link rel="stylesheet" href="~/css/site.css" />
-    @*<script src="~/js/site.min.js"></script>*@
+    <script src="~/js/site.min.js"></script>
 </head>
 <body>
-@RenderBody()
-@RenderSection("scripts", required: false)
+<nav>
+    <ul class="navbar">
+        <li><a asp-page="/Index">Basic</a></li>
+        <li><a asp-page="/VideoRobot">Video</a></li>
+        <li><a asp-page="/SettingsPage">Settings</a></li>
+    </ul>
+</nav>
+<div class="pageContainer">
+    @RenderBody()
+    @RenderSection("scripts", required: false)
+</div>
 </body>
 </html>
