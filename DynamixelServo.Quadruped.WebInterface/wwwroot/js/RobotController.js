@@ -1,5 +1,8 @@
 ﻿var uri = `ws://${document.domain}:${location.port}/ws`;
 var serverSocket = new WebSocket(uri);
+window.onbeforeunload = function() {
+    serverSocket.close();
+};
 let moveJoystickZone = document.getElementById('move_joystick_zone');
 var moveJoystickTextField = document.getElementById('move_joystick_text_field');
 let rotationJoystickZone = document.getElementById('rotate_joystick_zone');
