@@ -11,7 +11,7 @@ namespace DynamixelServo.Quadruped.WebInterface.RobotController
         public float Rotation { get; set; }
 
         private readonly BasicQuadrupedGaitEngine _basicQuadrupedGaitEngine;
-        private readonly Task _robotRunnerTask;
+        private Task _robotRunnerTask;
         private LegFlags _lastUsedCombo = LegFlags.RfLrCross;
         private bool _keepRunning = true;
 
@@ -20,6 +20,27 @@ namespace DynamixelServo.Quadruped.WebInterface.RobotController
             _basicQuadrupedGaitEngine = basicQuadrupedGaitEngine;
             _robotRunnerTask = Task.Run((Action)RobotRunnerLoop);
             applicationLifetime.ApplicationStopped.Register(() => _keepRunning = false);
+        }
+
+        public async Task DisableMotors()
+        {
+            _keepRunning = false;
+            await _robotRunnerTask;
+            await Task.Run(() =>
+            {
+                _basicQuadrupedGaitEngine.Stop();
+                _basicQuadrupedGaitEngine.DisableTorqueOnMotors();
+            });
+        }
+
+        public void StartRobot()
+        {
+            if (_keepRunning || !_robotRunnerTask.IsCompleted)
+            {
+                throw new InvalidOperationException("Can't start robot when it's alredy running");
+            }
+            _keepRunning = true;
+            _robotRunnerTask = Task.Run((Action)RobotRunnerLoop);
         }
 
         private void RobotRunnerLoop()

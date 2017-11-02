@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Threading.Tasks;
 
 namespace DynamixelServo.Quadruped.WebInterface.RobotController
 {
@@ -7,5 +8,15 @@ namespace DynamixelServo.Quadruped.WebInterface.RobotController
         public Vector2 Direction { get; set; }
 
         public float Rotation { get; set; }
+
+        public void StartRobot()
+        {
+            
+        }
+
+        public Task DisableMotors()
+        {
+            return Task.CompletedTask;
+        }
     }
 }

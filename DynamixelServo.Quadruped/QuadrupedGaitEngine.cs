@@ -58,6 +58,11 @@ namespace DynamixelServo.Quadruped
             _engineTask.Wait();
         }
 
+        public void DisableTorqueOnMotors()
+        {
+            Driver.DisableMotors();
+        }
+
         public void DetachDriver()
         {
             if (!_engineTask.IsCompleted)
