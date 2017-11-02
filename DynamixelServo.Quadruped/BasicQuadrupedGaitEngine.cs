@@ -31,14 +31,13 @@ namespace DynamixelServo.Quadruped
             RightRear = new Vector3(LegDistanceLateral, -LegDistanceLongitudinal, LegHeight)
         };
 
-        private readonly LegPositions _lastWrittenPosition;
+        private LegPositions _lastWrittenPosition;
 
         public bool IsComamndQueueEmpty => _moveQueueSingal.IsSet && _moves.IsEmpty;
 
         public BasicQuadrupedGaitEngine(QuadrupedIkDriver driver) : base(driver)
         {
             Driver.Setup();
-            _lastWrittenPosition = Driver.ReadCurrentLegPositions();
             EnqueueInitialStandup();
             if (_moves.TryDequeue(out var deqeueuedLegPosition))
             {
@@ -79,8 +78,9 @@ namespace DynamixelServo.Quadruped
             _lastWrittenPosition.MoveTowards(_nextMove, NextStepLength);
         }
 
-        private void EnqueueInitialStandup()
+        public void EnqueueInitialStandup()
         {
+            _lastWrittenPosition = Driver.ReadCurrentLegPositions();
             float average = (_lastWrittenPosition.LeftFront.Z +
                              _lastWrittenPosition.RightFront.Z +
                              _lastWrittenPosition.LeftRear.Z +

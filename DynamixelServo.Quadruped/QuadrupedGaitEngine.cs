@@ -23,7 +23,7 @@ namespace DynamixelServo.Quadruped
             Driver = driver ?? throw new ArgumentNullException(nameof(driver));
         }
 
-        protected void StartEngine()
+        public void StartEngine()
         {
             if (_engineTask != null && !_engineTask.IsCompleted)
             {

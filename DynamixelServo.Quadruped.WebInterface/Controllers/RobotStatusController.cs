@@ -1,6 +1,7 @@
 ﻿using System;
 using DynamixelServo.Quadruped.WebInterface.RobotController;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace DynamixelServo.Quadruped.WebInterface.Controllers
 {
@@ -9,10 +10,12 @@ namespace DynamixelServo.Quadruped.WebInterface.Controllers
     public class RobotStatusController : Controller
     {
         private readonly IRobot _robot;
+        private readonly ILogger<RobotStatusController> _logger;
 
-        public RobotStatusController(IRobot robot)
+        public RobotStatusController(IRobot robot, ILogger<RobotStatusController> logger)
         {
             _robot = robot;
+            _logger = logger;
         }
 
         // GET: api/RobotStatus
@@ -26,6 +29,12 @@ namespace DynamixelServo.Quadruped.WebInterface.Controllers
         [HttpPost]
         public void Post([FromBody]RobotCommand value)
         {
+            if (value == null)
+            {
+                Response.StatusCode = 400;
+                _logger.LogError("can't resolve argument");
+                return;
+            }
             switch (value.Operation)
             {
                 case RobotOperation.DisableMotors:
