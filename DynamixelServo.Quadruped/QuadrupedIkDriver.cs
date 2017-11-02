@@ -38,10 +38,13 @@ namespace DynamixelServo.Quadruped
 
         public void Setup()
         {
-            foreach (var servo in AllMotorIds)
+            lock (_driver.SyncLock)
             {
-                _driver.SetComplianceSlope(servo, ComplianceSlope.S64);
-                _driver.SetMovingSpeed(servo, 300);
+                foreach (var servo in AllMotorIds)
+                {
+                    _driver.SetComplianceSlope(servo, ComplianceSlope.S64);
+                    _driver.SetMovingSpeed(servo, 300);
+                }
             }
         }
 
@@ -89,9 +92,12 @@ namespace DynamixelServo.Quadruped
 
         public void DisableMotors()
         {
-            foreach (var servo in AllMotorIds)
+            lock (_driver.SyncLock)
             {
-                _driver.SetTorque(servo, false);
+                foreach (var servo in AllMotorIds)
+                {
+                    _driver.SetTorque(servo, false);
+                }
             }
         }
 
@@ -164,24 +170,35 @@ namespace DynamixelServo.Quadruped
 
         public void Dispose()
         {
-            _driver.Dispose();
+            lock (_driver.SyncLock)
+            {
+                _driver.Dispose();
+            }
         }
 
         private Vector3 GetLegGoalPosition(LegConfiguration legConfig)
         {
-            float coxa = _driver.GetGoalPositionInDegrees(legConfig.CoxaId);
-            float femur = _driver.GetGoalPositionInDegrees(legConfig.FemurId);
-            float tibia = _driver.GetGoalPositionInDegrees(legConfig.TibiaId);
-            MotorGoalPositions positions = new MotorGoalPositions(coxa, femur, tibia);
+            MotorGoalPositions positions;
+            lock (_driver.SyncLock)
+            {
+                float coxa = _driver.GetGoalPositionInDegrees(legConfig.CoxaId);
+                float femur = _driver.GetGoalPositionInDegrees(legConfig.FemurId);
+                float tibia = _driver.GetGoalPositionInDegrees(legConfig.TibiaId);
+                positions = new MotorGoalPositions(coxa, femur, tibia);
+            }
             return CalculateFkForLeg(positions, legConfig);
         }
 
         private Vector3 GetCurrentLegPosition(LegConfiguration legConfig)
         {
-            float coxa = _driver.GetPresentPositionInDegrees(legConfig.CoxaId);
-            float femur = _driver.GetPresentPositionInDegrees(legConfig.FemurId);
-            float tibia = _driver.GetPresentPositionInDegrees(legConfig.TibiaId);
-            MotorGoalPositions positions = new MotorGoalPositions(coxa, femur, tibia);
+            MotorGoalPositions positions;
+            lock (_driver.SyncLock)
+            {
+                float coxa = _driver.GetPresentPositionInDegrees(legConfig.CoxaId);
+                float femur = _driver.GetPresentPositionInDegrees(legConfig.FemurId);
+                float tibia = _driver.GetPresentPositionInDegrees(legConfig.TibiaId);
+                positions = new MotorGoalPositions(coxa, femur, tibia);
+            }
             return CalculateFkForLeg(positions, legConfig);
         }
 
@@ -232,15 +249,21 @@ namespace DynamixelServo.Quadruped
             servoIds[11] = LeftRear.TibiaId;
             servoGoals[11] = leftRearLegGoalPositions.Tibia;
 
-            _driver.GroupSyncSetGoalPositionInDegrees(servoIds, servoGoals);
+            lock (_driver.SyncLock)
+            {
+                _driver.GroupSyncSetGoalPositionInDegrees(servoIds, servoGoals);
+            }
         }
 
         private void MoveLeg(Vector3 target, LegConfiguration legConfig)
         {
             var legGoalPositions = CalculateIkForLeg(target, legConfig);
-            _driver.SetGoalPositionInDegrees(legConfig.CoxaId, legGoalPositions.Coxa);
-            _driver.SetGoalPositionInDegrees(legConfig.FemurId, legGoalPositions.Femur);
-            _driver.SetGoalPositionInDegrees(legConfig.TibiaId, legGoalPositions.Tibia);
+            lock (_driver.SyncLock)
+            {
+                _driver.SetGoalPositionInDegrees(legConfig.CoxaId, legGoalPositions.Coxa);
+                _driver.SetGoalPositionInDegrees(legConfig.FemurId, legGoalPositions.Femur);
+                _driver.SetGoalPositionInDegrees(legConfig.TibiaId, legGoalPositions.Tibia);
+            }
         }
 
         private static Vector3 CalculateFkForLeg(MotorGoalPositions currentPsoitions, LegConfiguration legConfig)

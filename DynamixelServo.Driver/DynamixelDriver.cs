@@ -49,6 +49,8 @@ namespace DynamixelServo.Driver
         private readonly string _portName;
         private readonly int _portNumber;
 
+        public object SyncLock { get; } = new object();
+
         public DynamixelDriver(string portName, int baudRate = DefaultBaudRate)
         {
             _portName = portName;

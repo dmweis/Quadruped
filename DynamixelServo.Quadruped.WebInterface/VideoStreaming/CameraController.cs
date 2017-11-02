@@ -17,42 +17,51 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
 
         public void CenterView()
         {
-            _driver.SetMovingSpeed(HorizontalMotorIndex, 300);
-            _driver.SetMovingSpeed(VerticalMotorIndex, 300);
-            _driver.SetGoalPositionInDegrees(HorizontalMotorIndex, 150);
-            _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 60);
+            lock (_driver.SyncLock)
+            {
+                _driver.SetMovingSpeed(HorizontalMotorIndex, 300);
+                _driver.SetMovingSpeed(VerticalMotorIndex, 300);
+                _driver.SetGoalPositionInDegrees(HorizontalMotorIndex, 150);
+                _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 60);
+            }
         }
 
         public void StartMove(Vector2 direction)
         {
             const float deadzone = 0.5f;
-            _driver.SetMovingSpeed(HorizontalMotorIndex, 30);
-            _driver.SetMovingSpeed(VerticalMotorIndex, 20);
-            if (direction.X > deadzone)
+            lock (_driver.SyncLock)
             {
-                _driver.SetGoalPositionInDegrees(HorizontalMotorIndex, 0);
-            }
-            else if (direction.X < -deadzone)
-            {
-                _driver.SetGoalPositionInDegrees(HorizontalMotorIndex, 300);
-            }
+                _driver.SetMovingSpeed(HorizontalMotorIndex, 30);
+                _driver.SetMovingSpeed(VerticalMotorIndex, 20);
+                if (direction.X > deadzone)
+                {
+                    _driver.SetGoalPositionInDegrees(HorizontalMotorIndex, 0);
+                }
+                else if (direction.X < -deadzone)
+                {
+                    _driver.SetGoalPositionInDegrees(HorizontalMotorIndex, 300);
+                }
 
-            if (direction.Y > deadzone)
-            {
-                _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 270);
-            }
-            else if (direction.Y < -deadzone)
-            {
-                _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 30);
+                if (direction.Y > deadzone)
+                {
+                    _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 270);
+                }
+                else if (direction.Y < -deadzone)
+                {
+                    _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 30);
+                }
             }
         }
 
         public void StopMove()
         {
-            var currentPos = _driver.GetPresentPosition(HorizontalMotorIndex);
-            _driver.SetGoalPosition(HorizontalMotorIndex, currentPos);
-            currentPos = _driver.GetPresentPosition(VerticalMotorIndex);
-            _driver.SetGoalPosition(VerticalMotorIndex, currentPos);
+            lock (_driver.SyncLock)
+            {
+                var currentPos = _driver.GetPresentPosition(HorizontalMotorIndex);
+                _driver.SetGoalPosition(HorizontalMotorIndex, currentPos);
+                currentPos = _driver.GetPresentPosition(VerticalMotorIndex);
+                _driver.SetGoalPosition(VerticalMotorIndex, currentPos);
+            }
         }
     }
 }
