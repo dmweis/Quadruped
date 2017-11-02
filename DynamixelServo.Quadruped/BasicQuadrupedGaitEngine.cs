@@ -81,6 +81,7 @@ namespace DynamixelServo.Quadruped
         public void EnqueueInitialStandup()
         {
             _lastWrittenPosition = Driver.ReadCurrentLegPositions();
+            _moves.Enqueue(_lastWrittenPosition);
             float average = (_lastWrittenPosition.LeftFront.Z +
                              _lastWrittenPosition.RightFront.Z +
                              _lastWrittenPosition.LeftRear.Z +
