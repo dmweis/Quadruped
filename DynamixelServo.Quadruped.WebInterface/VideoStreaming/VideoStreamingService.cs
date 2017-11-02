@@ -36,7 +36,10 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
         {
             await Task.Run(() =>
             {
-                KillStream();
+                if (StreamRunning)
+                {
+                    KillStream();
+                }
                 StartStream();
             });
         }
