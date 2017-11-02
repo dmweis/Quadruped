@@ -1,10 +1,7 @@
-﻿body {
+﻿html, body {
+    height: 100%;
     margin: 0;
-}
-
-.mainContainer {
-    width: 100%;
-    height: 100vh;
+    padding: 0;
 }
 
 .joystick {
@@ -43,18 +40,18 @@
 @media screen and (orientation:portrait) {
     .moveJoystick {
         width: 100%;
-        height: 35%;
+        height: 30%;
     }
 
     .videoSegment {
         width: auto;
         position: relative;
         display: block;
-        height: 30%;
+        height: 40%;
     }
 
     .rotationJoystick {
         width: 100%;
-        height: 35%;
+        height: 30%;
     }
 }
