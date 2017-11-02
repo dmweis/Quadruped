@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
 {
@@ -14,11 +15,11 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
 
         private Process _streamerProcess;
 
-        public VideoStreamingService(IApplicationLifetime applicationLifetime, ILogger<VideoStreamingService> logger)
+        public VideoStreamingService(IApplicationLifetime applicationLifetime, ILogger<VideoStreamingService> logger, IOptions<StreamerConfig> config)
         {
             applicationLifetime.ApplicationStopping.Register(KillStream);
             logger.LogInformation("Starting video server");
-            StartStream();
+            StartStream(config.Value);
             logger.LogInformation("Video server up and running");
         }
 
@@ -28,11 +29,6 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
         {
             KillStream();
             StartStream(config);
-        }
-
-        private void StartStream()
-        {
-            StartStream(new StreamerConfig());
         }
 
         private void StartStream(StreamerConfig config)
@@ -72,13 +68,5 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
             _streamerProcess.Dispose();
             StreamRunning = false;
         }
-    }
-
-    public class StreamerConfig
-    {
-        public int ImageQuality { get; set; } = 85;
-        public int HorizontalResolution { get; set; } = 800;
-        public int VerticalResolution { get; set; } = 600;
-        public int Framerate { get; set; } = 10;
     }
 }

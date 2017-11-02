@@ -30,6 +30,9 @@ namespace dynamixelServo.Quadruped.WebInterface
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
 
+            services.AddOptions();
+            services.Configure<StreamerConfig>(Configuration.GetSection("streamerConfig"));
+
             if (HostingEnvironment.IsDevelopment())
             {
                 services.AddSingleton<IRobot, MockRobot>();
