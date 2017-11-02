@@ -11,7 +11,16 @@ namespace dynamixelServo.Quadruped.WebInterface
     {
         public static void Main(string[] args)
         {
-            //SaveCorrectDxlLibrary();
+            try
+            {
+                SaveCorrectDxlLibrary();
+            }
+            catch (Exception )
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Failed to laod library!!!");
+                Console.ResetColor();
+            }
             BuildWebHost(args).Run();
         }
 
