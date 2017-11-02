@@ -28,8 +28,8 @@ namespace DynamixelServo.Quadruped.WebInterface.Pages
             {
                 return Page();
             }
-            await _streamService.RestartAsync(StreamConfiguration);
-
+            _streamService.StreamerConfiguration = StreamConfiguration;
+            await _streamService.RestartAsync();
             return RedirectToPage("/VideoRobot");
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
@@ -11,35 +12,44 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
         private const int Port = 8080;
 
         public bool StreamRunning { get; private set; }
-        public StreamerConfig StreamerConfiguration { get; private set; }
+        public StreamerConfig StreamerConfiguration { get; set; }
 
         private Process _streamerProcess;
+        private readonly ILogger<VideoStreamingService> _logger;
 
         public VideoStreamingService(IApplicationLifetime applicationLifetime, ILogger<VideoStreamingService> logger, IOptions<StreamerConfig> config)
         {
             applicationLifetime.ApplicationStopping.Register(KillStream);
-            logger.LogInformation("Starting video server");
-            StartStream(config.Value);
-            logger.LogInformation("Video server up and running");
+            _logger = logger;
+            StreamerConfiguration = config.Value;
         }
 
-        public Task RestartAsync(StreamerConfig config) => Task.Run(() => Restart(config));
-
-        public void Restart(StreamerConfig config)
+        public async Task EnsureStreamOn()
         {
-            KillStream();
-            StartStream(config);
+            if (!StreamRunning)
+            {
+                await Task.Run((Action)StartStream);
+            }
         }
 
-        private void StartStream(StreamerConfig config)
+        public async Task RestartAsync()
         {
-            StreamerConfiguration = config;
+            await Task.Run(() =>
+            {
+                KillStream();
+                StartStream();
+            });
+        }
+
+        private void StartStream()
+        {
+            _logger.LogInformation("Starting video server");
             _streamerProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "/usr/local/bin/mjpg_streamer",
-                    Arguments = $" -o \"output_http.so -p {Port}\" -i \"input_raspicam.so -x {config.HorizontalResolution} -y {config.VerticalResolution} -fps {config.Framerate} -quality {config.ImageQuality}",
+                    Arguments = $" -o \"output_http.so -p {Port}\" -i \"input_raspicam.so -x {StreamerConfiguration.HorizontalResolution} -y {StreamerConfiguration.VerticalResolution} -fps {StreamerConfiguration.Framerate} -quality {StreamerConfiguration.ImageQuality}",
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
                     CreateNoWindow = true
@@ -47,10 +57,12 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
             };
             _streamerProcess.Start();
             StreamRunning = true;
+            _logger.LogInformation("Video server up and running");
         }
 
         public void KillStream()
         {
+            _logger.LogInformation("Shutting down streaming server");
             var killProcessStartInfo = new ProcessStartInfo
             {
                 FileName = "/bin/bash",
@@ -67,6 +79,7 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
             _streamerProcess.WaitForExit();
             _streamerProcess.Dispose();
             StreamRunning = false;
+            _logger.LogInformation("Streaming shut down");
         }
     }
 }

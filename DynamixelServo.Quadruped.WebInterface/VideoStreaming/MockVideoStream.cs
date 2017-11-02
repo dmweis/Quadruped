@@ -10,14 +10,19 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
             StreamerConfiguration = config.Value;
         }
 
-        public bool StreamRunning => false;
+        public bool StreamRunning { get; private set; }
 
-        public StreamerConfig StreamerConfiguration { get; private set; }
+        public StreamerConfig StreamerConfiguration { get; set; }
 
-        public Task RestartAsync(StreamerConfig config)
+        public Task RestartAsync()
         {
-            StreamerConfiguration = config;
+            StreamRunning = true;
             return Task.CompletedTask;
+        }
+
+        public Task EnsureStreamOn()
+        {
+            return RestartAsync();
         }
     }
 }

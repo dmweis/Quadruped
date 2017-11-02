@@ -5,7 +5,8 @@ namespace DynamixelServo.Quadruped.WebInterface.VideoStreaming
     public interface IVideoService
     {
         bool StreamRunning { get; }
-        StreamerConfig StreamerConfiguration { get; }
-        Task RestartAsync(StreamerConfig config);
+        StreamerConfig StreamerConfiguration { get; set; }
+        Task RestartAsync();
+        Task EnsureStreamOn();
     }
 }
