@@ -1,0 +1,20 @@
+﻿@page
+@model global::Quadruped.WebInterface.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<link rel="stylesheet" href="~/css/RobotController.css" />
+
+<div class="joystick moveJoystick" id="move_joystick_zone">
+    <strong>Move joystick</strong>
+    <div id="move_joystick_text_field"></div>
+</div>
+<div class="joystick rotationJoystick" id="rotate_joystick_zone">
+    <strong>Rotation joystick</strong>
+    <div id="rotation_joystick_text_field"></div>
+</div>
+
+@section scripts {
+    <script src="~/lib/nipplejs/dist/nipplejs.min.js"></script>
+    <script src="~/js/RobotController.js"></script>
+}
