@@ -25,7 +25,7 @@ deploy:
   - arm_web_deploy.tar.gz
   skip_cleanup: true
   on:
-    repo: dmweis/DynamixelServo
+    tags: true
 after_deploy:
   - dotnet clean
   - git stash --all
