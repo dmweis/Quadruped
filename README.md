@@ -1,5 +1,5 @@
-[![Travis Build Status](https://travis-ci.org/dmweis/DynamixelServo.svg?branch=master)](https://travis-ci.org/dmweis/DynamixelServo)
-[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/36ten6o8gyh3kxuo/branch/master?svg=true)](https://ci.appveyor.com/project/dmweis/dynamixelservo/branch/master)
+[![Travis Build Status](https://travis-ci.org/dmweis/Quadruped.svg?branch=master)](https://travis-ci.org/dmweis/Quadruped)
+[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/l8176h30n72rhkec/branch/master?svg=true)](https://ci.appveyor.com/project/dmweis/quadruped/branch/master)
 
 
 # Dynamixel Servo driver
