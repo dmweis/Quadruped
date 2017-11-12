@@ -22,7 +22,7 @@ namespace Quadruped
         private const int LegDistanceLongitudinal = 15;
         private const int LegDistanceLateral = 15;
 
-        private LegPositions RelaxedStance => new LegPositions
+        private LegPositions OriginalRelaxedStance => new LegPositions
         {
             LeftFront = new Vector3(-LegDistanceLateral, LegDistanceLongitudinal, LegHeight),
             RightFront = new Vector3(LegDistanceLateral, LegDistanceLongitudinal, LegHeight),
@@ -30,12 +30,22 @@ namespace Quadruped
             RightRear = new Vector3(LegDistanceLateral, -LegDistanceLongitudinal, LegHeight)
         };
 
+        private LegPositions _relaxedStance;
+
+        public LegPositions RelaxedStance
+        {
+            get => _relaxedStance.Copy();
+            set => _relaxedStance = value;
+        }
+
+
         private LegPositions _lastWrittenPosition;
 
         public bool IsComamndQueueEmpty => _moveQueueSingal.IsSet && _moves.IsEmpty;
 
         public BasicQuadrupedGaitEngine(QuadrupedIkDriver driver) : base(driver)
         {
+            _relaxedStance = OriginalRelaxedStance;
             Driver.Setup();
             EnqueueInitialStandup();
             if (_moves.TryDequeue(out var deqeueuedLegPosition))

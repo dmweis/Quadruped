@@ -11,7 +11,13 @@
         <div>Framerate <input asp-for="StreamConfiguration.Framerate" /></div>
         <div>HorizontalResolution <input asp-for="StreamConfiguration.HorizontalResolution"/></div>
         <div>VerticalResolution <input asp-for="StreamConfiguration.VerticalResolution" /></div>
-        <div>ImageQuality <input asp-for="StreamConfiguration.ImageQuality"/></div>
+        <div>ImageQuality <input asp-for="StreamConfiguration.ImageQuality" /></div>
+        
+        <h3>Relaxed stance adjustment</h3>
+        <div>X:<input asp-for="RelaxedStance.X" /></div>
+        <div>Y:<input asp-for="RelaxedStance.Y" /></div>
+        <div>Z:<input asp-for="RelaxedStance.Z" /></div>
+
         <input type="submit"/>
     </form>
 </div>

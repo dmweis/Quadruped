@@ -52,6 +52,16 @@ namespace Quadruped.WebInterface.RobotController
             _robotRunnerTask = Task.Run((Action)RobotRunnerLoop);
         }
 
+        public Vector3 RelaxedStance { get; private set; } = Vector3.Zero;
+
+        public void UpdateAboluteRelaxedStance(Vector3 transform)
+        {
+            RelaxedStance = transform;
+            var newRelaxed = _basicQuadrupedGaitEngine.RelaxedStance;
+            newRelaxed.Transform(transform);
+            _basicQuadrupedGaitEngine.RelaxedStance = newRelaxed;
+        }
+
         private void RobotRunnerLoop()
         {
             while (_keepRunning)
