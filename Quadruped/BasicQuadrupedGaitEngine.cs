@@ -22,7 +22,7 @@ namespace Quadruped
         private const int LegDistanceLongitudinal = 15;
         private const int LegDistanceLateral = 15;
 
-        private LegPositions OriginalRelaxedStance => new LegPositions
+        public LegPositions OriginalRelaxedStance => new LegPositions
         {
             LeftFront = new Vector3(-LegDistanceLateral, LegDistanceLongitudinal, LegHeight),
             RightFront = new Vector3(LegDistanceLateral, LegDistanceLongitudinal, LegHeight),

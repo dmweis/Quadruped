@@ -57,7 +57,7 @@ namespace Quadruped.WebInterface.RobotController
         public void UpdateAboluteRelaxedStance(Vector3 transform)
         {
             RelaxedStance = transform;
-            var newRelaxed = _basicQuadrupedGaitEngine.RelaxedStance;
+            var newRelaxed = _basicQuadrupedGaitEngine.OriginalRelaxedStance;
             newRelaxed.Transform(transform);
             _basicQuadrupedGaitEngine.RelaxedStance = newRelaxed;
         }
