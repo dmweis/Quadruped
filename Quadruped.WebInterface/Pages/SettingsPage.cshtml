@@ -19,9 +19,9 @@
         <div>Z:<input asp-for="RelaxedStance.Z" /></div>
         
         <h3>gait configuration</h3>
-        <div>FrontLegShift:<input asp-for="RobotConfiguration.FrontLegShift" /></div>
-        <div>RearLegShift:<input asp-for="RobotConfiguration.RearLegShift" /></div>
-        <div>LiftHeight:<input asp-for="RobotConfiguration.LiftHeight" /></div>
+        <div>FrontLegShift:<input asp-for="RobotConfiguration.FrontLegShift" /> default: @Model.DefaultRobotConfiguration.FrontLegShift</div>
+        <div>RearLegShift:<input asp-for="RobotConfiguration.RearLegShift" /> default: @Model.DefaultRobotConfiguration.RearLegShift</div>
+        <div>LiftHeight:<input asp-for="RobotConfiguration.LiftHeight" /> default: @Model.DefaultRobotConfiguration.LiftHeight</div>
 
         <input type="submit"/>
     </form>

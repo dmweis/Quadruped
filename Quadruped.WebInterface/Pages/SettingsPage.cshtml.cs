@@ -33,6 +33,8 @@ namespace Quadruped.WebInterface.Pages
         [BindProperty]
         public RobotConfig RobotConfiguration { get; set; }
 
+        public RobotConfig DefaultRobotConfiguration => new RobotConfig();
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
