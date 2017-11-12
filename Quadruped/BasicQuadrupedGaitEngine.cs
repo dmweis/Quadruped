@@ -8,8 +8,15 @@ namespace Quadruped
 {
     public class BasicQuadrupedGaitEngine : QuadrupedGaitEngine
     {
-        private const int Speed = 30;
-        private float NextStepLength => Speed * 0.001f * TimeSincelastTick;
+        private int _speed = 30;
+
+        public int Speed
+        {
+            get => _speed;
+            set => _speed = value;
+        }
+
+        private float NextStepLength => _speed * 0.001f * TimeSincelastTick;
 
         private readonly ConcurrentQueue<LegPositions> _moves = new ConcurrentQueue<LegPositions>();
         private readonly ManualResetEventSlim _moveQueueSingal = new ManualResetEventSlim();

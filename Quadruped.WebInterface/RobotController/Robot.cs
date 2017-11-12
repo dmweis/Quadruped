@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
@@ -22,7 +21,7 @@ namespace Quadruped.WebInterface.RobotController
         {
             _basicQuadrupedGaitEngine = basicQuadrupedGaitEngine;
             _logger = logger;
-            _robotRunnerTask = Task.Run((Action)RobotRunnerLoop);
+            _robotRunnerTask = Task.Run(RobotRunnerLoop);
             applicationLifetime.ApplicationStopped.Register(OnExit);
         }
 
@@ -50,7 +49,7 @@ namespace Quadruped.WebInterface.RobotController
             _basicQuadrupedGaitEngine.StartEngine();
             _basicQuadrupedGaitEngine.EnqueueInitialStandup();
             _keepRunning = true;
-            _robotRunnerTask = Task.Run((Action)RobotRunnerLoop);
+            _robotRunnerTask = Task.Run(RobotRunnerLoop);
         }
 
         public Vector3 RelaxedStance { get; private set; } = Vector3.Zero;
@@ -63,7 +62,7 @@ namespace Quadruped.WebInterface.RobotController
             _basicQuadrupedGaitEngine.RelaxedStance = newRelaxed;
         }
 
-        private void RobotRunnerLoop()
+        private async Task RobotRunnerLoop()
         {
             while (_keepRunning)
             {
@@ -77,6 +76,11 @@ namespace Quadruped.WebInterface.RobotController
                     _basicQuadrupedGaitEngine.EnqueueOneRotation(Rotation, GetNextLegCombo(), GaitConfiguration.LiftHeight);
                     _basicQuadrupedGaitEngine.WaitUntilCommandQueueIsEmpty();
                 }
+                if (_basicQuadrupedGaitEngine.Speed != GaitConfiguration.Speed)
+                {
+                    _basicQuadrupedGaitEngine.Speed = GaitConfiguration.Speed;
+                }
+                await Task.Delay(10);
             }
         }
 
