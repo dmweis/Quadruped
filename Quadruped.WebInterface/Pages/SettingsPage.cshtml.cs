@@ -1,5 +1,4 @@
 ﻿using System.Numerics;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -24,12 +23,15 @@ namespace Quadruped.WebInterface.Pages
             StreamConfiguration = _streamService.StreamerConfiguration;
             var relaxed = _robotController.RelaxedStance;
             RelaxedStance = new Vector3Class{X = relaxed.X, Y = relaxed.Y, Z = relaxed.Z};
+            RobotConfiguration = _robotController.GaitConfiguration;
         }
 
         [BindProperty]
         public StreamerConfig StreamConfiguration { get; set; }
         [BindProperty]
         public Vector3Class RelaxedStance { get; set; }
+        [BindProperty]
+        public RobotConfig RobotConfiguration { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -43,6 +45,7 @@ namespace Quadruped.WebInterface.Pages
                 await _streamService.RestartAsync();
             }
             _robotController.UpdateAboluteRelaxedStance((Vector3)RelaxedStance);
+            _robotController.GaitConfiguration = RobotConfiguration;
             return RedirectToPage("/VideoRobot");
         }
     }

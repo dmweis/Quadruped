@@ -9,6 +9,8 @@ namespace Quadruped.WebInterface.RobotController
 
         public float Rotation { get; set; }
 
+        public RobotConfig GaitConfiguration { get; set; } = new RobotConfig();
+
         public void StartRobot()
         {
             

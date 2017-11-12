@@ -10,6 +10,7 @@ namespace Quadruped.WebInterface.RobotController
     {
         public Vector2 Direction { get; set; }
         public float Rotation { get; set; }
+        public RobotConfig GaitConfiguration { get; set; } = new RobotConfig();
 
         private readonly BasicQuadrupedGaitEngine _basicQuadrupedGaitEngine;
         private readonly ILogger<Robot> _logger;
@@ -68,12 +69,12 @@ namespace Quadruped.WebInterface.RobotController
             {
                 if (Direction != Vector2.Zero)
                 {
-                    _basicQuadrupedGaitEngine.EnqueueOneStep(Direction, GetNextLegCombo());
+                    _basicQuadrupedGaitEngine.EnqueueOneStep(Direction, GetNextLegCombo(), GaitConfiguration.FrontLegShift, GaitConfiguration.RearLegShift, GaitConfiguration.LiftHeight);
                     _basicQuadrupedGaitEngine.WaitUntilCommandQueueIsEmpty();
                 }
                 else if (Rotation != 0)
                 {
-                    _basicQuadrupedGaitEngine.EnqueueOneRotation(Rotation, GetNextLegCombo());
+                    _basicQuadrupedGaitEngine.EnqueueOneRotation(Rotation, GetNextLegCombo(), GaitConfiguration.LiftHeight);
                     _basicQuadrupedGaitEngine.WaitUntilCommandQueueIsEmpty();
                 }
             }
