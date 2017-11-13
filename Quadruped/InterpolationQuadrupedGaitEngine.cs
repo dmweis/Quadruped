@@ -98,14 +98,14 @@ namespace Quadruped
         {
             _lastWrittenPosition = Driver.ReadCurrentLegPositions();
             _nextMove = _lastWrittenPosition;
-            _moves.Enqueue(_lastWrittenPosition);
+            AddStep(_lastWrittenPosition);
             float average = (_lastWrittenPosition.LeftFront.Z +
                              _lastWrittenPosition.RightFront.Z +
                              _lastWrittenPosition.LeftRear.Z +
                              _lastWrittenPosition.RightRear.Z) / 4;
             if (average > LegHeight + 2)
             {
-                _moves.Enqueue(new LegPositions
+                AddStep(new LegPositions
                 {
                     LeftFront = new Vector3(-LegDistanceLateral, LegDistanceLongitudinal, 0),
                     RightFront = new Vector3(LegDistanceLateral, LegDistanceLongitudinal, 0),
@@ -115,6 +115,12 @@ namespace Quadruped
             }
 
             _moves.Enqueue(RelaxedStance);
+        }
+
+        private void AddStep(LegPositions nextStep)
+        {
+            _moves.Enqueue(nextStep);
+            _moveQueueSingal.Reset();
         }
 
         public void WaitUntilCommandQueueIsEmpty(CancellationToken cancellationToken) => _moveQueueSingal.Wait(cancellationToken);
@@ -144,29 +150,28 @@ namespace Quadruped
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, liftHeight), forwardMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
-            _moves.Enqueue(nextStep);
-            _moveQueueSingal.Reset();
+            AddStep(nextStep);
 
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, -liftHeight), forwardMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
-            _moves.Enqueue(nextStep);
+            AddStep(nextStep);
 
             // Move all
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(-frontLegShift * direction.X, -frontLegShift * direction.Y, 0));
-            _moves.Enqueue(nextStep);
+            AddStep(nextStep);
 
             // Move RR and LF forward
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, liftHeight), backwardsMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), forwardMovingLegs);
-            _moves.Enqueue(nextStep);
+            AddStep(nextStep);
 
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, -liftHeight), backwardsMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), forwardMovingLegs);
-            _moves.Enqueue(nextStep);
+            AddStep(nextStep);
         }
 
         public void EnqueueTwoSteps(Vector2 direction, LegFlags forwardMovingLegs = LegFlags.RfLrCross, float frontLegShift = 2, float rearLegShift = 1, float liftHeight = 2, bool normalize = true)
@@ -192,46 +197,44 @@ namespace Quadruped
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, liftHeight), forwardMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
-            _moves.Enqueue(nextStep);
-            _moveQueueSingal.Reset();
+            AddStep(nextStep);
 
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, -liftHeight), forwardMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
-            _moves.Enqueue(nextStep);
+            AddStep(nextStep);
 
             // Move all
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(-frontLegShift * direction.X, -frontLegShift * direction.Y, 0));
-            _moves.Enqueue(nextStep);
+            AddStep(nextStep);
 
             // Move RR and LF forward for two steps
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * 2 * direction.X, frontLegShift * 2 * direction.Y, liftHeight), backwardsMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * 2 * direction.X, -rearLegShift * 2 * direction.Y, 0), forwardMovingLegs);
-            _moves.Enqueue(nextStep);
+            AddStep(nextStep);
 
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * 2 * direction.X, frontLegShift * 2 * direction.Y, -liftHeight), backwardsMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * 2 * direction.X, -rearLegShift * 2 * direction.Y, 0), forwardMovingLegs);
-            _moves.Enqueue(nextStep);
+            AddStep(nextStep);
 
             // Move all
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(-frontLegShift * direction.X, -frontLegShift * direction.Y, 0));
-            _moves.Enqueue(nextStep);
+            AddStep(nextStep);
 
             // Move LR and RF forward
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, liftHeight), forwardMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
-            _moves.Enqueue(nextStep);
-            _moveQueueSingal.Reset();
+            AddStep(nextStep);
 
             nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, -liftHeight), forwardMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
-            _moves.Enqueue(nextStep);
+            AddStep(nextStep);
         }
 
         public void EnqueueOneRotation(float rotation, LegFlags firstMovingLegs = LegFlags.LfRrCross, float liftHeight = 2)
@@ -259,26 +262,25 @@ namespace Quadruped
             nextStep.Rotate(new Angle(-rotation), firstMovingLegs);
             nextStep.Transform(new Vector3(0, 0, liftHeight), firstMovingLegs);
             nextStep.Rotate(new Angle(rotation), secondMovingLegs);
-            _moves.Enqueue(nextStep);
-            _moveQueueSingal.Reset();
+            AddStep(nextStep);
 
             nextStep = nextStep.Copy();
             nextStep.Rotate(new Angle(-rotation), firstMovingLegs);
             nextStep.Transform(new Vector3(0, 0, -liftHeight), firstMovingLegs);
             nextStep.Rotate(new Angle(rotation), secondMovingLegs);
-            _moves.Enqueue(nextStep);
+            AddStep(nextStep);
 
             nextStep = nextStep.Copy();
             nextStep.Rotate(new Angle(-rotation), secondMovingLegs);
             nextStep.Transform(new Vector3(0, 0, liftHeight), secondMovingLegs);
             nextStep.Rotate(new Angle(rotation), firstMovingLegs);
-            _moves.Enqueue(nextStep);
+            AddStep(nextStep);
 
             nextStep = nextStep.Copy();
             nextStep.Rotate(new Angle(-rotation), secondMovingLegs);
             nextStep.Transform(new Vector3(0, 0, -liftHeight), secondMovingLegs);
             nextStep.Rotate(new Angle(rotation), firstMovingLegs);
-            _moves.Enqueue(nextStep);
+            AddStep(nextStep);
         }
 
         public override void Dispose()
