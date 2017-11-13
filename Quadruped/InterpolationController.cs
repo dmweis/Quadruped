@@ -13,13 +13,11 @@ namespace Quadruped
         private const int LegDistanceLongitudinal = 15;
         private const int LegDistanceLateral = 15;
 
-
         public int Speed
         {
             get => _engine.Speed;
             set => _engine.Speed = value;
         }
-
 
         public LegPositions OriginalRelaxedStance => new LegPositions
         {
