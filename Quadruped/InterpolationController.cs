@@ -39,6 +39,7 @@ namespace Quadruped
 
         public InterpolationController(InterpolationGaitEngine engine)
         {
+            _relaxedStance = OriginalRelaxedStance;
             _engine = engine ?? throw new ArgumentNullException(nameof(engine));
             EnqueueInitialStandup();
         }
