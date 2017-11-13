@@ -18,20 +18,20 @@ namespace Quadruped.WebInterface.RobotController
             set
             {
                 _gaitConfiguration = value;
-                _basicQuadrupedGaitEngine.Speed = GaitConfiguration.Speed;
+                _interpolationQuadrupedGaitEngine.Speed = GaitConfiguration.Speed;
             }
         }
 
 
-        private readonly BasicQuadrupedGaitEngine _basicQuadrupedGaitEngine;
+        private readonly InterpolationQuadrupedGaitEngine _interpolationQuadrupedGaitEngine;
         private readonly ILogger<Robot> _logger;
         private Task _robotRunnerTask;
         private LegFlags _lastUsedCombo = LegFlags.RfLrCross;
         private bool _keepRunning = true;
 
-        public Robot(BasicQuadrupedGaitEngine basicQuadrupedGaitEngine, IApplicationLifetime applicationLifetime, ILogger<Robot> logger)
+        public Robot(InterpolationQuadrupedGaitEngine interpolationQuadrupedGaitEngine, IApplicationLifetime applicationLifetime, ILogger<Robot> logger)
         {
-            _basicQuadrupedGaitEngine = basicQuadrupedGaitEngine;
+            _interpolationQuadrupedGaitEngine = interpolationQuadrupedGaitEngine;
             _logger = logger;
             _robotRunnerTask = Task.Run(RobotRunnerLoop);
             applicationLifetime.ApplicationStopped.Register(OnExit);
@@ -47,8 +47,8 @@ namespace Quadruped.WebInterface.RobotController
             await _robotRunnerTask;
             await Task.Run(() =>
             {
-                _basicQuadrupedGaitEngine.Stop();
-                _basicQuadrupedGaitEngine.DisableTorqueOnMotors();
+                _interpolationQuadrupedGaitEngine.Stop();
+                _interpolationQuadrupedGaitEngine.DisableTorqueOnMotors();
             });
         }
 
@@ -58,8 +58,8 @@ namespace Quadruped.WebInterface.RobotController
             {
                 _logger.LogWarning("Can't start robot when it's alredy running");
             }
-            _basicQuadrupedGaitEngine.StartEngine();
-            _basicQuadrupedGaitEngine.EnqueueInitialStandup();
+            _interpolationQuadrupedGaitEngine.StartEngine();
+            _interpolationQuadrupedGaitEngine.EnqueueInitialStandup();
             _keepRunning = true;
             _robotRunnerTask = Task.Run(RobotRunnerLoop);
         }
@@ -69,9 +69,9 @@ namespace Quadruped.WebInterface.RobotController
         public void UpdateAboluteRelaxedStance(Vector3 transform)
         {
             RelaxedStance = transform;
-            var newRelaxed = _basicQuadrupedGaitEngine.OriginalRelaxedStance;
+            var newRelaxed = _interpolationQuadrupedGaitEngine.OriginalRelaxedStance;
             newRelaxed.Transform(transform);
-            _basicQuadrupedGaitEngine.RelaxedStance = newRelaxed;
+            _interpolationQuadrupedGaitEngine.RelaxedStance = newRelaxed;
         }
 
         private async Task RobotRunnerLoop()
@@ -82,18 +82,18 @@ namespace Quadruped.WebInterface.RobotController
                 {
                     if (GaitConfiguration.StepConfig == StepConfiguration.OneStep)
                     {
-                        _basicQuadrupedGaitEngine.EnqueueOneStep(Direction, GetNextLegCombo(), GaitConfiguration.FrontLegShift, GaitConfiguration.RearLegShift, GaitConfiguration.LiftHeight);
+                        _interpolationQuadrupedGaitEngine.EnqueueOneStep(Direction, GetNextLegCombo(), GaitConfiguration.FrontLegShift, GaitConfiguration.RearLegShift, GaitConfiguration.LiftHeight);
                     }
                     else
                     {
-                        _basicQuadrupedGaitEngine.EnqueueTwoSteps(Direction, GetNextLegCombo(), GaitConfiguration.FrontLegShift, GaitConfiguration.RearLegShift, GaitConfiguration.LiftHeight);
+                        _interpolationQuadrupedGaitEngine.EnqueueTwoSteps(Direction, GetNextLegCombo(), GaitConfiguration.FrontLegShift, GaitConfiguration.RearLegShift, GaitConfiguration.LiftHeight);
                     }
-                    _basicQuadrupedGaitEngine.WaitUntilCommandQueueIsEmpty();
+                    _interpolationQuadrupedGaitEngine.WaitUntilCommandQueueIsEmpty();
                 }
                 else if (Rotation != 0)
                 {
-                    _basicQuadrupedGaitEngine.EnqueueOneRotation(Rotation, GetNextLegCombo(), GaitConfiguration.LiftHeight);
-                    _basicQuadrupedGaitEngine.WaitUntilCommandQueueIsEmpty();
+                    _interpolationQuadrupedGaitEngine.EnqueueOneRotation(Rotation, GetNextLegCombo(), GaitConfiguration.LiftHeight);
+                    _interpolationQuadrupedGaitEngine.WaitUntilCommandQueueIsEmpty();
                 }
                 else
                 {

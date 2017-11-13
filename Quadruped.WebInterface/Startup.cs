@@ -43,7 +43,7 @@ namespace Quadruped.WebInterface
                 string portName = Configuration["SerialPortName"];
                 services.AddSingleton(new DynamixelDriver(portName));
                 services.AddSingleton<QuadrupedIkDriver>();
-                services.AddSingleton<BasicQuadrupedGaitEngine>();
+                services.AddSingleton<InterpolationQuadrupedGaitEngine>();
                 services.AddSingleton<IRobot, Robot>();
                 services.AddSingleton<ICameraController, CameraController>();
                 services.AddSingleton<IVideoService, VideoStreamingService>();
