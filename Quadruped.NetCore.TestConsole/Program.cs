@@ -73,6 +73,7 @@ namespace Quadruped.NetCore.TestConsole
             {
                 LoadLimits(driver);
                 using (var gaiteEngine = new InterpolationGaitEngine(quadruped))
+                using (var controller = new InterpolationController(gaiteEngine))
                 {
                     bool keepGoing = true;
                     LegFlags nextLegCombo = LegFlags.RfLrCross;
@@ -100,10 +101,10 @@ namespace Quadruped.NetCore.TestConsole
                                 direction = new Vector2(0, -1);
                                 break;
                             case ConsoleKey.D3:
-                                gaiteEngine.EnqueueOneRotation(keyInfo.Modifiers == ConsoleModifiers.Shift ? 25 : 12.5f, nextLegCombo);
+                                controller.EnqueueOneRotation(keyInfo.Modifiers == ConsoleModifiers.Shift ? 25 : 12.5f, nextLegCombo);
                                 break;
                             case ConsoleKey.D2:
-                                gaiteEngine.EnqueueOneRotation(keyInfo.Modifiers == ConsoleModifiers.Shift ? -25 : -12.5f, nextLegCombo);
+                                controller.EnqueueOneRotation(keyInfo.Modifiers == ConsoleModifiers.Shift ? -25 : -12.5f, nextLegCombo);
                                 break;
                             case ConsoleKey.Q:
                                 direction = keyInfo.Modifiers == ConsoleModifiers.Shift ? new Vector2(-1, -1) : new Vector2(-1, 1);
@@ -118,13 +119,13 @@ namespace Quadruped.NetCore.TestConsole
                                 direction = new Vector2(1, -1);
                                 break;
                             case ConsoleKey.Spacebar:
-                                gaiteEngine.EnqueueOneRotation(0);
+                                controller.EnqueueOneRotation(0);
                                 break;
                             case ConsoleKey.Escape:
                                 keepGoing = false;
                                 break;
                         }
-                        gaiteEngine.EnqueueOneStep(direction, nextLegCombo);
+                        controller.EnqueueOneStep(direction, nextLegCombo);
                         gaiteEngine.WaitUntilCommandQueueIsEmpty();
                     }
                     gaiteEngine.Stop();
