@@ -71,6 +71,7 @@ namespace Quadruped.WebInterface.RobotController
             var newRelaxed = _interpolationController.OriginalRelaxedStance;
             newRelaxed.Transform(transform);
             _interpolationController.RelaxedStance = newRelaxed;
+            _interpolationController.EnqueueMoveToRelaxed();
         }
 
         private async Task RobotRunnerLoop()

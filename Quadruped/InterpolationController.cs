@@ -74,6 +74,11 @@ namespace Quadruped
             _engine.DisableTorqueOnMotors();
         }
 
+        public void EnqueueMoveToRelaxed()
+        {
+            _engine.AddStep(RelaxedStance);
+        }
+
         public void EnqueueOneStep(Vector2 direction, LegFlags forwardMovingLegs = LegFlags.RfLrCross, float frontLegShift = 2, float rearLegShift = 1, float liftHeight = 2, bool normalize = true)
         {
             // identity comparasion to prevent error on float.NaN
