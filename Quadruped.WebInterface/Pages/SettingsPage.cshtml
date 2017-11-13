@@ -1,5 +1,6 @@
 ﻿@page
 @using Quadruped.WebInterface.Pages
+@using Quadruped.WebInterface.RobotController
 @model global::Quadruped.WebInterface.Pages.SettingsPageModel
 @{
     ViewData["Title"] = "SettingsPage";
@@ -24,6 +25,7 @@
         <div>RearLegShift:<input asp-for="RobotConfiguration.RearLegShift" /> default: @Model.DefaultRobotConfiguration.RearLegShift</div>
         <div>LiftHeight:<input asp-for="RobotConfiguration.LiftHeight" /> default: @Model.DefaultRobotConfiguration.LiftHeight</div>
         <div>Speed:<input asp-for="RobotConfiguration.Speed" /> default: @Model.DefaultRobotConfiguration.Speed</div>
+        <div>Step Configuration:<select asp-for="RobotConfiguration.StepConfig" asp-items="Html.GetEnumSelectList<StepConfiguration>()"></select> default: @Model.DefaultRobotConfiguration.StepConfig</div>
 
         <input type="submit"/>
     </form>

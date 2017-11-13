@@ -80,7 +80,14 @@ namespace Quadruped.WebInterface.RobotController
             {
                 if (Direction != Vector2.Zero)
                 {
-                    _basicQuadrupedGaitEngine.EnqueueOneStep(Direction, GetNextLegCombo(), GaitConfiguration.FrontLegShift, GaitConfiguration.RearLegShift, GaitConfiguration.LiftHeight);
+                    if (GaitConfiguration.StepConfig == StepConfiguration.OneStep)
+                    {
+                        _basicQuadrupedGaitEngine.EnqueueOneStep(Direction, GetNextLegCombo(), GaitConfiguration.FrontLegShift, GaitConfiguration.RearLegShift, GaitConfiguration.LiftHeight);
+                    }
+                    else
+                    {
+                        _basicQuadrupedGaitEngine.EnqueueTwoSteps(Direction, GetNextLegCombo(), GaitConfiguration.FrontLegShift, GaitConfiguration.RearLegShift, GaitConfiguration.LiftHeight);
+                    }
                     _basicQuadrupedGaitEngine.WaitUntilCommandQueueIsEmpty();
                 }
                 else if (Rotation != 0)
@@ -88,7 +95,10 @@ namespace Quadruped.WebInterface.RobotController
                     _basicQuadrupedGaitEngine.EnqueueOneRotation(Rotation, GetNextLegCombo(), GaitConfiguration.LiftHeight);
                     _basicQuadrupedGaitEngine.WaitUntilCommandQueueIsEmpty();
                 }
-                await Task.Delay(10);
+                else
+                {
+                    await Task.Delay(10);
+                }
             }
         }
 
