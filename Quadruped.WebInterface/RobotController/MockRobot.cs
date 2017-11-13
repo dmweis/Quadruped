@@ -18,9 +18,12 @@ namespace Quadruped.WebInterface.RobotController
 
         public Vector3 RelaxedStance { get; private set; }
 
-        public void UpdateAboluteRelaxedStance(Vector3 transform)
+        public Rotation RelaxedStanceRotation { get; private set; } = new Rotation();
+
+        public void UpdateAboluteRelaxedStance(Vector3 transform, Rotation rotation)
         {
             RelaxedStance = transform;
+            RelaxedStanceRotation = rotation;
         }
 
         public Task DisableMotors()

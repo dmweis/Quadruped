@@ -23,6 +23,7 @@ namespace Quadruped.WebInterface.Pages
             StreamConfiguration = _streamService.StreamerConfiguration;
             var relaxed = _robotController.RelaxedStance;
             RelaxedStance = new Vector3Class{X = relaxed.X, Y = relaxed.Y, Z = relaxed.Z};
+            RelaxedStanceRotation = _robotController.RelaxedStanceRotation;
             RobotConfiguration = _robotController.GaitConfiguration;
         }
 
@@ -30,6 +31,8 @@ namespace Quadruped.WebInterface.Pages
         public StreamerConfig StreamConfiguration { get; set; }
         [BindProperty]
         public Vector3Class RelaxedStance { get; set; }
+        [BindProperty]
+        public Rotation RelaxedStanceRotation { get; set; }
         [BindProperty]
         public RobotConfig RobotConfiguration { get; set; }
 
@@ -46,7 +49,7 @@ namespace Quadruped.WebInterface.Pages
                 _streamService.StreamerConfiguration = StreamConfiguration;
                 await _streamService.RestartAsync();
             }
-            _robotController.UpdateAboluteRelaxedStance((Vector3)RelaxedStance);
+            _robotController.UpdateAboluteRelaxedStance((Vector3)RelaxedStance, RelaxedStanceRotation);
             _robotController.GaitConfiguration = RobotConfiguration;
             return RedirectToPage("/VideoRobot");
         }

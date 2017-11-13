@@ -64,12 +64,15 @@ namespace Quadruped.WebInterface.RobotController
         }
 
         public Vector3 RelaxedStance { get; private set; } = Vector3.Zero;
+        public Rotation RelaxedStanceRotation { get; private set; } = new Rotation();
 
-        public void UpdateAboluteRelaxedStance(Vector3 transform)
+        public void UpdateAboluteRelaxedStance(Vector3 transform, Rotation rotation)
         {
             RelaxedStance = transform;
+            RelaxedStanceRotation = rotation;
             var newRelaxed = _interpolationController.OriginalRelaxedStance;
             newRelaxed.Transform(transform);
+            newRelaxed.RotateCenter(rotation);
             _interpolationController.RelaxedStance = newRelaxed;
             _interpolationController.EnqueueMoveToRelaxed();
         }

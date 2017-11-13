@@ -73,6 +73,36 @@ namespace Quadruped
             }
         }
 
+        /// <summary>
+        /// Rotate the conter of the robot by degrees
+        /// </summary>
+        /// <param name="rotation"></param>
+        /// <param name="legs"></param>
+        public void RotateCenter(Rotation rotation, LegFlags legs = LegFlags.All)
+        {
+            RotateCenter(Quaternion.CreateFromYawPitchRoll(rotation.Yaw.RadToDegree(), rotation.Pitch.RadToDegree(), rotation.Roll.RadToDegree()), legs);
+        }
+
+        public void RotateCenter(Quaternion rotation, LegFlags legs = LegFlags.All)
+        {
+            if ((legs & LegFlags.LeftFront) != 0)
+            {
+                LeftFront = Vector3.Transform(LeftFront, rotation);
+            }
+            if ((legs & LegFlags.RightFront) != 0)
+            {
+                RightFront = Vector3.Transform(RightFront, rotation);
+            }
+            if ((legs & LegFlags.LeftRear) != 0)
+            {
+                LeftRear = Vector3.Transform(LeftRear, rotation);
+            }
+            if ((legs & LegFlags.RightRear) != 0)
+            {
+                RightRear = Vector3.Transform(RightRear, rotation);
+            }
+        }
+
         public void MoveTowards(LegPositions target, float distance)
         {
             LeftFront = LeftFront.MoveTowards(target.LeftFront, distance);

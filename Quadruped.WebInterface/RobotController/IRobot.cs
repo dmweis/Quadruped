@@ -10,7 +10,8 @@ namespace Quadruped.WebInterface.RobotController
         RobotConfig GaitConfiguration { get; set; }
         void StartRobot();
         Vector3 RelaxedStance { get; }
-        void UpdateAboluteRelaxedStance(Vector3 transform);
+        Rotation RelaxedStanceRotation { get; }
+        void UpdateAboluteRelaxedStance(Vector3 transform, Rotation rotation);
         Task DisableMotors();
     }
 }
