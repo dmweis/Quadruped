@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Quadruped
 {
-    public class InterpolationQuadrupedGaitEngine : QuadrupedGaitEngine
+    public class InterpolationGaitEngine : QuadrupedGaitEngine
     {
         private int _speed = 30;
 
@@ -50,7 +50,7 @@ namespace Quadruped
 
         public bool IsComamndQueueEmpty => _moveQueueSingal.IsSet && _moves.IsEmpty;
 
-        public InterpolationQuadrupedGaitEngine(QuadrupedIkDriver driver) : base(driver)
+        public InterpolationGaitEngine(QuadrupedIkDriver driver) : base(driver)
         {
             _relaxedStance = OriginalRelaxedStance;
             Driver.Setup();

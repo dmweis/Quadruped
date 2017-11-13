@@ -72,7 +72,7 @@ namespace Quadruped.NetCore.TestConsole
             using (var quadruped = new QuadrupedIkDriver(driver))
             {
                 LoadLimits(driver);
-                using (var gaiteEngine = new InterpolationQuadrupedGaitEngine(quadruped))
+                using (var gaiteEngine = new InterpolationGaitEngine(quadruped))
                 {
                     bool keepGoing = true;
                     LegFlags nextLegCombo = LegFlags.RfLrCross;

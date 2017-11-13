@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Quadruped
 {
-    public class FunctionalQuadrupedGaitEngine : QuadrupedGaitEngine
+    public class FunctionalGaitEngine : QuadrupedGaitEngine
     {
 
         private const float LegHeight = -9f;
@@ -32,7 +32,7 @@ namespace Quadruped
         };
 
 
-        public FunctionalQuadrupedGaitEngine(QuadrupedIkDriver driver) : base(driver)
+        public FunctionalGaitEngine(QuadrupedIkDriver driver) : base(driver)
         {
             Driver.Setup();
             var currentPosition = driver.ReadCurrentLegPositions();
