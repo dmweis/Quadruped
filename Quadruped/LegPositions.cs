@@ -80,7 +80,7 @@ namespace Quadruped
         /// <param name="legs"></param>
         public void RotateCenter(Rotation rotation, LegFlags legs = LegFlags.All)
         {
-            RotateCenter(Quaternion.CreateFromYawPitchRoll(rotation.Yaw.RadToDegree(), rotation.Pitch.RadToDegree(), rotation.Roll.RadToDegree()), legs);
+            RotateCenter(Quaternion.CreateFromYawPitchRoll(rotation.Yaw.DegreeToRad(), rotation.Pitch.DegreeToRad(), rotation.Roll.DegreeToRad()), legs);
         }
 
         public void RotateCenter(Quaternion rotation, LegFlags legs = LegFlags.All)
