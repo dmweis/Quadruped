@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using Quadruped.MotionPlanning;
 
 namespace Quadruped
 {
@@ -99,28 +100,23 @@ namespace Quadruped
             var nextStep = RelaxedStance;
 
             // Move LR and RF forward
-            nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, liftHeight), forwardMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
             _engine.AddStep(nextStep);
 
-            nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, -liftHeight), forwardMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
             _engine.AddStep(nextStep);
 
             // Move all
-            nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(-frontLegShift * direction.X, -frontLegShift * direction.Y, 0));
             _engine.AddStep(nextStep);
 
             // Move RR and LF forward
-            nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, liftHeight), backwardsMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), forwardMovingLegs);
             _engine.AddStep(nextStep);
 
-            nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, -liftHeight), backwardsMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), forwardMovingLegs);
             _engine.AddStep(nextStep);
@@ -146,44 +142,36 @@ namespace Quadruped
             var nextStep = RelaxedStance;
 
             // Move LR and RF forward
-            nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, liftHeight), forwardMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
             _engine.AddStep(nextStep);
 
-            nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, -liftHeight), forwardMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
             _engine.AddStep(nextStep);
 
             // Move all
-            nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(-frontLegShift * direction.X, -frontLegShift * direction.Y, 0));
             _engine.AddStep(nextStep);
 
             // Move RR and LF forward for two steps
-            nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * 2 * direction.X, frontLegShift * 2 * direction.Y, liftHeight), backwardsMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * 2 * direction.X, -rearLegShift * 2 * direction.Y, 0), forwardMovingLegs);
             _engine.AddStep(nextStep);
 
-            nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * 2 * direction.X, frontLegShift * 2 * direction.Y, -liftHeight), backwardsMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * 2 * direction.X, -rearLegShift * 2 * direction.Y, 0), forwardMovingLegs);
             _engine.AddStep(nextStep);
 
             // Move all
-            nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(-frontLegShift * direction.X, -frontLegShift * direction.Y, 0));
             _engine.AddStep(nextStep);
 
             // Move LR and RF forward
-            nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, liftHeight), forwardMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
             _engine.AddStep(nextStep);
 
-            nextStep = nextStep.Copy();
             nextStep.Transform(new Vector3(frontLegShift * direction.X, frontLegShift * direction.Y, -liftHeight), forwardMovingLegs);
             nextStep.Transform(new Vector3(-rearLegShift * direction.X, -rearLegShift * direction.Y, 0), backwardsMovingLegs);
             _engine.AddStep(nextStep);
@@ -210,29 +198,46 @@ namespace Quadruped
             rotation /= 2;
             var nextStep = RelaxedStance;
 
-            nextStep = nextStep.Copy();
             nextStep.Rotate(new Angle(-rotation), firstMovingLegs);
             nextStep.Transform(new Vector3(0, 0, liftHeight), firstMovingLegs);
             nextStep.Rotate(new Angle(rotation), secondMovingLegs);
             _engine.AddStep(nextStep);
 
-            nextStep = nextStep.Copy();
             nextStep.Rotate(new Angle(-rotation), firstMovingLegs);
             nextStep.Transform(new Vector3(0, 0, -liftHeight), firstMovingLegs);
             nextStep.Rotate(new Angle(rotation), secondMovingLegs);
             _engine.AddStep(nextStep);
 
-            nextStep = nextStep.Copy();
             nextStep.Rotate(new Angle(-rotation), secondMovingLegs);
             nextStep.Transform(new Vector3(0, 0, liftHeight), secondMovingLegs);
             nextStep.Rotate(new Angle(rotation), firstMovingLegs);
             _engine.AddStep(nextStep);
 
-            nextStep = nextStep.Copy();
             nextStep.Rotate(new Angle(-rotation), secondMovingLegs);
             nextStep.Transform(new Vector3(0, 0, -liftHeight), secondMovingLegs);
             nextStep.Rotate(new Angle(rotation), firstMovingLegs);
             _engine.AddStep(nextStep);
+        }
+
+        public void EnqueueMotion(MoveSet moveSet)
+        {
+            LegPositions start = null;
+            foreach (var movement in moveSet.Movements)
+            {
+                if (movement.StargingStance == StartingStanceOptions.Relaxed)
+                {
+                    start = RelaxedStance;
+                }
+                if (start == null)
+                {
+                    throw new InvalidOperationException("First move can't start with previous step");
+                }
+                foreach (var motion in movement.Motions)
+                {
+                    start.Transform(motion.Motion, motion.Legs);
+                }
+                _engine.AddStep(start);
+            }
         }
 
         public void Dispose()

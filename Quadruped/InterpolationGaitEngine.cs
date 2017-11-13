@@ -68,7 +68,7 @@ namespace Quadruped
 
         public void AddStep(LegPositions nextStep)
         {
-            _moves.Enqueue(nextStep);
+            _moves.Enqueue(nextStep.Copy());
             _moveQueueSingal.Reset();
         }
 
