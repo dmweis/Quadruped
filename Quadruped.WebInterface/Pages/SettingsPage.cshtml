@@ -17,13 +17,13 @@
         
         <h3>Relaxed stance adjustment</h3>
         <h4>Position</h4>
-        <div>X:<input asp-for="RelaxedStance.X" /></div>
-        <div>Y:<input asp-for="RelaxedStance.Y" /></div>
-        <div>Z:<input asp-for="RelaxedStance.Z" /></div>
+        <div>X:<input asp-for="RelaxedStance.X" /> Positive is left</div>
+        <div>Y:<input asp-for="RelaxedStance.Y" /> Positive is backwards</div>
+        <div>Z:<input asp-for="RelaxedStance.Z" /> Negative is upwards</div>
         <h4>Rotation</h4>
-        <div>Yaw:<input asp-for="RelaxedStanceRotation.Yaw" /></div>
-        <div>Pitch:<input asp-for="RelaxedStanceRotation.Pitch" /></div>
-        <div>Roll:<input asp-for="RelaxedStanceRotation.Roll" /></div>
+        <div>Yaw:<input asp-for="RelaxedStanceRotation.Yaw" /> Positive is left leaning</div>
+        <div>Pitch:<input asp-for="RelaxedStanceRotation.Pitch" /> Positive is forward leaning</div>
+        <div>Roll:<input asp-for="RelaxedStanceRotation.Roll" /> Positive is right rotation</div>
 
         <h3>gait configuration</h3>
         <div>FrontLegShift:<input asp-for="RobotConfiguration.FrontLegShift" /> default: @Model.DefaultRobotConfiguration.FrontLegShift</div>
