@@ -14,10 +14,10 @@ namespace Quadruped
 
         // Correction numbers are set up so that if you add them to the angle the motor center will bo pointing to the desired angle
         // the offset for each axis is than added to compensate for the shape of the legs
-        private static readonly LegConfiguration LeftFront = new LegConfiguration(1, 3, 5, 45, new Vector3(-6.5f, 6.5f, 0), -240 + FemurOffset, -330 + TibiaOffset);
-        private static readonly LegConfiguration RightFront = new LegConfiguration(2, 4, 6, -45, new Vector3(6.5f, 6.5f, 0), 60 + FemurOffset, -30 + TibiaOffset);
-        private static readonly LegConfiguration LeftRear = new LegConfiguration(7, 9, 11, 135, new Vector3(-6.5f, -6.5f, 0), 60 + FemurOffset, -30 + TibiaOffset);
-        private static readonly LegConfiguration RightRear = new LegConfiguration(8, 10, 12, -135, new Vector3(6.5f, -6.5f, 0), -240 + FemurOffset, -330 + TibiaOffset);
+        private static readonly LegConfiguration LeftFront = new LegConfiguration(1, 3, 5, 45, new Vector3(6.5f, 6.5f, 0), -240 + FemurOffset, -330 + TibiaOffset);
+        private static readonly LegConfiguration RightFront = new LegConfiguration(2, 4, 6, -45, new Vector3(6.5f, -6.5f, 0), 60 + FemurOffset, -30 + TibiaOffset);
+        private static readonly LegConfiguration LeftRear = new LegConfiguration(7, 9, 11, 135, new Vector3(-6.5f, 6.5f, 0), 60 + FemurOffset, -30 + TibiaOffset);
+        private static readonly LegConfiguration RightRear = new LegConfiguration(8, 10, 12, -135, new Vector3(-6.5f, -6.5f, 0), -240 + FemurOffset, -330 + TibiaOffset);
 
         private static readonly byte[] Coxas = { LeftFront.CoxaId, RightFront.CoxaId, LeftRear.CoxaId, RightRear.CoxaId };
         private static readonly byte[] Femurs = { LeftFront.FemurId, RightFront.FemurId, LeftRear.FemurId, RightRear.FemurId };
