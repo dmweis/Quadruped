@@ -24,12 +24,12 @@ namespace Quadruped
         private LegPositions _lastWrittenPosition;
 
         private LegPositions RelaxedStance => new LegPositions
-        {
-            LeftFront = new Vector3(-LegDistance, LegDistance, LegHeight),
-            RightFront = new Vector3(LegDistance, LegDistance, LegHeight),
-            LeftRear = new Vector3(-LegDistance, -LegDistance, LegHeight),
-            RightRear = new Vector3(LegDistance, -LegDistance, LegHeight)
-        };
+        (
+            new Vector3(-LegDistance, LegDistance, LegHeight),
+            new Vector3(LegDistance, LegDistance, LegHeight),
+            new Vector3(-LegDistance, -LegDistance, LegHeight),
+            new Vector3(LegDistance, -LegDistance, LegHeight)
+        );
 
 
         public FunctionalGaitEngine(QuadrupedIkDriver driver) : base(driver)
@@ -43,12 +43,12 @@ namespace Quadruped
             if (average > -9)
             {
                 Driver.MoveLegsSynced(new LegPositions
-                {
-                    LeftFront = new Vector3(-LegDistance, LegDistance, 0),
-                    RightFront = new Vector3(LegDistance, LegDistance, 0),
-                    LeftRear = new Vector3(-LegDistance, -LegDistance, 0),
-                    RightRear = new Vector3(LegDistance, -LegDistance, 0)
-                });
+                (
+                    new Vector3(-LegDistance, LegDistance, 0),
+                    new Vector3(LegDistance, LegDistance, 0),
+                    new Vector3(-LegDistance, -LegDistance, 0),
+                    new Vector3(LegDistance, -LegDistance, 0)
+                ));
                 Thread.Sleep(1000);
             }
             _lastWrittenPosition = RelaxedStance;
@@ -104,14 +104,13 @@ namespace Quadruped
                 _leftRearOffset -= NextStepLength;
             }
 
-            var newPosition = RelaxedStance;
-            newPosition.Transform(new Vector3((float)(swaySin * 3) * _direction.Y, -(float)(swaySin * 3) * _direction.X, 0));
-            newPosition.Transform(new Vector3(_rightFrontOffset * _direction.X, _rightFrontOffset * _direction.Y, 0), LegFlags.RightFront);
-            newPosition.Transform(new Vector3(_rightRearOffset * _direction.X, _rightRearOffset * _direction.Y, 0), LegFlags.RightRear);
-            newPosition.Transform(new Vector3(_leftFrontOffset * _direction.X, _leftFrontOffset * _direction.Y, 0), LegFlags.LeftFront);
-            newPosition.Transform(new Vector3(_leftRearOffset * _direction.X, _leftRearOffset * _direction.Y, 0), LegFlags.LeftRear);
-            newPosition.Transform(new Vector3(0, 0, (float)Math.Abs(legLiftSin) * 3), currentLeg);
-            _lastWrittenPosition = newPosition;
+            _lastWrittenPosition = RelaxedStance
+                .Transform(new Vector3((float)(swaySin * 3) * _direction.Y, -(float)(swaySin * 3) * _direction.X, 0))
+                .Transform(new Vector3(_rightFrontOffset * _direction.X, _rightFrontOffset * _direction.Y, 0), LegFlags.RightFront)
+                .Transform(new Vector3(_rightRearOffset * _direction.X, _rightRearOffset * _direction.Y, 0), LegFlags.RightRear)
+                .Transform(new Vector3(_leftFrontOffset * _direction.X, _leftFrontOffset * _direction.Y, 0), LegFlags.LeftFront)
+                .Transform(new Vector3(_leftRearOffset * _direction.X, _leftRearOffset * _direction.Y, 0), LegFlags.LeftRear)
+                .Transform(new Vector3(0, 0, (float)Math.Abs(legLiftSin) * 3), currentLeg);
             try
             {
                 Driver.MoveLegsSynced(_lastWrittenPosition);

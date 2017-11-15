@@ -136,12 +136,12 @@ namespace Quadruped
         public LegPositions ReadCurrentLegPositions()
         {
             return new LegPositions
-            {
-                LeftFront = GetLeftFrontLegPosition(),
-                RightFront = GetRightFrontLegPosition(),
-                LeftRear = GetLeftRearLegPosition(),
-                RightRear = GetRightRearLegPosition()
-            };
+            (
+                GetLeftFrontLegPosition(),
+                GetRightFrontLegPosition(),
+                GetLeftRearLegPosition(),
+                GetRightRearLegPosition()
+            );
         }
 
         public Vector3 GetLeftFrontLegGoal() => GetLegGoalPosition(LeftFront);

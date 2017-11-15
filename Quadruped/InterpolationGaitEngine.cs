@@ -19,7 +19,7 @@ namespace Quadruped
         private readonly ManualResetEventSlim _moveQueueSingal = new ManualResetEventSlim();
 
         private LegPositions _nextMove;
-        private readonly LegPositions _lastWrittenPosition;
+        private LegPositions _lastWrittenPosition;
 
         public bool IsComamndQueueEmpty => _moveQueueSingal.IsSet && _moves.IsEmpty;
 
@@ -54,6 +54,7 @@ namespace Quadruped
             }
             try
             {
+                _lastWrittenPosition = _lastWrittenPosition.MoveTowards(_nextMove, NextStepLength);
                 Driver.MoveLegsSynced(_lastWrittenPosition);
             }
             catch (IOException e)
@@ -63,12 +64,11 @@ namespace Quadruped
                 Console.ResetColor();
                 throw;
             }
-            _lastWrittenPosition.MoveTowards(_nextMove, NextStepLength);
         }
 
         public void AddStep(LegPositions nextStep)
         {
-            _moves.Enqueue(nextStep.Copy());
+            _moves.Enqueue(nextStep);
             _moveQueueSingal.Reset();
         }
 

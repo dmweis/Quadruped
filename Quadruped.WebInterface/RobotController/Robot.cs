@@ -70,10 +70,10 @@ namespace Quadruped.WebInterface.RobotController
         {
             RelaxedStance = transform;
             RelaxedStanceRotation = rotation;
-            var newRelaxed = _interpolationController.OriginalRelaxedStance;
-            newRelaxed.Transform(transform);
-            newRelaxed.RotateCenter(rotation);
-            _interpolationController.RelaxedStance = newRelaxed;
+            _interpolationController.RelaxedStance = _interpolationController
+                .OriginalRelaxedStance
+                .Transform(transform)
+                .RotateCenter(rotation);
             _interpolationController.EnqueueMoveToRelaxed();
         }
 

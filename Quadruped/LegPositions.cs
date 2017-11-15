@@ -4,18 +4,10 @@ namespace Quadruped
 {
     public class LegPositions
     {
-        public Vector3 LeftFront { get; set; }
-        public Vector3 RightFront { get; set; }
-        public Vector3 LeftRear { get; set; }
-        public Vector3 RightRear { get; set; }
-
-        public LegPositions(LegPositions legPositions)
-        {
-            LeftFront = legPositions.LeftFront;
-            RightFront = legPositions.RightFront;
-            LeftRear = legPositions.LeftRear;
-            RightRear = legPositions.RightRear;
-        }
+        public Vector3 LeftFront { get; }
+        public Vector3 RightFront { get; }
+        public Vector3 LeftRear { get; }
+        public Vector3 RightRear { get; }
 
         public LegPositions(Vector3 leftFront, Vector3 rightFront, Vector3 leftRear, Vector3 rightRear)
         {
@@ -27,50 +19,60 @@ namespace Quadruped
 
         public LegPositions()
         {
-            LeftFront = new Vector3();
-            RightFront = new Vector3();
-            LeftRear = new Vector3();
-            RightRear = new Vector3();
+            LeftFront = Vector3.Zero;
+            RightFront = Vector3.Zero;
+            LeftRear = Vector3.Zero;
+            RightRear = Vector3.Zero;
         }
 
-        public void Transform(Vector3 transformVector, LegFlags legs = LegFlags.All)
+        public LegPositions Transform(Vector3 transformVector, LegFlags legs = LegFlags.All)
         {
+            Vector3 newLeftFront = LeftFront;
+            Vector3 newRightFront = RightFront;
+            Vector3 newLeftRear = LeftRear;
+            Vector3 newRightRear = RightRear;
             if ((legs & LegFlags.LeftFront) != 0)
             {
-                LeftFront += transformVector;
+                newLeftFront = LeftFront + transformVector;
             }
             if ((legs & LegFlags.RightFront) != 0)
             {
-                RightFront += transformVector;
+                newRightFront = RightFront + transformVector;
             }
             if ((legs & LegFlags.LeftRear) != 0)
             {
-                LeftRear += transformVector;
+                newLeftRear = LeftRear + transformVector;
             }
             if ((legs & LegFlags.RightRear) != 0)
             {
-                RightRear += transformVector;
+                newRightRear = RightRear + transformVector;
             }
+            return new LegPositions(newLeftFront, newRightFront, newLeftRear, newRightRear);
         }
 
-        public void Rotate(Angle angle, LegFlags legs = LegFlags.All)
+        public LegPositions Rotate(Angle angle, LegFlags legs = LegFlags.All)
         {
+            Vector3 newLeftFront = LeftFront;
+            Vector3 newRightFront = RightFront;
+            Vector3 newLeftRear = LeftRear;
+            Vector3 newRightRear = RightRear;
             if ((legs & LegFlags.LeftFront) != 0)
             {
-                LeftFront  = new Vector3(LeftFront.ToDirectionVector2().Rotate(angle), LeftFront.Z);
+                newLeftFront = new Vector3(LeftFront.ToDirectionVector2().Rotate(angle), LeftFront.Z);
             }
             if ((legs & LegFlags.RightFront) != 0)
             {
-                RightFront = new Vector3(RightFront.ToDirectionVector2().Rotate(angle), RightFront.Z);
+                newRightFront = new Vector3(RightFront.ToDirectionVector2().Rotate(angle), RightFront.Z);
             }
             if ((legs & LegFlags.LeftRear) != 0)
             {
-                LeftRear = new Vector3(LeftRear.ToDirectionVector2().Rotate(angle), LeftRear.Z);
+                newLeftRear = new Vector3(LeftRear.ToDirectionVector2().Rotate(angle), LeftRear.Z);
             }
             if ((legs & LegFlags.RightRear) != 0)
             {
-                RightRear = new Vector3(RightRear.ToDirectionVector2().Rotate(angle), RightRear.Z);
+                newRightRear = new Vector3(RightRear.ToDirectionVector2().Rotate(angle), RightRear.Z);
             }
+            return new LegPositions(newLeftFront, newRightFront, newLeftRear, newRightRear);
         }
 
         /// <summary>
@@ -78,37 +80,43 @@ namespace Quadruped
         /// </summary>
         /// <param name="rotation"></param>
         /// <param name="legs"></param>
-        public void RotateCenter(Rotation rotation, LegFlags legs = LegFlags.All)
+        public LegPositions RotateCenter(Rotation rotation, LegFlags legs = LegFlags.All)
         {
-            RotateCenter(Quaternion.CreateFromYawPitchRoll(rotation.Yaw.DegreeToRad(), rotation.Pitch.DegreeToRad(), rotation.Roll.DegreeToRad()), legs);
+            return RotateCenter(Quaternion.CreateFromYawPitchRoll(rotation.Yaw.DegreeToRad(), rotation.Pitch.DegreeToRad(), rotation.Roll.DegreeToRad()), legs);
         }
 
-        public void RotateCenter(Quaternion rotation, LegFlags legs = LegFlags.All)
+        public LegPositions RotateCenter(Quaternion rotation, LegFlags legs = LegFlags.All)
         {
+            Vector3 newLeftFront = LeftFront;
+            Vector3 newRightFront = RightFront;
+            Vector3 newLeftRear = LeftRear;
+            Vector3 newRightRear = RightRear;
             if ((legs & LegFlags.LeftFront) != 0)
             {
-                LeftFront = Vector3.Transform(LeftFront, rotation);
+                newLeftFront = Vector3.Transform(LeftFront, rotation);
             }
             if ((legs & LegFlags.RightFront) != 0)
             {
-                RightFront = Vector3.Transform(RightFront, rotation);
+                newRightFront = Vector3.Transform(RightFront, rotation);
             }
             if ((legs & LegFlags.LeftRear) != 0)
             {
-                LeftRear = Vector3.Transform(LeftRear, rotation);
+                newLeftRear = Vector3.Transform(LeftRear, rotation);
             }
             if ((legs & LegFlags.RightRear) != 0)
             {
-                RightRear = Vector3.Transform(RightRear, rotation);
+                newRightRear = Vector3.Transform(RightRear, rotation);
             }
+            return new LegPositions(newLeftFront, newRightFront, newLeftRear, newRightRear);
         }
 
-        public void MoveTowards(LegPositions target, float distance)
+        public LegPositions MoveTowards(LegPositions target, float distance)
         {
-            LeftFront = LeftFront.MoveTowards(target.LeftFront, distance);
-            RightFront = RightFront.MoveTowards(target.RightFront, distance);
-            LeftRear = LeftRear.MoveTowards(target.LeftRear, distance);
-            RightRear = RightRear.MoveTowards(target.RightRear, distance);
+            var newLeftFront = LeftFront.MoveTowards(target.LeftFront, distance);
+            var newRightFront = RightFront.MoveTowards(target.RightFront, distance);
+            var newLeftRear = LeftRear.MoveTowards(target.LeftRear, distance);
+            var newRightRear = RightRear.MoveTowards(target.RightRear, distance);
+            return new LegPositions(newLeftFront, newRightFront, newLeftRear, newRightRear);
         }
 
         public bool MoveFinished(LegPositions other)
@@ -117,11 +125,6 @@ namespace Quadruped
                    RightFront == other.RightFront &&
                    LeftRear == other.LeftRear &&
                    RightRear == other.RightRear;
-        }
-
-        public LegPositions Copy()
-        {
-            return new LegPositions(this);
         }
 
         public override string ToString()

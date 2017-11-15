@@ -15,7 +15,7 @@ namespace Quadruped.Tests
             // Arrange
             LegPositions positions = new LegPositions(Vector3.UnitX, Vector3.UnitX, Vector3.UnitX, Vector3.UnitX);
             // Act
-            positions.Rotate(new Angle(90), LegFlags.RfLrCross);
+            positions = positions.Rotate(new Angle(90), LegFlags.RfLrCross);
             // Assert
             positions.RightFront.X.Should().BeApproximately(0, FloatComparasionPrecision);
             positions.RightFront.Y.Should().BeApproximately(1, FloatComparasionPrecision);
@@ -36,7 +36,26 @@ namespace Quadruped.Tests
             // Arrange
             LegPositions positions = new LegPositions(Vector3.UnitX, Vector3.UnitX, Vector3.UnitX, Vector3.UnitX);
             // Act
-            positions.Rotate(new Angle(0), LegFlags.RfLrCross);
+            positions = positions.Rotate(new Angle(0), LegFlags.RfLrCross);
+            // Assert
+            positions.RightFront.ShouldBeEquivalentTo(Vector3.UnitX);
+
+            positions.LeftRear.ShouldBeEquivalentTo(Vector3.UnitX);
+
+            positions.RightRear.ShouldBeEquivalentTo(Vector3.UnitX);
+
+            positions.LeftFront.ShouldBeEquivalentTo(Vector3.UnitX);
+        }
+
+        [TestMethod()]
+        public void LegPositionsShouldBeImmutable()
+        {
+            // Arrange
+            LegPositions positions = new LegPositions(Vector3.UnitX, Vector3.UnitX, Vector3.UnitX, Vector3.UnitX);
+            // Act
+            positions.Rotate(new Angle(90));
+            positions.Transform(new Vector3(10, 10, 10));
+            positions.RotateCenter(Quaternion.CreateFromYawPitchRoll(30, 60, 70));
             // Assert
             positions.RightFront.ShouldBeEquivalentTo(Vector3.UnitX);
 
