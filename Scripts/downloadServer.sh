@@ -14,4 +14,3 @@ echo removing archive
 rm $FILE_NAME
 chmod +x run_linux.sh
 echo script run_linux.sh will run the program
-
