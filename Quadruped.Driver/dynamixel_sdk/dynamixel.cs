@@ -31,6 +31,7 @@
 /* Author: Ryu Woon Jung (Leon) */
 
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Quadruped.Driver.dynamixel_sdk
@@ -38,6 +39,39 @@ namespace Quadruped.Driver.dynamixel_sdk
     class dynamixel
     {
         const string dll_path = "dxl_lib.ds";
+
+        static dynamixel()
+        {
+            var assemblyPath = AppDomain.CurrentDomain.BaseDirectory;
+            var architecture = RuntimeInformation.OSArchitecture;
+            if (architecture == Architecture.Arm || architecture == Architecture.Arm64)
+            {
+                const string newFileName = "libdxl_sbc_c.so";
+                File.Copy(Path.Combine(assemblyPath, newFileName), Path.Combine(assemblyPath, dll_path), true);
+            }
+            else if (architecture == Architecture.X64)
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    const string newFileName = "dxl_x64_c.dll";
+                    File.Copy(Path.Combine(assemblyPath, newFileName), Path.Combine(assemblyPath, dll_path), true);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    const string newFileName = "libdxl_x64_c.so";
+                    File.Copy(Path.Combine(assemblyPath, newFileName), Path.Combine(assemblyPath, dll_path), true);
+                }
+                else
+                {
+                    throw new NotSupportedException("This OS is not supported!");
+                }
+            }
+            else
+            {
+                throw new NotSupportedException("This architecture is not supported!");
+            }
+        }
+
 
         #region PortHandler
         [DllImport(dll_path)]
