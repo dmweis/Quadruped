@@ -42,8 +42,8 @@ namespace Quadruped.WebInterface.RTC
             {
                 return Vector2.Zero;
             }
-            float x = (float)Math.Cos(Angle);
-            float y = (float)Math.Sin(Angle);
+            float y = -(float)Math.Cos(Angle);
+            float x = (float)Math.Sin(Angle);
             var vector = new Vector2
             {
                 X = x,
