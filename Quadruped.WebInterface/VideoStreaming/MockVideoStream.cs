@@ -24,5 +24,11 @@ namespace Quadruped.WebInterface.VideoStreaming
         {
             return RestartAsync();
         }
+
+        public Task StopStream()
+        {
+            StreamRunning = false;
+            return Task.CompletedTask;
+        }
     }
 }

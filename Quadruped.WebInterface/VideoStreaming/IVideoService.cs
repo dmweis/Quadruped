@@ -8,5 +8,6 @@ namespace Quadruped.WebInterface.VideoStreaming
         StreamerConfig StreamerConfiguration { get; set; }
         Task RestartAsync();
         Task EnsureStreamOn();
+        Task StopStream();
     }
 }

@@ -32,6 +32,11 @@ namespace Quadruped.WebInterface.VideoStreaming
             }
         }
 
+        public async Task StopStream()
+        {
+            await Task.Run((Action)KillStream);
+        }
+
         public async Task RestartAsync()
         {
             await Task.Run(() =>
@@ -63,7 +68,7 @@ namespace Quadruped.WebInterface.VideoStreaming
             _logger.LogInformation("Video server up and running");
         }
 
-        public void KillStream()
+        private void KillStream()
         {
             _logger.LogInformation("Shutting down streaming server");
             var killProcessStartInfo = new ProcessStartInfo
