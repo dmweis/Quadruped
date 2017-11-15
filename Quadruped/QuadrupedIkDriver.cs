@@ -48,28 +48,6 @@ namespace Quadruped
             }
         }
 
-        [Obsolete("This method is deprecated and will be removed at some point")]
-        public void StandUpfromGround()
-        {
-            float average = (GetLeftFrontLegPosition().Z +
-                GetRightFrontLegPosition().Z +
-                GetLeftRearLegPosition().Z +
-                GetRightRearLegPosition().Z) / 4;
-            if (average > -9)
-            {
-                MoveLeftFrontLeg(new Vector3(-15, 15, 0));
-                MoveRightFrontLeg(new Vector3(15, 15, 0));
-                MoveLeftRearLeg(new Vector3(-15, -15, 0));
-                MoveRightRearLeg(new Vector3(15, -15, 0));
-                Thread.Sleep(1000);
-            }
-            MoveLeftFrontLeg(new Vector3(-15, 15, -13));
-            MoveRightFrontLeg(new Vector3(15, 15, -13));
-            MoveLeftRearLeg(new Vector3(-15, -15, -13));
-            MoveRightRearLeg(new Vector3(15, -15, -13));
-            Thread.Sleep(500);
-        }
-
         public void MoveRelativeCenterMass(Vector3 transform)
         {
             Vector3 leftFrontPosition = GetLeftFrontLegGoal();
