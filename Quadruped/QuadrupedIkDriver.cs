@@ -62,10 +62,10 @@ namespace Quadruped
 
         public void MoveAbsoluteCenterMass(Vector3 transform, float legDistance, float height)
         {
-            MoveLeftFrontLeg(new Vector3(-legDistance, legDistance, height) - transform);
-            MoveRightFrontLeg(new Vector3(legDistance, legDistance, height) - transform);
-            MoveLeftRearLeg(new Vector3(-legDistance, -legDistance, height) - transform);
-            MoveRightRearLeg(new Vector3(legDistance, -legDistance, height) - transform);
+            MoveLeftFrontLeg(new Vector3(legDistance, legDistance, height) - transform);
+            MoveRightFrontLeg(new Vector3(legDistance, -legDistance, height) - transform);
+            MoveLeftRearLeg(new Vector3(-legDistance, legDistance, height) - transform);
+            MoveRightRearLeg(new Vector3(-legDistance, -legDistance, height) - transform);
         }
 
         public void DisableMotors()
@@ -140,10 +140,10 @@ namespace Quadruped
 
         public void MoveToHeight(float height, float distance)
         {
-            MoveLeg(new Vector3(-distance, distance, height), LeftFront);
-            MoveLeg(new Vector3(distance, distance, height), RightFront);
-            MoveLeg(new Vector3(-distance, -distance, height), LeftRear);
-            MoveLeg(new Vector3(distance, -distance, height), RightRear);
+            MoveLeg(new Vector3(distance, distance, height), LeftFront);
+            MoveLeg(new Vector3(distance, -distance, height), RightFront);
+            MoveLeg(new Vector3(-distance, distance, height), LeftRear);
+            MoveLeg(new Vector3(-distance, -distance, height), RightRear);
         }
 
         public void Dispose()

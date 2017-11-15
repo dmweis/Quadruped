@@ -22,10 +22,10 @@ namespace Quadruped
 
         public LegPositions OriginalRelaxedStance => new LegPositions
         (
-            new Vector3(-LegDistanceLateral, LegDistanceLongitudinal, LegHeight),
             new Vector3(LegDistanceLateral, LegDistanceLongitudinal, LegHeight),
-            new Vector3(-LegDistanceLateral, -LegDistanceLongitudinal, LegHeight),
-            new Vector3(LegDistanceLateral, -LegDistanceLongitudinal, LegHeight)
+            new Vector3(LegDistanceLateral, -LegDistanceLongitudinal, LegHeight),
+            new Vector3(-LegDistanceLateral, LegDistanceLongitudinal, LegHeight),
+            new Vector3(-LegDistanceLateral, -LegDistanceLongitudinal, LegHeight)
         );
 
         public LegPositions RelaxedStance { get; set; }
@@ -47,13 +47,7 @@ namespace Quadruped
                              currentPositions.RightRear.Z) / 4;
             if (average > LegHeight + 2)
             {
-                _engine.AddStep(new LegPositions
-                (
-                    new Vector3(-LegDistanceLateral, LegDistanceLongitudinal, 0),
-                    new Vector3(LegDistanceLateral, LegDistanceLongitudinal, 0),
-                    new Vector3(-LegDistanceLateral, -LegDistanceLongitudinal, 0),
-                    new Vector3(LegDistanceLateral, -LegDistanceLongitudinal, 0)
-                ));
+                _engine.AddStep(RelaxedStance.Transform(new Vector3(0, 0, -LegHeight)));
             }
 
             _engine.AddStep(RelaxedStance);

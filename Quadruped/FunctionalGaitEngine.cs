@@ -25,10 +25,10 @@ namespace Quadruped
 
         private LegPositions RelaxedStance => new LegPositions
         (
-            new Vector3(-LegDistance, LegDistance, LegHeight),
             new Vector3(LegDistance, LegDistance, LegHeight),
-            new Vector3(-LegDistance, -LegDistance, LegHeight),
-            new Vector3(LegDistance, -LegDistance, LegHeight)
+            new Vector3(LegDistance, -LegDistance, LegHeight),
+            new Vector3(-LegDistance, LegDistance, LegHeight),
+            new Vector3(-LegDistance, -LegDistance, LegHeight)
         );
 
 
@@ -42,13 +42,7 @@ namespace Quadruped
                              currentPosition.RightRear.Z) / 4;
             if (average > -9)
             {
-                Driver.MoveLegsSynced(new LegPositions
-                (
-                    new Vector3(-LegDistance, LegDistance, 0),
-                    new Vector3(LegDistance, LegDistance, 0),
-                    new Vector3(-LegDistance, -LegDistance, 0),
-                    new Vector3(LegDistance, -LegDistance, 0)
-                ));
+                Driver.MoveLegsSynced(RelaxedStance.Transform(new Vector3(0, 0, -LegHeight)));
                 Thread.Sleep(1000);
             }
             _lastWrittenPosition = RelaxedStance;
