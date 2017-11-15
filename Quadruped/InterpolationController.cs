@@ -218,24 +218,28 @@ namespace Quadruped
             _engine.AddStep(nextStep);
         }
 
-        public void EnqueueMotion(MoveSet moveSet)
+        public void EnqueueMotion(MotionPlan motionPlan)
         {
-            LegPositions start = null;
-            foreach (var movement in moveSet.Movements)
+            var previousStep = RelaxedStance;
+            foreach (var movement in motionPlan.Movements)
             {
                 if (movement.StargingStance == StartingStanceOptions.Relaxed)
                 {
-                    start = RelaxedStance;
+                    previousStep = RelaxedStance;
                 }
-                if (start == null)
+                foreach (var action in movement.Motions)
                 {
-                    throw new InvalidOperationException("First move can't start with previous step");
+                    switch (action)
+                    {
+                        case RotationAction rotation:
+                            previousStep = previousStep.Rotate(rotation.Rotation, rotation.Legs);
+                            break;
+                        case TransformAction transform:
+                            previousStep = previousStep.Transform((Vector3)transform.Motion, transform.Legs);
+                            break;
+                    }
                 }
-                foreach (var motion in movement.Motions)
-                {
-                    start = start.Transform(motion.Motion, motion.Legs);
-                }
-                _engine.AddStep(start);
+                _engine.AddStep(previousStep);
             }
         }
 

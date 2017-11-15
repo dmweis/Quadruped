@@ -2,8 +2,8 @@
 
 namespace Quadruped.MotionPlanning
 {
-    public class MoveSet
+    public class MotionPlan
     {
-        public List<Movement> Movements { get; set; }
+        public List<MotionStep> Movements { get; set; }
     }
 }

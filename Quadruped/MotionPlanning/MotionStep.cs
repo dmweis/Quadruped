@@ -2,9 +2,9 @@
 
 namespace Quadruped.MotionPlanning
 {
-    public class Movement
+    public class MotionStep
     {
         public StartingStanceOptions StargingStance { get; set; }
-        public List<Transform> Motions { get; set; }
+        public List<MotionPlanAction> Motions { get; set; }
     }
 }

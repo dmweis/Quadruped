@@ -2,9 +2,9 @@
 
 namespace Quadruped.MotionPlanning
 {
-    public class Transform
+    public class TransformAction : MotionPlanAction
     {
-        public Vector3 Motion { get; set; }
+        public Vector3Wrapper Motion { get; set; }
         public LegFlags Legs { get; set; }
     }
 }

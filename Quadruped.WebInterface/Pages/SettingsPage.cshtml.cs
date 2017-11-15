@@ -22,7 +22,7 @@ namespace Quadruped.WebInterface.Pages
         {
             StreamConfiguration = _streamService.StreamerConfiguration;
             var relaxed = _robotController.RelaxedStance;
-            RelaxedStance = new Vector3Class{X = relaxed.X, Y = relaxed.Y, Z = relaxed.Z};
+            RelaxedStance = new Vector3Wrapper{X = relaxed.X, Y = relaxed.Y, Z = relaxed.Z};
             RelaxedStanceRotation = _robotController.RelaxedStanceRotation;
             RobotConfiguration = _robotController.GaitConfiguration;
         }
@@ -30,7 +30,7 @@ namespace Quadruped.WebInterface.Pages
         [BindProperty]
         public StreamerConfig StreamConfiguration { get; set; }
         [BindProperty]
-        public Vector3Class RelaxedStance { get; set; }
+        public Vector3Wrapper RelaxedStance { get; set; }
         [BindProperty]
         public Rotation RelaxedStanceRotation { get; set; }
         [BindProperty]
@@ -52,18 +52,6 @@ namespace Quadruped.WebInterface.Pages
             _robotController.UpdateAboluteRelaxedStance((Vector3)RelaxedStance, RelaxedStanceRotation);
             _robotController.GaitConfiguration = RobotConfiguration;
             return RedirectToPage("/VideoRobot");
-        }
-    }
-
-    public class Vector3Class
-    {
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Z { get; set; }
-
-        public static explicit operator Vector3(Vector3Class original)
-        {
-            return new Vector3(original.X, original.Y, original.Z);
         }
     }
 }
