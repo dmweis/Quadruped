@@ -82,10 +82,10 @@ namespace Quadruped
         /// <param name="legs"></param>
         public LegPositions RotateCenter(Rotation rotation, LegFlags legs = LegFlags.All)
         {
-            return RotateCenter(Quaternion.CreateFromYawPitchRoll(rotation.Yaw.DegreeToRad(), rotation.Pitch.DegreeToRad(), rotation.Roll.DegreeToRad()), legs);
+            return RotateCenter(Quaternion.CreateFromYawPitchRoll(rotation.Pitch.DegreeToRad(), rotation.Roll.DegreeToRad(), rotation.Yaw.DegreeToRad()), legs);
         }
 
-        public LegPositions RotateCenter(Quaternion rotation, LegFlags legs = LegFlags.All)
+        private LegPositions RotateCenter(Quaternion rotation, LegFlags legs = LegFlags.All)
         {
             Vector3 newLeftFront = LeftFront;
             Vector3 newRightFront = RightFront;
