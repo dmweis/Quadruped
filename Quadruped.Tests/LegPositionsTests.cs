@@ -55,7 +55,7 @@ namespace Quadruped.Tests
             // Act
             positions.Rotate(new Angle(90));
             positions.Transform(new Vector3(10, 10, 10));
-            positions.RotateCenter(new Rotation(30, 60, 70));
+            positions.Rotate(new Rotation(30, 60, 70));
             // Assert
             positions.RightFront.ShouldBeEquivalentTo(Vector3.UnitX);
 

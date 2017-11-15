@@ -52,27 +52,7 @@ namespace Quadruped
 
         public LegPositions Rotate(Angle angle, LegFlags legs = LegFlags.All)
         {
-            Vector3 newLeftFront = LeftFront;
-            Vector3 newRightFront = RightFront;
-            Vector3 newLeftRear = LeftRear;
-            Vector3 newRightRear = RightRear;
-            if ((legs & LegFlags.LeftFront) != 0)
-            {
-                newLeftFront = new Vector3(LeftFront.ToDirectionVector2().Rotate(angle), LeftFront.Z);
-            }
-            if ((legs & LegFlags.RightFront) != 0)
-            {
-                newRightFront = new Vector3(RightFront.ToDirectionVector2().Rotate(angle), RightFront.Z);
-            }
-            if ((legs & LegFlags.LeftRear) != 0)
-            {
-                newLeftRear = new Vector3(LeftRear.ToDirectionVector2().Rotate(angle), LeftRear.Z);
-            }
-            if ((legs & LegFlags.RightRear) != 0)
-            {
-                newRightRear = new Vector3(RightRear.ToDirectionVector2().Rotate(angle), RightRear.Z);
-            }
-            return new LegPositions(newLeftFront, newRightFront, newLeftRear, newRightRear);
+            return Rotate(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, ((float)angle).DegreeToRad()), legs);
         }
 
         /// <summary>
@@ -80,12 +60,12 @@ namespace Quadruped
         /// </summary>
         /// <param name="rotation"></param>
         /// <param name="legs"></param>
-        public LegPositions RotateCenter(Rotation rotation, LegFlags legs = LegFlags.All)
+        public LegPositions Rotate(Rotation rotation, LegFlags legs = LegFlags.All)
         {
-            return RotateCenter(Quaternion.CreateFromYawPitchRoll(rotation.Pitch.DegreeToRad(), rotation.Roll.DegreeToRad(), rotation.Yaw.DegreeToRad()), legs);
+            return Rotate(Quaternion.CreateFromYawPitchRoll(rotation.Pitch.DegreeToRad(), rotation.Roll.DegreeToRad(), rotation.Yaw.DegreeToRad()), legs);
         }
 
-        private LegPositions RotateCenter(Quaternion rotation, LegFlags legs = LegFlags.All)
+        private LegPositions Rotate(Quaternion rotation, LegFlags legs = LegFlags.All)
         {
             Vector3 newLeftFront = LeftFront;
             Vector3 newRightFront = RightFront;
