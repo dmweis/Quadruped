@@ -229,14 +229,13 @@ namespace Quadruped
                 }
                 foreach (var action in movement.Motions)
                 {
-                    switch (action)
+                    if (action.Rotation != null)
                     {
-                        case RotationAction rotation:
-                            previousStep = previousStep.Rotate(rotation.Rotation, rotation.Legs);
-                            break;
-                        case TransformAction transform:
-                            previousStep = previousStep.Transform((Vector3)transform.Motion, transform.Legs);
-                            break;
+                        previousStep = previousStep.Transform((Vector3)action.Motion, action.Legs);
+                    }
+                    if (action.Rotation != null)
+                    {
+                        previousStep = previousStep.Rotate(action.Rotation, action.Legs);
                     }
                 }
                 _engine.AddStep(previousStep);
