@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,8 @@ namespace Quadruped.WebInterface.RobotController
 {
     public class Robot : IRobot
     {
+        public event EventHandler<QuadrupedTelemetrics> NewTelemetricsUpdate;
+
         public Vector2 Direction { get; set; }
         public float Rotation { get; set; }
 
@@ -32,6 +35,7 @@ namespace Quadruped.WebInterface.RobotController
         public Robot(InterpolationController interpolationController, IApplicationLifetime applicationLifetime, ILogger<Robot> logger)
         {
             _interpolationController = interpolationController;
+            _interpolationController.NewTelemetricsUpdate += NewTelemetricsUpdate;
             _logger = logger;
             _robotRunnerTask = Task.Run(RobotRunnerLoop);
             applicationLifetime.ApplicationStopped.Register(OnExit);

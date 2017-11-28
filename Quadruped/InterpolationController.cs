@@ -14,6 +14,8 @@ namespace Quadruped
         private const int LegDistanceLongitudinal = 15;
         private const int LegDistanceLateral = 15;
 
+        public event EventHandler<QuadrupedTelemetrics> NewTelemetricsUpdate;
+
         public int Speed
         {
             get => _engine.Speed;
@@ -34,6 +36,7 @@ namespace Quadruped
         {
             RelaxedStance = OriginalRelaxedStance;
             _engine = engine ?? throw new ArgumentNullException(nameof(engine));
+            _engine.NewTelemetricsUpdate += NewTelemetricsUpdate;
             EnqueueInitialStandup();
         }
 
@@ -244,6 +247,7 @@ namespace Quadruped
 
         public void Dispose()
         {
+            _engine.NewTelemetricsUpdate -= NewTelemetricsUpdate;
             _engine.Dispose();
         }
     }

@@ -33,6 +33,7 @@ namespace Quadruped.WebInterface.RTC
             _cameraController = cameraController;
             _logger = logger;
             _applicationLifetime = applicationLifetime;
+            _robot.NewTelemetricsUpdate += (sender, telemetrics) => EmitToAll("telemetrics", telemetrics);
         }
 
         public async Task Invoke(HttpContext context)

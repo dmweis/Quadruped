@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
@@ -77,6 +78,19 @@ namespace Quadruped
                     _driver.SetTorque(servo, false);
                 }
             }
+        }
+
+        public QuadrupedTelemetrics ReadTelemetrics()
+        {
+            List<ServoTelemetrics> servos = new List<ServoTelemetrics>(AllMotorIds.Length);
+            foreach (var motorId in AllMotorIds)
+            {
+                lock (_driver.SyncLock)
+                {
+                    servos.Add(_driver.GetTelemetrics(motorId));
+                }
+            }
+            return new QuadrupedTelemetrics{ServoTelemetrics = servos.OrderBy(servo => servo.Id) };
         }
 
         public void MoveLeftFrontLeg(Vector3 target) => MoveLeg(target, LeftFront);

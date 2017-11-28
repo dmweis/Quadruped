@@ -7,8 +7,6 @@ namespace Quadruped
 {
     public class InterpolationGaitEngine : QuadrupedGaitEngine
     {
-        public int Speed { get; set; } = 30;
-
         private float NextStepLength => Speed * 0.001f * TimeSincelastTick;
 
         private readonly ConcurrentQueue<LegPositions> _moves = new ConcurrentQueue<LegPositions>();
@@ -18,9 +16,16 @@ namespace Quadruped
         /// </summary>
         private readonly ManualResetEventSlim _moveQueueSingal = new ManualResetEventSlim();
 
+
         private LegPositions _nextMove;
         private LegPositions _lastWrittenPosition;
 
+        private int _lastTelemetricsUpdate;
+        private const int TelemetricsUpdateInterval = 2000;
+
+        public event EventHandler<QuadrupedTelemetrics> NewTelemetricsUpdate; 
+
+        public int Speed { get; set; } = 30;
         public bool IsComamndQueueEmpty => _moveQueueSingal.IsSet && _moves.IsEmpty;
 
         public InterpolationGaitEngine(QuadrupedIkDriver driver) : base(driver)
@@ -56,6 +61,13 @@ namespace Quadruped
             {
                 _lastWrittenPosition = _lastWrittenPosition.MoveTowards(_nextMove, NextStepLength);
                 Driver.MoveLegsSynced(_lastWrittenPosition);
+                // if last telemetrics was too long time ago fire
+                var currentTickCount = Environment.TickCount;
+                if (currentTickCount - _lastTelemetricsUpdate > TelemetricsUpdateInterval)
+                {
+                    _lastTelemetricsUpdate = currentTickCount;
+                    NewTelemetricsUpdate?.Invoke(this, Driver.ReadTelemetrics());
+                }
             }
             catch (IOException e)
             {
