@@ -6,6 +6,5 @@ namespace Quadruped.WebInterface.VideoStreaming
     {
         void CenterView();
         void StartMove(Vector2 direction);
-        void StopMove();
     }
 }

@@ -72,9 +72,6 @@ namespace Quadruped.WebInterface.RTC
                         case JoystickType.Camera:
                             switch (message.MessageType)
                             {
-                                case MessageType.Stop:
-                                    _cameraController.StopMove();
-                                    break;
                                 case MessageType.Movement:
                                     _cameraController.StartMove(message.CalculateHeadingVector(deadzone));
                                     break;

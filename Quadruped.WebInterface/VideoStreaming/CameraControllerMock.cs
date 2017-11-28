@@ -13,10 +13,5 @@ namespace Quadruped.WebInterface.VideoStreaming
         {
             
         }
-
-        public void StopMove()
-        {
-            
-        }
     }
 }

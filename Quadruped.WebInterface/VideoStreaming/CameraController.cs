@@ -62,16 +62,5 @@ namespace Quadruped.WebInterface.VideoStreaming
                 }
             }
         }
-
-        public void StopMove()
-        {
-            lock (_driver.SyncLock)
-            {
-                var currentPos = _driver.GetPresentPosition(HorizontalMotorIndex);
-                _driver.SetGoalPosition(HorizontalMotorIndex, currentPos);
-                currentPos = _driver.GetPresentPosition(VerticalMotorIndex);
-                _driver.SetGoalPosition(VerticalMotorIndex, currentPos);
-            }
-        }
     }
 }

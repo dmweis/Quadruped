@@ -11,6 +11,11 @@
     background-color: lightcoral;
 }
 
+.videoImage {
+    width: 100%;
+    height: auto;
+}
+
 @media screen and (orientation:landscape) {
     .moveJoystick {
         float: left;
@@ -20,8 +25,9 @@
 
     .videoSegment {
         width: 40%;
-        position: relative;
-        height: auto;
+        position: absolute;
+        left: 30%;
+        min-height: 40%;
     }
 
     .rotationJoystick {
