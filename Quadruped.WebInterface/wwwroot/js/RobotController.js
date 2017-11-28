@@ -1,11 +1,25 @@
 ﻿var uri = `ws://${document.domain}:${location.port}/ws`;
 var serverSocket = new WebSocket(uri);
 window.onbeforeunload = function () {
+    serverSocket.onclose = function () { };
     serverSocket.close();
 };
 
+const telemtricsVm = new Vue({
+    el: '#telemetrics_display',
+    data: {
+        averageTemperature: 0,
+        averageVoltage: 0
+    }
+});
+
 serverSocket.onmessage = function(event) {
-    console.log(JSON.parse(event.data));
+    const networkMessage = JSON.parse(event.data); 
+    console.log(networkMessage);
+    if (networkMessage.topic === "telemetrics") {
+        telemtricsVm.averageTemperature = networkMessage.message.AverageTemperature;
+        telemtricsVm.averageVoltage = networkMessage.message.AverageVoltage;
+    }
 };
 
 const movementJoystick = createJoystick({
