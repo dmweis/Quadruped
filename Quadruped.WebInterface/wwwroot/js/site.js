@@ -8,25 +8,25 @@
             name: data.name
         },
         mounted: function () {
-            const data = this;
+            const context = this;
             nipplejs.create({ zone: this.$el, color: this.color }).on('added', function (evt, nipple) {
                 nipple.on('move',
                     function (evt, arg) {
-                        data.angle = arg.angle.radian;
-                        data.distance = arg.distance;
+                        context.angle = arg.angle.radian;
+                        context.distance = arg.distance;
                     });
                 nipple.on('start',
                     function () {
                         if (data.startCallback) {
                             data.startCallback();
                         }
-                        data.angle = 0;
-                        data.distance = 0;
+                        context.angle = 0;
+                        context.distance = 0;
                     });
                 nipple.on('end',
                     function () {
-                        data.angle = 0;
-                        data.distance = 0;
+                        context.angle = 0;
+                        context.distance = 0;
                     });
             });
         },
