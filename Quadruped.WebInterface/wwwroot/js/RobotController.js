@@ -4,6 +4,10 @@ window.onbeforeunload = function () {
     serverSocket.close();
 };
 
+serverSocket.onmessage = function(event) {
+    console.log(JSON.parse(event.data));
+};
+
 const movementJoystick = createJoystick({
     elementId: "#move_joystick_zone",
     color: "red",

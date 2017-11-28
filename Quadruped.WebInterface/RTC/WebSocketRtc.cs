@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace Quadruped.WebInterface.RTC
         private readonly ICameraController _cameraController;
         private readonly IApplicationLifetime _applicationLifetime;
         private readonly ILogger _logger;
+        private readonly ConcurrentBag<WebSocket> _clients = new ConcurrentBag<WebSocket>();
 
         public WebSocketRtc(RequestDelegate next, IRobot robot, ICameraController cameraController, IApplicationLifetime applicationLifetime, ILogger<WebSocketRtc> logger)
         {
@@ -53,8 +55,17 @@ namespace Quadruped.WebInterface.RTC
             }
         }
 
+        public async Task EmitToAll<T>(string topic, T message)
+        {
+            foreach (var client in _clients)
+            {
+                await client.SendObjectAsync(new { topic, message }, _applicationLifetime.ApplicationStopped);
+            }
+        }
+
         private async Task WebSocketHandlerTask(WebSocket webSocket, CancellationToken cancellationToken = default(CancellationToken))
         {
+            _clients.Add(webSocket);
             while (webSocket.State == WebSocketState.Open)
             {
                 try
@@ -83,7 +94,6 @@ namespace Quadruped.WebInterface.RTC
                         default:
                             throw new NotImplementedException();
                     }
-
                 }
                 catch (IOException e)
                 {
@@ -100,6 +110,10 @@ namespace Quadruped.WebInterface.RTC
                     _logger.LogError("WebSocket threw exception", e);
                     throw;
                 }
+            }
+            while (!_clients.TryTake(out webSocket))
+            {
+                _logger.LogError("Failed to remove client from bag");
             }
             try
             {
