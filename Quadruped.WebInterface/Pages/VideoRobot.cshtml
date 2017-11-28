@@ -6,6 +6,7 @@
 }
 
 <link rel="stylesheet" href="~/css/VideoRobotController.css" />
+<div id="telemetrics_display" class="telemetricsDisplay"><strong>Temperature</strong> {{ averageTemperature.toFixed(2) }} &deg;C <strong>Voltage</strong> {{ averageVoltage.toFixed(2) }} V</div>
 <div class="videoSegment" id="video_image_container">
     <div>Angle: {{ angle.toFixed(2) }} Distance: {{ distance.toFixed(2) }}</div>
     <img class="videoImage" id="video_image"/>
