@@ -19,6 +19,8 @@
                         });
                     nipple.on('start',
                         function () {
+                            context.angle = 0;
+                            context.distance = 0;
                             context.touchDown = true;
                             if (data.startCallback) {
                                 data.startCallback();
@@ -26,6 +28,8 @@
                         });
                     nipple.on('end',
                         function () {
+                            context.angle = 0;
+                            context.distance = 0;
                             context.touchDown = false;
                             if (data.endCallback) {
                                 data.endCallback();

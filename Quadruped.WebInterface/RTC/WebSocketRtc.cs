@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Numerics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -72,28 +73,7 @@ namespace Quadruped.WebInterface.RTC
                 try
                 {
                     var message = await webSocket.ReceiveObjectAsync<RobotMessage>(cancellationToken);
-                    const float deadzone = 0.3f;
-                    switch (message.JoystickType)
-                    {
-                        case JoystickType.Direction:
-                            _robot.Direction = message.CalculateHeadingVector(deadzone);
-                            break;
-                        case JoystickType.Rotation:
-                            _robot.Rotation = message.GetScaledX(deadzone, 2, 25);
-                            break;
-                        case JoystickType.Camera:
-                            if (message.MessageType == MessageType.Reset)
-                            {
-                                _cameraController.CenterView();
-                            }
-                            else
-                            {
-                                _cameraController.StartMove(message.CalculateHeadingVector(deadzone));
-                            }
-                            break;
-                        //default:
-                        //    throw new NotImplementedException();
-                    }
+                    HandleRobotMessage(message);
                 }
                 catch (IOException e)
                 {
@@ -122,6 +102,41 @@ namespace Quadruped.WebInterface.RTC
             catch (Exception e)
             {
                 _logger.LogError("failed disconnecting from client", e);
+            }
+        }
+
+        private void HandleRobotMessage(RobotMessage message)
+        {
+            const float deadzone = 0.3f;
+            switch (message.JoystickType)
+            {
+                case JoystickType.Direction:
+                    _robot.Direction = message.CalculateHeadingVector(deadzone);
+                    break;
+                case JoystickType.Rotation:
+                    _robot.Rotation = message.GetScaledX(deadzone, 2, 25);
+                    break;
+                case JoystickType.Camera:
+                    if (message.MessageType == MessageType.Reset)
+                    {
+                        _cameraController.CenterView();
+                    }
+                    else
+                    {
+                        _cameraController.StartMove(message.CalculateHeadingVector(deadzone));
+                    }
+                    break;
+                case JoystickType.Translation:
+                    var direction = message.CalculatePinPosition(0.1f);
+                    const float scaleBy = 5;
+                    var newTransform = new Vector3(-direction.X * scaleBy, -direction.Y * scaleBy, 0);
+                    if (!newTransform.Similar(_robot.RelaxedStance, 0.5f))
+                    {
+                        _robot.UpdateAboluteRelaxedStance(newTransform, _robot.RelaxedStanceRotation);
+                    }
+                    break;
+                    //default:
+                    //    throw new NotImplementedException();
             }
         }
     }

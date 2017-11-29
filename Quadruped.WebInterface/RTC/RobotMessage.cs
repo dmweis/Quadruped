@@ -52,6 +52,26 @@ namespace Quadruped.WebInterface.RTC
             return vector;
         }
 
+        public Vector2 CalculatePinPosition(float deadzone = 0.0f)
+        {
+            if (MessageType != MessageType.Movement)
+            {
+                return Vector2.Zero;
+            }
+            if (Math.Abs(Distance / 50) < deadzone)
+            {
+                return Vector2.Zero;
+            }
+            float y = -(float)Math.Cos(Angle) * (Distance / 50);
+            float x = (float)Math.Sin(Angle) * (Distance / 50);
+            var vector = new Vector2
+            {
+                X = x,
+                Y = y
+            };
+            return vector;
+        }
+
         public override string ToString()
         {
             if (MessageType == MessageType.Movement)
