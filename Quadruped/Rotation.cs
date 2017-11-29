@@ -1,4 +1,6 @@
-﻿namespace Quadruped
+﻿using System.Numerics;
+
+namespace Quadruped
 {
     public class Rotation
     {
@@ -16,6 +18,11 @@
         public Rotation()
         {
             
+        }
+
+        public bool Similar(Rotation other, float marginOfError = float.Epsilon)
+        {
+            return Vector3.Distance(new Vector3(Yaw, Pitch, Roll), new Vector3(other.Yaw, other.Pitch, other.Roll)) <= marginOfError;
         }
     }
 }

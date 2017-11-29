@@ -144,8 +144,17 @@ namespace Quadruped.WebInterface.RTC
                         _robot.UpdateAboluteRelaxedStance(newTransform, _robot.RelaxedStanceRotation);
                     }
                     break;
-                    //default:
-                    //    throw new NotImplementedException();
+                case JoystickType.BodyRotation:
+                    direction = message.CalculatePinPosition(0.1f);
+                    const float scaleByRotation = 10;
+                    var newRotation = new Rotation(0, -direction.X * scaleByRotation, direction.Y * scaleByRotation);
+                    if (!newRotation.Similar(_robot.RelaxedStanceRotation, 0.5f))
+                    {
+                        _robot.UpdateAboluteRelaxedStance(_robot.RelaxedStance, newRotation);
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
         }
     }
