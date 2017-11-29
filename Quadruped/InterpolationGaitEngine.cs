@@ -41,6 +41,13 @@ namespace Quadruped
 
         protected override void EngineSpin()
         {
+            // if last telemetrics was too long time ago fire
+            var currentTickCount = Environment.TickCount;
+            if (currentTickCount - _lastTelemetricsUpdate > TelemetricsUpdateInterval)
+            {
+                _lastTelemetricsUpdate = currentTickCount;
+                NewTelemetricsUpdate?.Invoke(this, Driver.ReadTelemetrics());
+            }
             if (_lastWrittenPosition.MoveFinished(_nextMove ?? _lastWrittenPosition))
             {
                 if (_moves.TryDequeue(out var deqeueuedLegPosition))
@@ -61,13 +68,7 @@ namespace Quadruped
             {
                 _lastWrittenPosition = _lastWrittenPosition.MoveTowards(_nextMove, NextStepLength);
                 Driver.MoveLegsSynced(_lastWrittenPosition);
-                // if last telemetrics was too long time ago fire
-                var currentTickCount = Environment.TickCount;
-                if (currentTickCount - _lastTelemetricsUpdate > TelemetricsUpdateInterval)
-                {
-                    _lastTelemetricsUpdate = currentTickCount;
-                    NewTelemetricsUpdate?.Invoke(this, Driver.ReadTelemetrics());
-                }
+                
             }
             catch (IOException e)
             {
@@ -76,6 +77,7 @@ namespace Quadruped
                 Console.ResetColor();
                 throw;
             }
+            
         }
 
         public void AddStep(LegPositions nextStep)

@@ -36,7 +36,7 @@ namespace Quadruped
         {
             RelaxedStance = OriginalRelaxedStance;
             _engine = engine ?? throw new ArgumentNullException(nameof(engine));
-            _engine.NewTelemetricsUpdate += NewTelemetricsUpdate;
+            _engine.NewTelemetricsUpdate += (sender, telemetrics) => NewTelemetricsUpdate?.Invoke(sender, telemetrics);
             EnqueueInitialStandup();
         }
 

@@ -35,7 +35,7 @@ namespace Quadruped.WebInterface.RobotController
         public Robot(InterpolationController interpolationController, IApplicationLifetime applicationLifetime, ILogger<Robot> logger)
         {
             _interpolationController = interpolationController;
-            _interpolationController.NewTelemetricsUpdate += NewTelemetricsUpdate;
+            _interpolationController.NewTelemetricsUpdate += (sender, telemetrics) => NewTelemetricsUpdate?.Invoke(sender, telemetrics);
             _logger = logger;
             _robotRunnerTask = Task.Run(RobotRunnerLoop);
             applicationLifetime.ApplicationStopped.Register(OnExit);
