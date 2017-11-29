@@ -23,7 +23,8 @@ namespace Quadruped
         private int _lastTelemetricsUpdate;
         private const int TelemetricsUpdateInterval = 2000;
 
-        public event EventHandler<QuadrupedTelemetrics> NewTelemetricsUpdate; 
+        public event EventHandler<QuadrupedTelemetrics> NewTelemetricsUpdate;
+        public event EventHandler<Exception> GaitEngineError;
 
         public int Speed { get; set; } = 30;
         public bool IsComamndQueueEmpty => _moveQueueSingal.IsSet && _moves.IsEmpty;
@@ -72,10 +73,7 @@ namespace Quadruped
             }
             catch (IOException e)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(e);
-                Console.ResetColor();
-                throw;
+                GaitEngineError?.Invoke(this, e);
             }
             
         }

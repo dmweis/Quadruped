@@ -15,6 +15,7 @@ namespace Quadruped
         private const int LegDistanceLateral = 15;
 
         public event EventHandler<QuadrupedTelemetrics> NewTelemetricsUpdate;
+        public event EventHandler<Exception> GaitEngineError;
 
         public int Speed
         {
@@ -37,7 +38,13 @@ namespace Quadruped
             RelaxedStance = OriginalRelaxedStance;
             _engine = engine ?? throw new ArgumentNullException(nameof(engine));
             _engine.NewTelemetricsUpdate += (sender, telemetrics) => NewTelemetricsUpdate?.Invoke(sender, telemetrics);
+            _engine.GaitEngineError += OnGaitEngineError;
             EnqueueInitialStandup();
+        }
+
+        private void OnGaitEngineError(object sender, Exception exception)
+        {
+            GaitEngineError?.Invoke(sender, exception);
         }
 
         public void EnqueueInitialStandup()

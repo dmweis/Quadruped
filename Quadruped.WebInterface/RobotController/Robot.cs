@@ -36,9 +36,15 @@ namespace Quadruped.WebInterface.RobotController
         {
             _interpolationController = interpolationController;
             _interpolationController.NewTelemetricsUpdate += (sender, telemetrics) => NewTelemetricsUpdate?.Invoke(sender, telemetrics);
+            _interpolationController.GaitEngineError += OnGaitEngineError;
             _logger = logger;
             _robotRunnerTask = Task.Run(RobotRunnerLoop);
             applicationLifetime.ApplicationStopped.Register(OnExit);
+        }
+
+        private void OnGaitEngineError(object o, Exception exception)
+        {
+            _logger.LogCritical("Gait engine expirienced critical error");
         }
 
         public async Task DisableMotors()
