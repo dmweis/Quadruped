@@ -71,7 +71,9 @@ namespace Quadruped.WebInterface.RTC
 
     public enum MessageType
     {
-        Movement,
-        Reset
+        Movement = 0,
+        Stop = 1,
+        Start = 2,
+        Reset = 4
     }
 }

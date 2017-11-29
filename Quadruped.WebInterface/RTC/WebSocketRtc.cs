@@ -82,14 +82,13 @@ namespace Quadruped.WebInterface.RTC
                             _robot.Rotation = message.GetScaledX(deadzone, 2, 25);
                             break;
                         case JoystickType.Camera:
-                            switch (message.MessageType)
+                            if (message.MessageType == MessageType.Reset)
                             {
-                                case MessageType.Movement:
-                                    _cameraController.StartMove(message.CalculateHeadingVector(deadzone));
-                                    break;
-                                case MessageType.Reset:
-                                    _cameraController.CenterView();
-                                    break;
+                                _cameraController.CenterView();
+                            }
+                            else
+                            {
+                                _cameraController.StartMove(message.CalculateHeadingVector(deadzone));
                             }
                             break;
                         default:

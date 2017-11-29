@@ -9,7 +9,7 @@ const cameraJoystick = createJoystick({
     color: "red",
     name: "camera",
     socket: serverSocket,
-    startCallback: function () {
+    endCallback: function () {
         if (Date.now() - lastStopClick < clickTimeout) {
             const json = JSON.stringify(
                 { joystickType: 'camera', MessageType: 'reset' });

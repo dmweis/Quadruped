@@ -5,7 +5,8 @@
             angle: 0,
             distance: 0,
             color: data.color,
-            name: data.name
+            name: data.name,
+            touchDown: false
         },
         mounted: function () {
             const context = this;
@@ -18,18 +19,27 @@
                         });
                     nipple.on('start',
                         function () {
+                            context.touchDown = true;
                             if (data.startCallback) {
                                 data.startCallback();
                             }
-                            context.angle = 0;
-                            context.distance = 0;
                         });
                     nipple.on('end',
                         function () {
-                            context.angle = 0;
-                            context.distance = 0;
+                            context.touchDown = false;
+                            if (data.endCallback) {
+                                data.endCallback();
+                            }
                         });
                 });
+        },
+        watch: {
+            touchDown: function() {
+                data.socket.send(JSON.stringify({
+                    joystickType: this.name,
+                    MessageType: this.touchDown ? 'start' : 'stop'
+                }));
+            }
         }
     });
     vm.$watch(function () {
