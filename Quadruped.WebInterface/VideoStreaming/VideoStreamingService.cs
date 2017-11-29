@@ -20,7 +20,7 @@ namespace Quadruped.WebInterface.VideoStreaming
 
         public VideoStreamingService(IApplicationLifetime applicationLifetime, ILogger<VideoStreamingService> logger, IOptions<StreamerConfig> config)
         {
-            applicationLifetime.ApplicationStopping.Register(KillStream);
+            applicationLifetime.ApplicationStopping.Register(StopStream().Wait);
             _logger = logger;
             StreamerConfiguration = config.Value;
         }
