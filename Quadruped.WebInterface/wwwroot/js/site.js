@@ -55,3 +55,13 @@
         });
     return vm;
 }
+
+function createServerConnection() {
+    const uri = `ws://${document.domain}:${location.port}/ws`;
+    var serverSocket = new WebSocket(uri);
+    window.onbeforeunload = function () {
+        serverSocket.onclose = function () { };
+        serverSocket.close();
+    };
+    return serverSocket;
+}

@@ -1,9 +1,4 @@
-﻿var uri = `ws://${document.domain}:${location.port}/ws`;
-var serverSocket = new WebSocket(uri);
-window.onbeforeunload = function () {
-    serverSocket.onclose = function () { };
-    serverSocket.close();
-};
+﻿var serverSocket = createServerConnection();
 
 const telemtricsVm = new Vue({
     el: '#telemetrics_display',
