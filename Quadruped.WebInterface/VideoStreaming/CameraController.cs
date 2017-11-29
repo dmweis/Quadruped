@@ -33,11 +33,11 @@ namespace Quadruped.WebInterface.VideoStreaming
             {
                 _driver.SetMovingSpeed(HorizontalMotorIndex, 30);
                 _driver.SetMovingSpeed(VerticalMotorIndex, 20);
-                if (direction.X > deadzone)
+                if (-direction.Y > deadzone)
                 {
                     _driver.SetGoalPositionInDegrees(HorizontalMotorIndex, 0);
                 }
-                else if (direction.X < -deadzone)
+                else if (-direction.Y < -deadzone)
                 {
                     _driver.SetGoalPositionInDegrees(HorizontalMotorIndex, 300);
                 }
@@ -47,11 +47,11 @@ namespace Quadruped.WebInterface.VideoStreaming
                     _driver.SetGoalPosition(HorizontalMotorIndex, currentPos);
                 }
 
-                if (direction.Y > deadzone)
+                if (direction.X > deadzone)
                 {
                     _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 270);
                 }
-                else if (direction.Y < -deadzone)
+                else if (direction.X < -deadzone)
                 {
                     _driver.SetGoalPositionInDegrees(VerticalMotorIndex, 30);
                 }
