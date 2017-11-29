@@ -108,7 +108,7 @@ namespace Quadruped.WebInterface.RTC
                 catch (Exception e)
                 {
                     _logger.LogError("WebSocket threw exception", e);
-                    throw;
+                    break;
                 }
             }
             while (!_clients.TryTake(out webSocket))
@@ -122,7 +122,6 @@ namespace Quadruped.WebInterface.RTC
             catch (Exception e)
             {
                 _logger.LogError("failed disconnecting from client", e);
-                throw;
             }
         }
     }
