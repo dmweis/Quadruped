@@ -91,8 +91,8 @@ namespace Quadruped.WebInterface.RTC
                                 _cameraController.StartMove(message.CalculateHeadingVector(deadzone));
                             }
                             break;
-                        default:
-                            throw new NotImplementedException();
+                        //default:
+                        //    throw new NotImplementedException();
                     }
                 }
                 catch (IOException e)

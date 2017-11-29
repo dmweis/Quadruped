@@ -66,7 +66,10 @@ namespace Quadruped.WebInterface.RTC
     {
         Direction,
         Rotation,
-        Camera
+        Camera,
+        Translation,
+        Height,
+        BodyRotation
     }
 
     public enum MessageType

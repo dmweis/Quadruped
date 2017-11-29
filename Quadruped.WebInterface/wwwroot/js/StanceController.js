@@ -8,24 +8,31 @@ const telemtricsVm = new Vue({
     }
 });
 
-serverSocket.onmessage = function(event) {
-    const networkMessage = JSON.parse(event.data); 
+serverSocket.onmessage = function (event) {
+    const networkMessage = JSON.parse(event.data);
     if (networkMessage.topic === "telemetrics") {
         telemtricsVm.averageTemperature = networkMessage.message.AverageTemperature;
         telemtricsVm.averageVoltage = networkMessage.message.AverageVoltage;
     }
 };
 
-const movementJoystick = createJoystick({
-    elementId: "#move_joystick_zone",
+const translationJoystick = createJoystick({
+    elementId: "#translation_joystick_zone",
     color: "red",
-    name: "direction",
+    name: "translation",
     socket: serverSocket
 });
 
-const rotationJoystick = createJoystick({
+const heightJoystick = createJoystick({
+    elementId: "#height_joystick_zone",
+    color: "navy",
+    name: "height",
+    socket: serverSocket
+});
+
+const bodyRotationJoystick = createJoystick({
     elementId: "#rotate_joystick_zone",
     color: "navy",
-    name: "rotation",
+    name: "bodyRotation",
     socket: serverSocket
 });
