@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
@@ -26,27 +27,48 @@ namespace Quadruped.WebInterface.VideoStreaming
 
         public async Task EnsureStreamOn()
         {
-            if (!StreamRunning)
+            if (IsCorrectPlatform())
             {
-                await Task.Run((Action)StartStream);
+                if (!StreamRunning)
+                {
+                    await Task.Run((Action)StartStream);
+                }
+            }
+            else
+            {
+                _logger.LogError("Incorrect platform for video streamer");
             }
         }
 
         public async Task StopStream()
         {
-            await Task.Run((Action)KillStream);
+            if (IsCorrectPlatform())
+            {
+                await Task.Run((Action)KillStream);
+            }
+            else
+            {
+                _logger.LogError("Incorrect platform for video streamer");
+            }
         }
 
         public async Task RestartAsync()
         {
-            await Task.Run(() =>
+            if (IsCorrectPlatform())
             {
-                if (StreamRunning)
+                await Task.Run(() =>
                 {
-                    KillStream();
-                }
-                StartStream();
-            });
+                    if (StreamRunning)
+                    {
+                        KillStream();
+                    }
+                    StartStream();
+                });
+            }
+            else
+            {
+                _logger.LogError("Incorrect platform for video streamer");
+            }
         }
 
         private void StartStream()
@@ -88,6 +110,16 @@ namespace Quadruped.WebInterface.VideoStreaming
             _streamerProcess.Dispose();
             StreamRunning = false;
             _logger.LogInformation("Streaming shut down");
+        }
+
+        private bool IsCorrectPlatform()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                var architecture = RuntimeInformation.OSArchitecture;
+                return architecture == Architecture.Arm || architecture == Architecture.Arm64;
+            }
+            return false;
         }
     }
 }
