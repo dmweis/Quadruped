@@ -8,11 +8,14 @@ const telemtricsVm = new Vue({
     }
 });
 
-serverSocket.onmessage = function(event) {
-    const networkMessage = JSON.parse(event.data); 
+serverSocket.onmessage = function (event) {
+    const networkMessage = JSON.parse(event.data);
     if (networkMessage.topic === "telemetrics") {
         telemtricsVm.averageTemperature = networkMessage.message.AverageTemperature;
         telemtricsVm.averageVoltage = networkMessage.message.AverageVoltage;
+    }
+    else if (networkMessage.topic === "IMU") {
+        console.log(networkMessage.message.Gyroscopic);
     }
 };
 

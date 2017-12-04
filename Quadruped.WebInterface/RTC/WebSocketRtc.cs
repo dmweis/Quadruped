@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Quadruped.WebInterface.IMU;
 using Quadruped.WebInterface.RobotController;
 using Quadruped.WebInterface.VideoStreaming;
 
@@ -27,7 +28,7 @@ namespace Quadruped.WebInterface.RTC
         private readonly ILogger _logger;
         private readonly ConcurrentBag<WebSocket> _clients = new ConcurrentBag<WebSocket>();
 
-        public WebSocketRtc(RequestDelegate next, IRobot robot, ICameraController cameraController, IApplicationLifetime applicationLifetime, ILogger<WebSocketRtc> logger)
+        public WebSocketRtc(RequestDelegate next, IRobot robot, IImuService imuService, ICameraController cameraController, IApplicationLifetime applicationLifetime, ILogger<WebSocketRtc> logger)
         {
             _next = next;
             _robot = robot;
@@ -35,6 +36,7 @@ namespace Quadruped.WebInterface.RTC
             _logger = logger;
             _applicationLifetime = applicationLifetime;
             _robot.NewTelemetricsUpdate += (sender, telemetrics) => EmitToAll("telemetrics", telemetrics).ConfigureAwait(false);
+            imuService.NewImuData += (sender, data) => EmitToAll("IMU", data).ConfigureAwait(false);
         }
 
         public async Task Invoke(HttpContext context)

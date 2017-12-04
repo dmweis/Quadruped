@@ -12,5 +12,10 @@ namespace Quadruped
         {
             return new Vector3(original.X, original.Y, original.Z);
         }
+
+        public override string ToString()
+        {
+            return ((Vector3) this).ToString();
+        }
     }
 }

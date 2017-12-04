@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Quadruped.Driver;
+using Quadruped.WebInterface.IMU;
 using Quadruped.WebInterface.RobotController;
 using Quadruped.WebInterface.RTC;
 using Quadruped.WebInterface.VideoStreaming;
@@ -49,6 +50,8 @@ namespace Quadruped.WebInterface
                 services.AddSingleton<ICameraController, CameraController>();
                 services.AddSingleton<IVideoService, VideoStreamingService>();
             }
+
+            services.AddSingleton<IImuService, NetworkImuService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
