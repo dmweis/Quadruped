@@ -15,7 +15,7 @@ serverSocket.onmessage = function (event) {
         telemtricsVm.averageVoltage = networkMessage.message.AverageVoltage;
     }
     else if (networkMessage.topic === "IMU") {
-        console.log(networkMessage.message.Gyroscopic);
+        console.log(networkMessage.message);
     }
 };
 

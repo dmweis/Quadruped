@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace Quadruped.WebInterface.IMU
@@ -14,41 +15,59 @@ namespace Quadruped.WebInterface.IMU
     {
         public event EventHandler<ImuData> NewImuData;
 
+        private readonly ILogger _logger;
+
+        private const string HostName = "localhost";
+        private const int PortName = 4242;
+        private const int ReadTimeout = 15;
+        private const byte LineSeparator = (byte)'\n';
+
         private bool _keepGoing = true;
 
-        public NetworkImuService(IApplicationLifetime applicationLifetime)
+        public NetworkImuService(IApplicationLifetime applicationLifetime, ILogger<NetworkImuService> logger)
         {
             applicationLifetime.ApplicationStopping.Register(() => _keepGoing = false);
+            _logger = logger;
             Task.Run((Action)HandleConnection);
         }
 
         private async void HandleConnection()
         {
-            const byte separator = (byte) '\n';
-            List<byte> buffer  = new List<byte>();
-            using (var client = new TcpClient("localhost", 4242))
-            using (var stream = client.GetStream())
+            try
             {
-                client.ReceiveTimeout = 15;
-                while (_keepGoing)
+                List<byte> buffer = new List<byte>();
+                using (var client = new TcpClient(HostName, PortName))
+                using (var stream = client.GetStream())
                 {
-                    var byteBuffer = new byte[client.Available];
-                    var countRead = await stream.ReadAsync(byteBuffer, 0, byteBuffer.Length);
-                    buffer.AddRange(byteBuffer.Take(countRead));
-                    if (buffer.Contains(separator))
+                    client.ReceiveTimeout = ReadTimeout;
+                    while (_keepGoing)
                     {
-                        var firstIndex = buffer.IndexOf(separator);
-                        if (firstIndex > 0)
+                        var byteBuffer = new byte[client.Available];
+                        var countRead = await stream.ReadAsync(byteBuffer, 0, byteBuffer.Length);
+                        buffer.AddRange(byteBuffer.Take(countRead));
+                        // look for separator
+                        var firstIndex = buffer.IndexOf(LineSeparator);
+                        // MOre efficient than iteratig twice with a contains
+                        if (firstIndex != -1)
                         {
-                            RaiseNewImuData(Encoding.UTF8.GetString(buffer.Take(firstIndex).ToArray()));
-                            buffer = new List<byte>(buffer.Skip(firstIndex + 1));
-                        }
-                        else
-                        {
-                            buffer.Remove(separator);
+                            if (firstIndex > 0)
+                            {
+                                RaiseNewImuData(Encoding.UTF8.GetString(buffer.Take(firstIndex).ToArray()));
+                                buffer.RemoveRange(0, firstIndex + 1);
+                            }
+                            else
+                            {
+                                // This is the case if new line is the first character
+                                // This won't happen a lot
+                                buffer.Remove(LineSeparator);
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception e) when (e is IOException || e is SocketException)
+            {
+               _logger.LogError("Connection to IMU server failed", e);
             }
         }
 
@@ -59,9 +78,9 @@ namespace Quadruped.WebInterface.IMU
                 var message = JsonConvert.DeserializeObject<ImuData>(json);
                 NewImuData?.Invoke(this, message);
             }
-            catch (Exception)
+            catch (Exception e) when (e is JsonReaderException || e is JsonSerializationException)
             {
-                
+                _logger.LogError("Json deserealize error in NetworkImuService", e);
             }
         }
     }

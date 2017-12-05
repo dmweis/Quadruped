@@ -21,7 +21,7 @@ while True:
     while True:
         try:
             incoming = arduino.readline()
-            connection.send(incoming + b"\n")
+            connection.send(incoming)
         except:
             print("Client disconnected")
             break
