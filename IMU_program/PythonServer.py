@@ -9,7 +9,7 @@ arduino_port = next((port for port in ports if "Arduino" in port.description), N
 arduino = serial.Serial(arduino_port[0], 9600)
 
 PORT = 4242
-HOST = ''
+HOST = 'localhost'
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.bind((HOST, PORT))
