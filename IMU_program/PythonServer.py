@@ -1,7 +1,8 @@
+#!/usr/bin/env python3
+
 import socket
 import serial.tools.list_ports
 import serial
-
 
 ports = list(serial.tools.list_ports.comports())
 arduino_port = next((port for port in ports if "Arduino" in port.description), None)
