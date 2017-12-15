@@ -47,8 +47,16 @@ namespace Quadruped.WebInterface
                 services.AddSingleton<InterpolationGaitEngine>();
                 services.AddSingleton<InterpolationController>();
                 services.AddSingleton<IRobot, Robot>();
-                services.AddSingleton<ICameraController, CameraController>();
-                services.AddSingleton<IVideoService, VideoStreamingService>();
+                if (Configuration.GetSection("streamerConfig").GetValue<bool>("ControllerOn"))
+                {
+                    services.AddSingleton<ICameraController, CameraController>();
+                    services.AddSingleton<IVideoService, VideoStreamingService>();
+                }
+                else
+                {
+                    services.AddSingleton<IVideoService, MockVideoStream>();
+                    services.AddSingleton<ICameraController, CameraControllerMock>();
+                }
             }
 
             services.AddSingleton<IImuService, NetworkImuService>();

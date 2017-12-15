@@ -4,6 +4,7 @@ namespace Quadruped.WebInterface.VideoStreaming
 {
     public class StreamerConfig : IEquatable<StreamerConfig>
     {
+        public bool ControllerOn { get; set; } = true;
         public int ImageQuality { get; set; } = 85;
         public int HorizontalResolution { get; set; } = 800;
         public int VerticalResolution { get; set; } = 600;
@@ -13,7 +14,11 @@ namespace Quadruped.WebInterface.VideoStreaming
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return ImageQuality == other.ImageQuality && HorizontalResolution == other.HorizontalResolution && VerticalResolution == other.VerticalResolution && Framerate == other.Framerate;
+            return ControllerOn == other.ControllerOn &&
+                ImageQuality == other.ImageQuality &&
+                HorizontalResolution == other.HorizontalResolution &&
+                VerticalResolution == other.VerticalResolution &&
+                Framerate == other.Framerate;
         }
 
         public override bool Equals(object obj)
@@ -32,6 +37,7 @@ namespace Quadruped.WebInterface.VideoStreaming
                 hashCode = (hashCode * 397) ^ HorizontalResolution;
                 hashCode = (hashCode * 397) ^ VerticalResolution;
                 hashCode = (hashCode * 397) ^ Framerate;
+                hashCode = (hashCode * 397) ^ ControllerOn.GetHashCode();
                 return hashCode;
             }
         }
