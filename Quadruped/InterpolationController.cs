@@ -108,7 +108,7 @@ namespace Quadruped
             _engine.AddStep(nextStep);
 
             // Move all
-            nextStep.Transform(new Vector3(-frontLegShift * direction.X, -frontLegShift * direction.Y, 0));
+            nextStep = nextStep.Transform(new Vector3(-frontLegShift * direction.X, -frontLegShift * direction.Y, 0));
             _engine.AddStep(nextStep);
 
             // Move RR and LF forward
