@@ -50,5 +50,10 @@ namespace Quadruped
             };
             return rotatedVector;
         }
+
+        public static bool IsZero(this Vector2 vector)
+        {
+            return vector.X == 0f && vector.Y == 0f;
+        }
     }
 }
