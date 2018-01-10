@@ -45,8 +45,10 @@ namespace Quadruped.WebInterface
                 services.AddSingleton(new DynamixelDriver(portName));
                 services.AddSingleton<QuadrupedIkDriver>();
                 services.AddSingleton<InterpolationGaitEngine>();
-                services.AddSingleton<InterpolationController>();
-                services.AddSingleton<IRobot, Robot>();
+                //services.AddSingleton<InterpolationController>();
+                //services.AddSingleton<AdvanceInterpolationController>();
+                services.AddSingleton<SmartQuadrupedController>();
+                services.AddSingleton<IRobot, SmartRobot>();
                 if (Configuration.GetSection("streamerConfig").GetValue<bool>("ControllerOn"))
                 {
                     services.AddSingleton<ICameraController, CameraController>();

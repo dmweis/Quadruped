@@ -32,13 +32,14 @@ namespace Quadruped.WebInterface.RTC
             return x;
         }
 
-        public Vector2 CalculateHeadingVector(float deadzone = 0.0f)
+        public Vector2 CalculateHeadingVector(float deadzone = 0.0f, float maxSize = 6f)
         {
             if (MessageType != MessageType.Movement)
             {
                 return Vector2.Zero;
             }
-            if (Math.Abs(Distance / 50) < deadzone)
+            var size = Math.Abs(Distance / 50);
+            if (size < deadzone)
             {
                 return Vector2.Zero;
             }
@@ -49,7 +50,8 @@ namespace Quadruped.WebInterface.RTC
                 X = x,
                 Y = y
             };
-            return vector;
+            var resultVector = vector.Normal() * (size * maxSize);
+            return resultVector;
         }
 
         public Vector2 CalculatePinPosition(float deadzone = 0.0f)
