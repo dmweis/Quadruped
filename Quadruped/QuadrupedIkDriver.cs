@@ -44,7 +44,7 @@ namespace Quadruped
                 foreach (var servo in AllMotorIds)
                 {
                     _driver.SetComplianceSlope(servo, ComplianceSlope.S64);
-                    _driver.SetMovingSpeed(servo, 300);
+                    _driver.SetMovingSpeed(servo, 1023);
                 }
             }
         }
@@ -291,7 +291,7 @@ namespace Quadruped
             // use law of cosinus to get angles in two corners
             float angleByTibia = (float)GetAngleByA(absoluteDistanceToTargetWithoutCoxa, FemurLength, TibiaLength);
             float angleByFemur = (float)GetAngleByA(TibiaLength, FemurLength, absoluteDistanceToTargetWithoutCoxa);
-            // we have angles of the SSS trianglel. now we need angle for the servos
+            // we have angles of the SSS triangle. now we need angle for the servos
             float groundToTargetAngleSize = (float)Math.Atan2(horizontalDistanceWithoutCoxa, -relativeVector.Z).RadToDegree();
             if (targetAngle >= 90 || targetAngle <= -90)
             {
